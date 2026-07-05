@@ -1291,6 +1291,10 @@ window.VXData = {
   var camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
   camera.position.z = 14;
 
+  // Shared handle so Immersive Mode can add/remove its own objects into this
+  // same scene/renderer instead of spinning up a second WebGL context.
+  window.VXScene = { scene: scene, camera: camera, renderer: renderer, THREE: THREE };
+
   var goldColor = new THREE.Color(0xC9A96E);
   var ivoryColor = new THREE.Color(0xF2EDE4);
 
@@ -1403,6 +1407,8 @@ window.VXData = {
 
   /* --- Mouse-driven camera parallax --- */
   var mouseX = 0, mouseY = 0;
+  var parallaxX = 0, parallaxY = 0;
+  var baseCameraZ = camera.position.z;
   window.addEventListener('mousemove', function(e){
     mouseX = (e.clientX / window.innerWidth - 0.5);
     mouseY = (e.clientY / window.innerHeight - 0.5);
@@ -1442,9 +1448,15 @@ window.VXData = {
     if(!reduceMotion){
       vPoints.rotation.y = mouseX * 0.25;
       vPoints.rotation.x = mouseY * 0.12;
-      stars.rotation.y += dt * 0.01;
-      camera.position.x = lerp(camera.position.x, mouseX * 0.6, 0.04);
-      camera.position.y = lerp(camera.position.y, -mouseY * 0.4, 0.04);
+      stars.rotation.y += dt * 0.01 * (window.VXImmersiveDrift ? window.VXImmersiveDrift.spin : 1);
+      parallaxX = lerp(parallaxX, mouseX * 0.6, 0.04);
+      parallaxY = lerp(parallaxY, -mouseY * 0.4, 0.04);
+      var driftX = window.VXImmersiveDrift ? window.VXImmersiveDrift.x : 0;
+      var driftY = window.VXImmersiveDrift ? window.VXImmersiveDrift.y : 0;
+      var driftZ = window.VXImmersiveDrift ? window.VXImmersiveDrift.z : 0;
+      camera.position.x = parallaxX + driftX;
+      camera.position.y = parallaxY + driftY;
+      camera.position.z = baseCameraZ + driftZ;
       camera.lookAt(0,0,0);
     }
 
@@ -2505,45 +2517,70 @@ window.VXData = {
 /* =========================================================
    Immersive Mode
    ---------------------------------------------------------
-   Per-track visual identity. When a themed signal plays, the
-   site's own design tokens (--obsidian, --midnight, --line,
-   --gold, --gold-dim, --smoke, --ivory) are swapped for that
-   track's palette. Because almost every color in the site is
-   already built on these tokens, text, icons, buttons, borders
-   and glows all shift together automatically — no per-component
-   overrides needed.
+   Per-track audiovisual identity. When a themed signal plays,
+   two layers activate together:
 
-   Safety net: before any theme is applied, ensureContrast() runs
-   a WCAG relative-luminance check on every text/background and
-   accent/background pairing and nudges the color toward black or
-   white until it clears a safe ratio. This runs for every theme,
-   including ones added later, so a future palette can never ship
-   an unreadable combination even if it wasn't hand-checked.
+   1) UI layer (always, everywhere): the site's own design
+      tokens (--obsidian, --midnight, --line, --gold, --gold-dim,
+      --smoke, --ivory) are swapped for that track's palette.
+      Because nearly every color in the site is already built on
+      these tokens, text, icons, buttons, borders and glows shift
+      together automatically — no per-component overrides needed.
+      Before any theme reaches the page, ensureContrast() runs a
+      WCAG relative-luminance check on every text/background and
+      accent/background pairing and nudges the color toward black
+      or white until it clears a safe ratio — for every theme,
+      including ones added later, so a rushed future palette can
+      never ship an unreadable combination.
 
-   Performance: the color/UI layer is CSS-only (near-zero cost).
-   The optional particle layer only starts on devices that pass a
-   quick capability check, and is skipped entirely under
-   prefers-reduced-motion.
+   2) 3D world layer (capable devices only): rather than opening a
+      second WebGL context, this reaches into the ambient Three.js
+      scene that already renders behind the whole site (exposed as
+      window.VXScene by the starfield module) and adds/removes its
+      own fog, particle field and glow sprite there. One shared
+      renderer, one shared draw call per frame — the cost of a
+      cinematic scene without the cost of a second one. Camera
+      drift is applied by the ambient module's own loop (via the
+      small window.VXImmersiveDrift handoff) so there is only ever
+      one place writing to camera.position, no fighting between
+      two animation loops.
+
+   Devices that don't clear the capability bar (low core/memory
+   count, small touch screens, prefers-reduced-motion, or if THREE
+   never loaded) simply keep layer 1 — a complete, deliberate visual
+   identity shift with zero 3D cost. Nothing ever blocks or slows
+   down the rest of the site.
    ========================================================= */
 (function(){
   var root = document.documentElement;
 
-  // The site's default identity — what we restore when playback stops.
   var BASE_THEME = {
     obsidian:'#080810', midnight:'#12131F', line:'#1E1E28',
     gold:'#C9A96E', goldDim:'rgba(201,169,110,0.35)',
     smoke:'#9E9080', ivory:'#F2EDE4'
   };
 
-  // One themed identity per track id. Add more here as new
-  // Signals get their own mood — each is independent and each
-  // goes through the same contrast guard automatically.
+  /* One entry per track id. `ui` is the palette (always applied).
+     `world` is the optional cinematic 3D recipe — add more as new
+     Signals get their own mood; both the contrast guard and the
+     3D builder below apply automatically to anything defined here. */
   var THEMES = {
     'shadow-mode': {
-      obsidian:'#0B0714', midnight:'#170F29', line:'#2C2140',
-      gold:'#B98CE0', goldDim:'rgba(185,140,224,0.35)',
-      smoke:'#9C8FBF', ivory:'#F3ECFB',
-      particle:'#C9A2EE'
+      ui: {
+        obsidian:'#0B0714', midnight:'#170F29', line:'#2C2140',
+        gold:'#B98CE0', goldDim:'rgba(185,140,224,0.35)',
+        smoke:'#9C8FBF', ivory:'#F3ECFB'
+      },
+      world: {
+        fogColor: 0x140b26, fogDensity: 0.075,
+        particleColor: 0xC9A2EE,
+        particleCount: { simple: 90, full: 240 },
+        spread: 22,
+        speed: { min:0.5, max:1.3 },
+        size: 0.055,
+        glowColor: 0xB98CE0, glowScale: 7.5,
+        drift: { amp: 0.32, speed: 0.55, spin: 1.8 }
+      }
     }
   };
 
@@ -2574,8 +2611,6 @@ window.VXData = {
     var lighter = Math.max(La,Lb), darker = Math.min(La,Lb);
     return (lighter + 0.05) / (darker + 0.05);
   }
-  // Nudges `hex` toward white or black (whichever direction the
-  // background calls for) until it clears `minRatio` against `bgHex`.
   function ensureContrast(hex, bgHex, minRatio){
     var bgIsDark = relLuminance(bgHex) < 0.5;
     var guard = 0;
@@ -2587,25 +2622,18 @@ window.VXData = {
     }
     return hex;
   }
-  // Runs every proposed theme through the guard before it ever
-  // reaches the page. Text roles get the stricter body-text
-  // threshold; the accent (used mostly for icons/borders/UI, but
-  // also for the eyebrow-style labels) gets the slightly relaxed
-  // large-text/UI-component threshold, both per WCAG 2.x.
-  function buildSafeTheme(theme){
-    var bg = theme.obsidian;
+  function buildSafeUITheme(ui){
+    var bg = ui.obsidian;
     return {
-      obsidian: theme.obsidian,
-      midnight: theme.midnight,
-      line: theme.line,
-      goldDim: theme.goldDim,
-      ivory: ensureContrast(theme.ivory, bg, 4.6),
-      smoke: ensureContrast(theme.smoke, bg, 4.6),
-      gold:  ensureContrast(theme.gold,  bg, 3.1),
-      particle: theme.particle || theme.gold
+      obsidian: ui.obsidian,
+      midnight: ui.midnight,
+      line: ui.line,
+      goldDim: ui.goldDim,
+      ivory: ensureContrast(ui.ivory, bg, 4.6),
+      smoke: ensureContrast(ui.smoke, bg, 4.6),
+      gold:  ensureContrast(ui.gold,  bg, 3.1)
     };
   }
-
   var VAR_MAP = { obsidian:'--obsidian', midnight:'--midnight', line:'--line', gold:'--gold', goldDim:'--gold-dim', smoke:'--smoke', ivory:'--ivory' };
   function applyVars(vars){
     Object.keys(VAR_MAP).forEach(function(key){
@@ -2613,19 +2641,163 @@ window.VXData = {
     });
   }
 
+  /* ---------- Capability tiering for the 3D layer ---------- */
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var pointerFine = window.matchMedia('(pointer: fine)').matches;
+  var lowPower = !!(navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) ||
+                 !!(navigator.deviceMemory && navigator.deviceMemory < 4);
+  var canWorld = !reduceMotion && !lowPower && (pointerFine || window.innerWidth >= 720);
+  var simpleWorld = canWorld && (!pointerFine || window.innerWidth < 1000);
+
+  /* ---------- 3D world builder (extends the existing ambient scene) ---------- */
+  var world = null;       // live objects for the currently-building/active world
+  var worldRaf = null;
+  var driftMix = 0;       // 0..1 ramp for camera drift fade in/out
+  var pendingRemoveId = 0;
+
+  function buildGlowTexture(THREE, hexColor){
+    var c = document.createElement('canvas');
+    c.width = c.height = 128;
+    var g2d = c.getContext('2d');
+    var col = new THREE.Color(hexColor);
+    var r = Math.round(col.r*255), g = Math.round(col.g*255), b = Math.round(col.b*255);
+    var grad = g2d.createRadialGradient(64,64,0,64,64,64);
+    grad.addColorStop(0, 'rgba('+r+','+g+','+b+',0.85)');
+    grad.addColorStop(1, 'rgba('+r+','+g+','+b+',0)');
+    g2d.fillStyle = grad;
+    g2d.fillRect(0,0,128,128);
+    return new THREE.CanvasTexture(c);
+  }
+
+  function startWorld(cfg){
+    if(!canWorld || !window.VXScene){ return; }
+    var VS = window.VXScene, THREE = VS.THREE, scene = VS.scene;
+
+    // rapid play/pause/play could otherwise leave a previous, still-fading
+    // world orphaned in the scene — always start from a clean slate
+    if(world){
+      world.scene.remove(world.points);
+      world.scene.remove(world.glow);
+      world.geo.dispose();
+      world.mat.dispose();
+      world.glowMat.dispose();
+      world = null;
+    }
+
+    var count = simpleWorld ? cfg.particleCount.simple : cfg.particleCount.full;
+    var geo = new THREE.BufferGeometry();
+    var pos = new Float32Array(count*3);
+    var vel = new Float32Array(count);
+    for(var i=0;i<count;i++){
+      pos[i*3]   = (Math.random()-0.5) * cfg.spread;
+      pos[i*3+1] = (Math.random()-0.5) * cfg.spread * 0.9 - 3;
+      pos[i*3+2] = (Math.random()-0.5) * cfg.spread * 0.6 - 5;
+      vel[i] = cfg.speed.min + Math.random()*(cfg.speed.max-cfg.speed.min);
+    }
+    geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+    var mat = new THREE.PointsMaterial({ color:new THREE.Color(cfg.particleColor), size:cfg.size, transparent:true, opacity:0, depthWrite:false });
+    var points = new THREE.Points(geo, mat);
+
+    var glowMat = new THREE.SpriteMaterial({ map:buildGlowTexture(THREE, cfg.glowColor), color:0xffffff, transparent:true, opacity:0, blending:THREE.AdditiveBlending, depthWrite:false });
+    var glow = new THREE.Sprite(glowMat);
+    glow.scale.set(cfg.glowScale, cfg.glowScale, 1);
+    glow.position.set(0, 0.4, -11);
+
+    scene.add(points);
+    scene.add(glow);
+    scene.fog = new THREE.FogExp2(cfg.fogColor, 0);
+
+    var myId = ++pendingRemoveId;
+    world = {
+      id: myId, scene: scene, points: points, geo: geo, mat: mat, vel: vel,
+      glow: glow, glowMat: glowMat, cfg: cfg, spread: cfg.spread,
+      targetOpacity: 1, targetFogDensity: cfg.fogDensity, removing: false
+    };
+
+    window.VXImmersiveDrift = { x:0, y:0, z:0, spin:1 };
+    driftMix = 0;
+    if(!worldRaf){ tickWorld(); }
+  }
+
+  function endWorld(){
+    if(!world) return;
+    world.targetOpacity = 0;
+    world.targetFogDensity = 0;
+    world.removing = true;
+    var doomedId = world.id;
+    // give the fade-out its full duration before actually freeing GPU memory
+    setTimeout(function(){
+      if(world && world.id === doomedId){
+        world.scene.remove(world.points);
+        world.scene.remove(world.glow);
+        world.scene.fog = null;
+        world.geo.dispose();
+        world.mat.dispose();
+        world.glowMat.dispose();
+        world = null;
+        window.VXImmersiveDrift = null;
+      }
+    }, 2000);
+  }
+
+  function lerp(a,b,t){ return a + (b-a)*t; }
+
+  function tickWorld(){
+    worldRaf = requestAnimationFrame(tickWorld);
+    if(!world){ worldRaf = null; return; }
+    var level = (window.VX_AUDIO && window.VX_AUDIO.level) || 0;
+
+    world.mat.opacity = lerp(world.mat.opacity, world.targetOpacity, 0.025);
+    world.glowMat.opacity = lerp(world.glowMat.opacity, world.targetOpacity * 0.75, 0.025);
+    if(world.scene.fog){
+      world.scene.fog.density = lerp(world.scene.fog.density, world.targetFogDensity, 0.02);
+    }
+    driftMix = lerp(driftMix, world.removing ? 0 : 1, 0.03);
+
+    // drift particles upward like slow embers/light streaks, wrapping around;
+    // the beat (VX_AUDIO level, already computed by the main audio loop) speeds
+    // the drift up rather than driving a jarring on/off flash
+    var posAttr = world.geo.getAttribute('position');
+    var half = world.spread * 0.5;
+    for(var i=0;i<world.vel.length;i++){
+      posAttr.array[i*3+1] += world.vel[i] * 0.012 * (1 + level*2.2);
+      if(posAttr.array[i*3+1] > half){ posAttr.array[i*3+1] = -half; }
+    }
+    posAttr.needsUpdate = true;
+
+    // glow breathes gently with the beat
+    var s = world.cfg.glowScale * (1 + level*0.3);
+    world.glow.scale.set(s, s, 1);
+
+    // hand the camera drift to the ambient scene's own loop —
+    // it composes this on top of its existing mouse parallax
+    if(window.VXImmersiveDrift){
+      var t = performance.now() * 0.001;
+      window.VXImmersiveDrift.x = Math.sin(t * world.cfg.drift.speed) * world.cfg.drift.amp * driftMix;
+      window.VXImmersiveDrift.y = Math.cos(t * world.cfg.drift.speed * 0.8) * world.cfg.drift.amp * 0.55 * driftMix;
+      window.VXImmersiveDrift.z = Math.sin(t * world.cfg.drift.speed * 0.5) * world.cfg.drift.amp * 0.4 * driftMix;
+      window.VXImmersiveDrift.spin = 1 + (world.cfg.drift.spin - 1) * driftMix;
+    }
+
+    if(world.removing && world.mat.opacity < 0.01 && driftMix < 0.01){
+      worldRaf && cancelAnimationFrame(worldRaf);
+      worldRaf = null; // endWorld()'s timeout still handles the actual cleanup
+    }
+  }
+
+  /* ---------- Public activate/deactivate ---------- */
   var currentThemeId = null;
   var revertTimer = null;
 
   function activate(trackId){
     var theme = THEMES[trackId];
-    if(!theme){ return; } // this track has no themed identity yet — site stays as-is
+    if(!theme){ return; } // no themed identity for this track yet — site stays as-is
     clearTimeout(revertTimer);
     currentThemeId = trackId;
     root.classList.add('immersive-active');
-    var safe = buildSafeTheme(theme);
-    applyVars(safe);
+    applyVars(buildSafeUITheme(theme.ui));
     root.setAttribute('data-immersive-theme', trackId);
-    startParticles(safe.particle);
+    if(theme.world){ startWorld(theme.world); }
   }
 
   function deactivate(){
@@ -2633,88 +2805,8 @@ window.VXData = {
     currentThemeId = null;
     applyVars(BASE_THEME);
     root.removeAttribute('data-immersive-theme');
-    stopParticles();
-    // keep the smooth-transition class on just long enough for the
-    // fade back to the default identity to finish, then drop it so
-    // normal component transitions go back to their own timings.
+    endWorld();
     revertTimer = setTimeout(function(){ root.classList.remove('immersive-active'); }, 950);
-  }
-
-  /* ---------- Optional ambient particle layer ---------- */
-  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var canParticles = (function(){
-    if(reduceMotion){ return false; }
-    if(navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4){ return false; }
-    if(navigator.deviceMemory && navigator.deviceMemory < 4){ return false; }
-    // small touch devices skip the extra canvas layer; they still get
-    // the full color/contrast identity, just without the particle bonus
-    var fine = window.matchMedia('(pointer: fine)').matches;
-    if(!fine && window.innerWidth < 720){ return false; }
-    return true;
-  })();
-
-  var canvas = null, ctx = null, particles = [], raf = null, dpr = Math.min(window.devicePixelRatio || 1, 2);
-
-  function ensureCanvas(){
-    if(canvas) return;
-    canvas = document.createElement('canvas');
-    canvas.id = 'immersiveParticles';
-    document.body.appendChild(canvas);
-    ctx = canvas.getContext('2d');
-    resize();
-    window.addEventListener('resize', resize, {passive:true});
-  }
-  function resize(){
-    if(!canvas) return;
-    canvas.width = window.innerWidth * dpr;
-    canvas.height = window.innerHeight * dpr;
-  }
-  function seed(){
-    particles = [];
-    var count = window.innerWidth < 720 ? 24 : 50;
-    for(var i=0; i<count; i++){
-      particles.push({
-        x: Math.random()*canvas.width,
-        y: Math.random()*canvas.height,
-        r: (0.6 + Math.random()*1.7) * dpr,
-        vy: -(0.06 + Math.random()*0.18) * dpr,
-        vx: (Math.random()-0.5) * 0.05 * dpr,
-        a: 0.15 + Math.random()*0.35
-      });
-    }
-  }
-  function draw(){
-    raf = requestAnimationFrame(draw);
-    if(!ctx) return;
-    var level = (window.VX_AUDIO && window.VX_AUDIO.level) || 0;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = canvas.dataset.color || '#C9A2EE';
-    for(var i=0; i<particles.length; i++){
-      var p = particles[i];
-      p.y += p.vy * (1 + level*2.2);
-      p.x += p.vx;
-      if(p.y < -6){ p.y = canvas.height + 6; p.x = Math.random()*canvas.width; }
-      ctx.globalAlpha = p.a * (0.55 + level*0.45);
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-      ctx.fill();
-    }
-    ctx.globalAlpha = 1;
-  }
-  function startParticles(color){
-    if(!canParticles){ return; }
-    ensureCanvas();
-    canvas.dataset.color = color;
-    seed();
-    if(!raf){ draw(); }
-    requestAnimationFrame(function(){ canvas.style.opacity = '0.5'; });
-  }
-  function stopParticles(){
-    if(!canvas) return;
-    canvas.style.opacity = '0';
-    setTimeout(function(){
-      if(raf){ cancelAnimationFrame(raf); raf = null; }
-    }, 1150);
   }
 
   window.VXImmersive = { activate: activate, deactivate: deactivate };
