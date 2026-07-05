@@ -761,6 +761,7 @@
   :root{
     --immersive-accent:201,169,110;
     --immersive-scrim:0;
+    --immersive-beat:0;
   }
   #immersiveScene{
     position:fixed;
@@ -793,9 +794,36 @@
   }
   #immersiveScrim.active{ opacity:var(--immersive-scrim); }
   body.immersive-on #playerDock{ border-color:rgba(var(--immersive-accent),0.5); }
-  body.immersive-on .dock-toggle{ color:rgb(var(--immersive-accent)); border-color:rgba(var(--immersive-accent),0.5); }
+  body.immersive-on .dock-toggle{
+    color:rgb(var(--immersive-accent));
+    border-color:rgba(var(--immersive-accent),0.5);
+    box-shadow:0 0 calc(10px + var(--immersive-beat) * 16px) rgba(var(--immersive-accent), calc(0.18 + var(--immersive-beat) * 0.32));
+    transition:box-shadow .12s linear, color .6s ease, border-color .3s ease;
+  }
   body.immersive-on .dock-bars span{ background:rgb(var(--immersive-accent)); }
   body.immersive-on .signal-row.playing .signal-bars span{ background:rgb(var(--immersive-accent)); }
+  /* Distributed reactivity: the beat also reaches real page elements —
+     edition tiles, note cards, the active signal row — so the "living
+     environment" feeling isn't confined to the background canvas. */
+  body.immersive-on [data-tilt]{
+    box-shadow:0 0 calc(16px + var(--immersive-beat) * 30px) rgba(var(--immersive-accent), calc(0.08 + var(--immersive-beat) * 0.2));
+    transition:box-shadow .15s linear, border-color .6s ease;
+  }
+  body.immersive-on .note-card{
+    box-shadow:0 0 calc(12px + var(--immersive-beat) * 22px) rgba(var(--immersive-accent), calc(0.06 + var(--immersive-beat) * 0.16));
+    transition:box-shadow .15s linear;
+  }
+  body.immersive-on .signal-row.playing{
+    box-shadow:inset 0 0 calc(24px + var(--immersive-beat) * 22px) rgba(var(--immersive-accent), calc(0.05 + var(--immersive-beat) * 0.13));
+    transition:box-shadow .15s linear;
+  }
+  body.immersive-on .eyebrow,
+  body.immersive-on .dock-eyebrow,
+  body.immersive-on .signal-tag,
+  body.immersive-on .note-tag{
+    color:color-mix(in srgb, currentColor 85%, rgb(var(--immersive-accent)) 15%);
+    transition:color .8s ease;
+  }
   @media (prefers-reduced-motion:reduce){
     #immersiveScene{ transition:opacity .9s ease; clip-path:none !important; }
   }
@@ -2686,20 +2714,50 @@ window.VXData = {
   renderer.setSize(window.innerWidth, window.innerHeight);
 
   var scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x05050a, 0.05);
+  scene.fog = new THREE.FogExp2(0x05050a, 0.045);
 
-  var CAMERA_REST_Z = 9, CAMERA_FAR_Z = 27;
-  var CAMERA_REST_FOV = 55, CAMERA_FAR_FOV = 24;
-  var camera = new THREE.PerspectiveCamera(CAMERA_FAR_FOV, window.innerWidth / window.innerHeight, 0.1, 150);
+  var CAMERA_REST_Z = 9, CAMERA_FAR_Z = 30;
+  var CAMERA_REST_FOV = 55, CAMERA_FAR_FOV = 20;
+  var camera = new THREE.PerspectiveCamera(CAMERA_FAR_FOV, window.innerWidth / window.innerHeight, 0.1, 160);
   camera.position.set(0, 0.4, CAMERA_FAR_Z);
 
   var accentColor = new THREE.Color(GOLD[0] / 255, GOLD[1] / 255, GOLD[2] / 255);
-  scene.add(new THREE.AmbientLight(0x2a2a35, 0.9));
-  var keyLight = new THREE.PointLight(accentColor.getHex(), 1.6, 44, 2);
-  keyLight.position.set(0, 3, 2);
-  scene.add(keyLight);
 
-  /* ---- soft radial glow texture, reused for particles/rays/floor ---- */
+  /* ---- lit backdrop: a huge inverted sphere enclosing the whole scene.
+     It has no visible texture of its own — its only job is to *catch*
+     the two roaming point lights below, so the general atmosphere and
+     ambient color of the environment keeps shifting on its own as the
+     lights wander, the way a lit cyclorama does behind a stage. ---- */
+  var backdropBase = new THREE.Color(0x07070d);
+  var backdropMat = new THREE.MeshStandardMaterial({
+    color: backdropBase.clone(), roughness: 1, metalness: 0, side: THREE.BackSide, fog: true
+  });
+  var backdrop = new THREE.Mesh(new THREE.SphereGeometry(46, 24, 16), backdropMat);
+  scene.add(backdrop);
+
+  scene.add(new THREE.AmbientLight(0x24242f, 0.7));
+
+  var ROAM_COUNT = 2;
+  var roamLights = [];
+  for(var rl = 0; rl < ROAM_COUNT; rl++){
+    var light = new THREE.PointLight(accentColor.getHex(), 1.4, 50, 2);
+    light.position.set((rl === 0 ? -6 : 6), 2, -4);
+    scene.add(light);
+    roamLights.push({
+      mesh: light,
+      target: new THREE.Vector3(light.position.x, light.position.y, light.position.z),
+      nextRetarget: 0
+    });
+  }
+  function pickRoamTarget(){
+    return new THREE.Vector3(
+      (Math.random() - 0.5) * 20,
+      (Math.random() - 0.2) * 10,
+      (Math.random() - 0.5) * 18 - 4
+    );
+  }
+
+  /* ---- soft radial glow texture, reused for particles/beams/floor ---- */
   function makeGlowTexture(){
     var c = document.createElement('canvas');
     c.width = c.height = 128;
@@ -2742,25 +2800,72 @@ window.VXData = {
   var particles = new THREE.Points(pGeo, pMat);
   scene.add(particles);
 
-  /* ---- volumetric god-rays: a slow-rotating fan of soft planes ---- */
-  var rayGroup = new THREE.Group();
-  var RAY_COUNT = 4;
-  var rays = [];
-  for(var r = 0; r < RAY_COUNT; r++){
-    var rayGeo = new THREE.PlaneGeometry(3.2, 20);
-    var rayMat = new THREE.MeshBasicMaterial({
-      map: glowTex, color: accentColor, transparent: true, opacity: 0.12,
+  /* ---- portal formation: entrance-only burst, built exactly like the
+     hero's particle "V" — scattered points converging (eased lerp) into
+     a shape, here a ring the camera flies through — then dissolving
+     into the ambient field above once the world has fully arrived. ---- */
+  var PORTAL_COUNT = isMobile ? 220 : 520;
+  var portalStart = new Float32Array(PORTAL_COUNT * 3);
+  var portalTarget = new Float32Array(PORTAL_COUNT * 3);
+  var portalGeo = new THREE.BufferGeometry();
+  var portalCurrent = new Float32Array(PORTAL_COUNT * 3);
+  portalGeo.setAttribute('position', new THREE.BufferAttribute(portalCurrent, 3));
+  var portalMat = new THREE.PointsMaterial({
+    map: glowTex, color: accentColor, size: isMobile ? 0.14 : 0.11,
+    transparent: true, opacity: 0, depthWrite: false,
+    blending: THREE.AdditiveBlending, sizeAttenuation: true
+  });
+  var portalPoints = new THREE.Points(portalGeo, portalMat);
+  scene.add(portalPoints);
+
+  function reseedPortal(){
+    for(var i = 0; i < PORTAL_COUNT; i++){
+      // start: scattered across a wide volume, like the hero's V burst
+      portalStart[i*3]   = (Math.random() - 0.5) * 34;
+      portalStart[i*3+1] = (Math.random() - 0.5) * 24;
+      portalStart[i*3+2] = (Math.random() - 0.5) * 30 - 6;
+      // target: a ring/aperture the camera passes through on its way in
+      var ang = Math.random() * Math.PI * 2;
+      var rr = 3.1 + (Math.random() - 0.5) * 0.5;
+      portalTarget[i*3]   = Math.cos(ang) * rr;
+      portalTarget[i*3+1] = Math.sin(ang) * rr * 0.62 + 0.2;
+      portalTarget[i*3+2] = -2.2 + (Math.random() - 0.5) * 0.4;
+    }
+  }
+  reseedPortal();
+
+  /* ---- roaming light beams: appear, drift, and dissolve at different
+     points in space instead of sitting in one fixed spot — the
+     "moving stage light" behaviour asked for. ---- */
+  var BEAM_COUNT = isMobile ? 4 : 7;
+  var beams = [];
+  function spawnBeam(b, immediate){
+    b.mesh.position.set(
+      (Math.random() - 0.5) * 16,
+      (Math.random() - 0.3) * 9,
+      (Math.random() - 0.5) * 14 - 5
+    );
+    b.mesh.rotation.z = Math.random() * Math.PI * 2;
+    b.mesh.rotation.x = -0.2 + Math.random() * 0.4;
+    var scale = 0.7 + Math.random() * 0.8;
+    b.mesh.scale.set(scale, 0.6 + Math.random() * 0.9, 1);
+    b.maxLife = 3 + Math.random() * 4;
+    b.life = 0;
+    b.delay = immediate ? 0 : Math.random() * 3.5;
+    b.peak = 0.5 + Math.random() * 0.5;
+  }
+  for(var bi = 0; bi < BEAM_COUNT; bi++){
+    var beamGeo = new THREE.PlaneGeometry(2.6, 16);
+    var beamMat = new THREE.MeshBasicMaterial({
+      map: glowTex, color: accentColor, transparent: true, opacity: 0,
       depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide
     });
-    var mesh = new THREE.Mesh(rayGeo, rayMat);
-    var ang = (r / RAY_COUNT) * Math.PI * 2;
-    mesh.position.set(Math.cos(ang) * 3, 2, Math.sin(ang) * 3 - 6);
-    mesh.rotation.z = ang;
-    mesh.rotation.x = -0.3;
-    rayGroup.add(mesh);
-    rays.push(mesh);
+    var beamMesh = new THREE.Mesh(beamGeo, beamMat);
+    scene.add(beamMesh);
+    var b = { mesh: beamMesh, life: 0, maxLife: 4, delay: 0, peak: 0.7 };
+    spawnBeam(b, false);
+    beams.push(b);
   }
-  scene.add(rayGroup);
 
   /* ---- floor glow: gives the scene a horizon / sense of ground ---- */
   var floorMat = new THREE.MeshBasicMaterial({
@@ -2775,29 +2880,34 @@ window.VXData = {
   function setAccent(rgb){
     accentColor.setRGB(rgb[0] / 255, rgb[1] / 255, rgb[2] / 255);
     pMat.color.copy(accentColor);
-    rays.forEach(function(m){ m.material.color.copy(accentColor); });
+    portalMat.color.copy(accentColor);
+    beams.forEach(function(b){ b.mesh.material.color.copy(accentColor); });
     floorMat.color.copy(accentColor);
-    keyLight.color.copy(accentColor);
+    roamLights.forEach(function(rl){ rl.mesh.color.copy(accentColor); });
+    backdropMat.color.copy(backdropBase).lerp(accentColor, 0.14);
     setAccentVars(rgb);
   }
 
   /* ---- state machine driving the cinematic build-up / dissolve ---- */
   var state = 'idle'; // idle | entering | active | exiting
   var transitionStart = 0;
-  var ENTER_MS = 1300, EXIT_MS = 950;
+  var ENTER_MS = 1850, EXIT_MS = 1000;
   function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
   function easeInCubic(t){ return t * t * t; }
+  function lerp(a, b, t){ return a + (b - a) * t; }
 
   function enter(rgb){
     setAccent(rgb || GOLD);
     if(state === 'idle' || state === 'exiting'){
       transitionStart = performance.now();
       state = 'entering';
+      reseedPortal();
+      portalPoints.visible = true;
       sceneEl.classList.add('active');
       scrimEl.classList.add('active');
     }
-    // switching tracks while already in: crossfade the accent color
-    // above is enough — no need to replay the whole entrance each time
+    // switching tracks while already in: the accent crossfade above is
+    // enough — no need to replay the whole portal entrance every time
   }
   function exit(){
     if(state === 'active' || state === 'entering'){
@@ -2810,6 +2920,7 @@ window.VXData = {
   /* ---- render loop ---- */
   var clock = new THREE.Clock();
   var beatPunch = 0;
+  var portalFade = 0; // 1 right as the world arrives, eases back to 0
 
   function tick(){
     requestAnimationFrame(tick);
@@ -2822,6 +2933,16 @@ window.VXData = {
       var p = Math.min(1, (performance.now() - transitionStart) / ENTER_MS);
       progress = easeOutCubic(p);
       sceneEl.style.clipPath = 'inset(' + (100 * (1 - progress)).toFixed(2) + '% 0 0 0)';
+      var posP = portalGeo.attributes.position.array;
+      for(var pi = 0; pi < PORTAL_COUNT; pi++){
+        var ix = pi * 3;
+        posP[ix]   = lerp(portalStart[ix],   portalTarget[ix],   progress);
+        posP[ix+1] = lerp(portalStart[ix+1], portalTarget[ix+1], progress);
+        posP[ix+2] = lerp(portalStart[ix+2], portalTarget[ix+2], progress);
+      }
+      portalGeo.attributes.position.needsUpdate = true;
+      portalMat.opacity = Math.min(1, progress * 1.6) * 0.9;
+      portalFade = 1;
       if(p >= 1){ state = 'active'; }
     } else if(state === 'exiting'){
       var p2 = Math.min(1, (performance.now() - transitionStart) / EXIT_MS);
@@ -2832,13 +2953,20 @@ window.VXData = {
         sceneEl.classList.remove('active');
         scrimEl.classList.remove('active');
         sceneEl.style.clipPath = 'inset(100% 0 0 0)';
+        document.documentElement.style.setProperty('--immersive-beat', '0');
         return;
       }
+    } else {
+      // active: the portal ring has done its job — dissolve it away so
+      // the persistent ambient field is the only thing left running
+      portalFade = Math.max(0, portalFade - dt * 1.6);
+      portalMat.opacity = portalFade * 0.9;
     }
 
     var audio = window.VX_AUDIO || {};
     var bass = audio.bass || 0, mid = audio.mid || 0, treble = audio.treble || 0;
     beatPunch += ((audio.beatStrength || 0) - beatPunch) * 0.4;
+    document.documentElement.style.setProperty('--immersive-beat', beatPunch.toFixed(3));
 
     /* camera: flies in/out synced with the reveal, idle drift, beat punch */
     camera.position.z = CAMERA_FAR_Z + (CAMERA_REST_Z - CAMERA_FAR_Z) * progress;
@@ -2852,21 +2980,44 @@ window.VXData = {
     var pos = pGeo.attributes.position.array;
     var push = 1 + bass * 0.12 + beatPunch * 0.35;
     for(var i = 0; i < PARTICLE_COUNT; i++){
-      var ix = i * 3;
+      var jx = i * 3;
       var drift = Math.sin(t * pSpeed[i] + pPhase[i]) * (0.4 + treble * 0.6);
-      pos[ix]   = pBase[ix]   * push + Math.cos(t * 0.2 + pPhase[i]) * 0.15;
-      pos[ix+1] = pBase[ix+1] * push + drift * 0.25;
-      pos[ix+2] = pBase[ix+2] * push;
+      pos[jx]   = pBase[jx]   * push + Math.cos(t * 0.2 + pPhase[i]) * 0.15;
+      pos[jx+1] = pBase[jx+1] * push + drift * 0.25;
+      pos[jx+2] = pBase[jx+2] * push;
     }
     pGeo.attributes.position.needsUpdate = true;
     pMat.opacity = (0.55 + mid * 0.35 + beatPunch * 0.25) * progress;
     pMat.size = (isMobile ? 0.15 : 0.12) + treble * 0.09;
 
-    rayGroup.rotation.y = t * 0.03;
-    rays.forEach(function(m){ m.material.opacity = (0.08 + mid * 0.22 + beatPunch * 0.18) * progress; });
+    /* roaming lights: periodically pick a new target and drift toward it —
+       organic, never-repeating "stage light" wandering, colored washes on
+       the backdrop shift as they move, real light/mid/beat reactivity */
+    roamLights.forEach(function(rl, idx){
+      if(t > rl.nextRetarget){
+        rl.target = pickRoamTarget();
+        rl.nextRetarget = t + 3 + Math.random() * 3.5;
+      }
+      rl.mesh.position.lerp(rl.target, dt * 0.5);
+      rl.mesh.intensity = (1.1 + mid * 2.2 + beatPunch * 2.6) * progress;
+    });
+
+    /* light beams: appear, drift and dissolve at different points, then
+       respawn elsewhere — never static, never repeating in place */
+    beams.forEach(function(b){
+      if(b.delay > 0){ b.delay -= dt; return; }
+      b.life += dt;
+      var lifeT = b.life / b.maxLife;
+      if(lifeT >= 1){ spawnBeam(b, false); return; }
+      var envelope = Math.sin(Math.PI * Math.min(1, lifeT));
+      b.mesh.rotation.z += dt * 0.06;
+      b.mesh.position.y += Math.sin(t * 0.4 + b.mesh.position.x) * dt * 0.06;
+      b.mesh.material.opacity = envelope * b.peak * (0.16 + mid * 0.3 + beatPunch * 0.3) * progress;
+    });
 
     floorMat.opacity = (0.1 + bass * 0.18 + beatPunch * 0.2) * progress;
     floor.scale.set(1 + beatPunch * 0.05, 1, 1 + beatPunch * 0.05);
+    backdrop.rotation.y = t * 0.006;
 
     renderer.render(scene, camera);
   }
@@ -2880,5 +3031,6 @@ window.VXData = {
   }, { passive: true });
 })();
 </script>
+
 </body>
 </html>
