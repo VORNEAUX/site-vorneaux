@@ -446,7 +446,7 @@
     justify-content:center;
     cursor:pointer;
     padding:0;
-    transition:background .35s ease, border-color .35s ease, box-shadow .35s ease, transform .3s ease;
+    transition:background .35s ease, border-color .35s ease, box-shadow .35s ease, transform .3s ease, opacity .4s ease;
   }
   .editions-arrow svg{ width:18px; height:18px; display:block; }
   .editions-arrow--prev{ left:1.8rem; }
@@ -458,7 +458,17 @@
     transform:translateY(-50%) scale(1.07);
   }
   .editions-arrow:active{ transform:translateY(-50%) scale(0.95); }
-  .editions-arrow:focus-visible{ outline:1px solid var(--gold); outline-offset:3px; }
+  .editions-arrow:focus-visible{ outline:1px solid var(--gold); outline-offset:3px; opacity:1; }
+  /* On devices with a real mouse, arrows rest at a dimmed idle state and
+     brighten on hover/focus, so they stop competing visually with the
+     caption — but stay visible enough to signal navigation exists.
+     Touch devices (no hover) always show them at full strength, since
+     there's no "idle vs. hovering" state to dim between. */
+  @media (hover:hover){
+    .editions-arrow{ opacity:0.45; }
+    .editions-stage:hover .editions-arrow,
+    .editions-stage:focus-within .editions-arrow{ opacity:1; }
+  }
   @media (max-width:700px){
     .editions-arrow{ width:44px; height:44px; }
     .editions-arrow--prev{ left:0.7rem; }
@@ -499,10 +509,10 @@
   }
   .editions-caption{
     position:absolute;
-    left:2rem;
+    left:6.5rem;
     bottom:2rem;
     z-index:4;
-    max-width:400px;
+    max-width:370px;
     padding:1.7rem 1.9rem;
     background:linear-gradient(160deg, rgba(15,15,23,0.6), rgba(9,9,15,0.28));
     border:1px solid var(--gold-dim);
@@ -513,7 +523,7 @@
   }
   .editions-caption.is-leaving{ opacity:0; transform:translateY(12px); }
   @media (max-width:700px){
-    .editions-caption{ left:1rem; right:1rem; bottom:1rem; max-width:none; padding:1.25rem 1.4rem; }
+    .editions-caption{ left:4.5rem; right:1rem; bottom:1rem; max-width:none; padding:1.25rem 1.4rem; }
   }
   .edition-index{
     font-family:var(--sans);
@@ -747,6 +757,28 @@
     transition:opacity .6s ease;
   }
 
+  /* ---------- Immersive Mode (site-wide, audio-reactive 3D atmosphere) ----------
+     Fixed full-viewport layer, always behind real content, never intercepts
+     clicks. Uses mix-blend-mode:screen so its black background contributes
+     nothing to the composite — only the particles/glow actually show, and
+     only ever brighten what's underneath, never darken or obscure it. */
+  #immersive-scene{
+    position:fixed;
+    inset:0;
+    z-index:1;
+    pointer-events:none;
+    opacity:0;
+    mix-blend-mode:screen;
+    transition:opacity 1.5s ease;
+  }
+  #immersive-scene.active{ opacity:1; }
+  @media (prefers-reduced-motion:reduce){
+    /* Ambient motion is skipped entirely for reduced-motion users — the
+       existing, non-animated Signal Glow tint above is enough of a cue
+       that a track is playing, without introducing movement. */
+    #immersive-scene{ display:none; }
+  }
+
   /* ---------- Signals section ---------- */
   .signal-list{ border-top:1px solid var(--line); }
   .signal-row{
@@ -922,6 +954,7 @@
   </svg>
 </div>
 <div id="grain"></div>
+<canvas id="immersive-scene" aria-hidden="true"></canvas>
 <div id="signalGlow"></div>
 
 <canvas id="scene"></canvas>
@@ -2254,8 +2287,10 @@ window.VXData = {
 
   var audioCtx = null, analyser = null, mediaSrcNode = null, freqData = null;
   var synthNodes = null;
+  var synthEndTimer = null;
   var currentIndex = -1;
   var isPlaying = false;
+  var SYNTH_FALLBACK_DURATION_MS = 20000; // demo-only pad length when a real file is missing
 
   function initAudioGraph(){
     if(audioCtx) return;
@@ -2295,9 +2330,14 @@ window.VXData = {
     gain.gain.linearRampToValueAtTime(0.05, now + 1.1);
     osc1.start(); osc2.start(); lfo.start();
     synthNodes = { gain: gain, osc1: osc1, osc2: osc2, lfo: lfo };
+    // the fallback pad has no natural end (it's just an oscillator drone),
+    // so give it a fixed demo length and then finish exactly like a real
+    // track would — icon resets, state stays honest.
+    synthEndTimer = setTimeout(handleTrackEnded, SYNTH_FALLBACK_DURATION_MS);
   }
 
   function stopSynthFallback(){
+    if(synthEndTimer){ clearTimeout(synthEndTimer); synthEndTimer = null; }
     if(!synthNodes || !audioCtx) return;
     var nodes = synthNodes;
     synthNodes = null;
@@ -2310,6 +2350,18 @@ window.VXData = {
     setTimeout(function(){
       try{ nodes.osc1.stop(); nodes.osc2.stop(); nodes.lfo.stop(); }catch(e){}
     }, 420);
+  }
+
+  // Fires when a track finishes on its own (real file reaches its end, or
+  // the fallback pad reaches its demo duration). Playback stops cleanly and
+  // every control — dock icon, row icon, bars — falls back to its resting
+  // "not playing" state, so the UI never claims audio is running when it
+  // isn't. (Deliberately not looping — see design notes.)
+  function handleTrackEnded(){
+    isPlaying = false;
+    stopSynthFallback();
+    updateUIPlaying();
+    if(window.VX_IMMERSIVE){ window.VX_IMMERSIVE.deactivate(); }
   }
 
   function updateUIPlaying(){
@@ -2347,6 +2399,7 @@ window.VXData = {
     currentIndex = index;
     isPlaying = true;
     updateUIPlaying();
+    if(window.VX_IMMERSIVE){ window.VX_IMMERSIVE.activateFromCover(track.cover); }
 
     var handled = false;
     function fallback(){
@@ -2363,6 +2416,7 @@ window.VXData = {
       if(p && p['catch']){ p['catch'](fallback); }
     };
     audioEl.onerror = fallback;
+    audioEl.onended = handleTrackEnded;
     try{
       audioEl.src = track.src;
       audioEl.load();
@@ -2376,6 +2430,7 @@ window.VXData = {
     audioEl.pause();
     stopSynthFallback();
     updateUIPlaying();
+    if(window.VX_IMMERSIVE){ window.VX_IMMERSIVE.deactivate(); }
   }
 
   function togglePlay(index){
@@ -2471,6 +2526,281 @@ window.VXData = {
     renderSignals();
     renderNotes();
   });
+})();
+</script>
+<script>
+/* =========================================================
+   IMMERSIVE MODE — site-wide, audio-reactive 3D atmosphere.
+
+   Activated by the audio player (see the Signals script) the
+   moment a track starts, deactivated the moment it stops or
+   ends. Fully decoupled from the player itself through a small
+   global bridge (window.VX_IMMERSIVE) — the player doesn't know
+   or care how this is rendered, it just calls activateFromCover()
+   / deactivate().
+
+   What it does:
+   - Extracts a "mood color" from the currently playing track's
+     cover art (falls back to brand gold if there's no cover, or
+     if the image can't be read for any reason).
+   - Drives a two-layer particle field (near/far, for a sense of
+     depth) tinted with that color, plus a soft additive glow that
+     breathes with the track's real audio level and gives a quick
+     "pulse" on loud hits — a lightweight stand-in for full beat
+     detection that still reads as "reacting to the music".
+   - Sits behind all real content (mix-blend-mode: screen, so its
+     black background contributes nothing to the page — only the
+     particles/glow ever show, and only ever brighten, never
+     obscure text or lower contrast).
+   - Fades in/out smoothly (CSS opacity transition) instead of
+     cutting in/out abruptly.
+   - Is skipped entirely for prefers-reduced-motion, and pauses
+     its render loop whenever the tab isn't visible.
+========================================================= */
+(function(){
+  "use strict";
+  if(typeof THREE === 'undefined'){ return; }
+  var canvas = document.getElementById('immersive-scene');
+  if(!canvas){ return; }
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduceMotion){
+    // Still expose the API (so callers never need to feature-detect) —
+    // it just does nothing, matching the site's existing pattern for
+    // other motion-heavy features.
+    window.VX_IMMERSIVE = { activateFromCover:function(){}, deactivate:function(){} };
+    return;
+  }
+
+  var isMobile = window.innerWidth < 720;
+  var GOLD = { r:201, g:169, b:110 }; // brand default mood, used when a
+                                       // track has no cover or it can't
+                                       // be read (e.g. opened via file://)
+
+  var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha:false, antialias:false });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.3 : 1.75));
+  renderer.setClearColor(0x000000, 1);
+
+  var scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x000000, 0.05);
+
+  var camera = new THREE.PerspectiveCamera(55, 1, 0.1, 60);
+  camera.position.set(0, 0, 12);
+
+  function resize(){
+    var w = window.innerWidth, h = window.innerHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / Math.max(h,1);
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  /* ---------- Two-layer particle field (near = depth, far = starfield) ---------- */
+  function makeParticleTexture(){
+    var c = document.createElement('canvas');
+    c.width = 64; c.height = 64;
+    var ctx = c.getContext('2d');
+    var g = ctx.createRadialGradient(32,32,0,32,32,32);
+    g.addColorStop(0, 'rgba(255,255,255,1)');
+    g.addColorStop(0.4, 'rgba(255,255,255,0.5)');
+    g.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0,0,64,64);
+    return new THREE.CanvasTexture(c);
+  }
+  var dotTex = makeParticleTexture();
+
+  function buildLayer(count, spread, sizeBase, opacityBase){
+    var geo = new THREE.BufferGeometry();
+    var pos = new Float32Array(count*3);
+    var seeds = new Float32Array(count); // used to desync individual drift
+    for(var i=0;i<count;i++){
+      pos[i*3]   = (Math.random()-0.5) * spread.x;
+      pos[i*3+1] = (Math.random()-0.5) * spread.y;
+      pos[i*3+2] = (Math.random()-0.5) * spread.z;
+      seeds[i] = Math.random() * Math.PI * 2;
+    }
+    geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+    var mat = new THREE.PointsMaterial({
+      size: sizeBase, map: dotTex, transparent:true, opacity: opacityBase,
+      depthWrite:false, blending: THREE.AdditiveBlending, color: 0xffffff
+    });
+    var points = new THREE.Points(geo, mat);
+    scene.add(points);
+    return { points:points, mat:mat, seeds:seeds, spread:spread, baseSize:sizeBase, baseOpacity:opacityBase };
+  }
+
+  var nearCount = isMobile ? 50 : 100;
+  var farCount  = isMobile ? 110 : 240;
+  var nearLayer = buildLayer(nearCount, {x:16,y:11,z:10}, isMobile?0.16:0.19, 0.55);
+  var farLayer  = buildLayer(farCount,  {x:26,y:18,z:18}, isMobile?0.07:0.09, 0.28);
+
+  /* ---------- Central soft glow, breathes with audio level ---------- */
+  var glowGeo = new THREE.PlaneGeometry(1,1);
+  var glowMat = new THREE.MeshBasicMaterial({
+    map: dotTex, transparent:true, opacity:0.35, depthWrite:false, blending:THREE.AdditiveBlending
+  });
+  var glow = new THREE.Mesh(glowGeo, glowMat);
+  glow.scale.set(14, 14, 1);
+  glow.position.z = -4;
+  scene.add(glow);
+
+  /* ---------- Beat-ish pulse ring — a quick flash on loud hits ---------- */
+  var pulseGeo = new THREE.PlaneGeometry(1,1);
+  var pulseMat = new THREE.MeshBasicMaterial({
+    map: dotTex, transparent:true, opacity:0, depthWrite:false, blending:THREE.AdditiveBlending
+  });
+  var pulse = new THREE.Mesh(pulseGeo, pulseMat);
+  pulse.position.z = -2;
+  scene.add(pulse);
+  var pulseT = 1; // 1 = fully finished/idle
+
+  /* =========================================================
+     Mood color — extracted from the current track's cover art,
+     cached per image so repeat plays are instant.
+  ========================================================= */
+  var moodCache = {};
+  var currentColor = { r:GOLD.r, g:GOLD.g, b:GOLD.b };
+  var targetColor   = { r:GOLD.r, g:GOLD.g, b:GOLD.b };
+
+  function extractMoodColor(src, cb){
+    if(!src){ cb(GOLD); return; }
+    if(moodCache[src]){ cb(moodCache[src]); return; }
+    var img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = function(){
+      try{
+        var size = 24;
+        var c = document.createElement('canvas');
+        c.width = size; c.height = size;
+        var ctx = c.getContext('2d');
+        ctx.drawImage(img, 0, 0, size, size);
+        var data = ctx.getImageData(0,0,size,size).data;
+        var r=0,g=0,b=0,n=0;
+        for(var i=0;i<data.length;i+=4){
+          var rr=data[i], gg=data[i+1], bb=data[i+2];
+          var max=Math.max(rr,gg,bb), min=Math.min(rr,gg,bb);
+          if(max<28 || min>232){ continue; } // skip near-black/near-white pixels
+          r+=rr; g+=gg; b+=bb; n++;
+        }
+        var result = n>0 ? { r:Math.round(r/n), g:Math.round(g/n), b:Math.round(b/n) } : GOLD;
+        moodCache[src] = result;
+        cb(result);
+      }catch(e){
+        // canvas read can fail (e.g. tainted canvas when opened via
+        // file:// without a local server) — fall back gracefully
+        cb(GOLD);
+      }
+    };
+    img.onerror = function(){ cb(GOLD); };
+    img.src = src;
+  }
+
+  /* =========================================================
+     Public bridge — called from the audio player.
+  ========================================================= */
+  var active = false;
+  var fadeTimer = null;
+
+  window.VX_IMMERSIVE = {
+    activateFromCover: function(coverSrc){
+      extractMoodColor(coverSrc, function(color){ targetColor = color; });
+      active = true;
+      if(fadeTimer){ clearTimeout(fadeTimer); fadeTimer = null; }
+      canvas.classList.add('active');
+      ensureLoopRunning();
+    },
+    deactivate: function(){
+      active = false;
+      canvas.classList.remove('active');
+      // keep rendering through the CSS fade-out, then stop for good
+      if(fadeTimer){ clearTimeout(fadeTimer); }
+      fadeTimer = setTimeout(function(){ loopRunning = false; }, 1600);
+    }
+  };
+
+  /* ---------- Render loop (only runs while active/fading, and only while the tab is visible) ---------- */
+  var clock = new THREE.Clock();
+  var loopRunning = false;
+  var lastLevelAvg = 0;
+  var levelHistory = [];
+  var lastPulseAt = 0;
+
+  function ensureLoopRunning(){
+    if(loopRunning) return;
+    loopRunning = true;
+    clock.getDelta(); // discard the large gap since last run
+    requestAnimationFrame(loop);
+  }
+
+  document.addEventListener('visibilitychange', function(){
+    if(!document.hidden && active){ ensureLoopRunning(); }
+  });
+
+  function tintLayer(layer, r, g, b, levelBoost){
+    layer.mat.color.setRGB(r/255, g/255, b/255);
+    layer.mat.size = layer.baseSize * (1 + levelBoost*0.9);
+    layer.mat.opacity = layer.baseOpacity * (0.75 + levelBoost*0.5);
+  }
+
+  function loop(){
+    if(!loopRunning){ return; }
+    requestAnimationFrame(loop);
+    if(document.hidden){ return; } // keep "running" but skip work while tab is hidden
+
+    var dt = Math.min(clock.getDelta(), 0.05);
+    var t = clock.elapsedTime;
+
+    // ease the displayed color toward the target mood color, so switching
+    // tracks mid-playback re-tints smoothly instead of snapping
+    currentColor.r += (targetColor.r - currentColor.r) * Math.min(dt*1.6, 1);
+    currentColor.g += (targetColor.g - currentColor.g) * Math.min(dt*1.6, 1);
+    currentColor.b += (targetColor.b - currentColor.b) * Math.min(dt*1.6, 1);
+
+    var level = (window.VX_AUDIO && typeof window.VX_AUDIO.level === 'number') ? window.VX_AUDIO.level : 0;
+
+    // simple loud-hit detector: compare current level to its own recent
+    // rolling average — a spike above that average reads as a "hit"
+    levelHistory.push(level);
+    if(levelHistory.length > 20){ levelHistory.shift(); }
+    var sum = 0; for(var i=0;i<levelHistory.length;i++){ sum += levelHistory[i]; }
+    lastLevelAvg = sum / levelHistory.length;
+    if(level - lastLevelAvg > 0.16 && (t - lastPulseAt) > 0.22){
+      lastPulseAt = t;
+      pulseT = 0;
+    }
+
+    // camera drifts slowly — gives the whole field a sense of parallax/depth
+    camera.position.x = Math.sin(t*0.06) * 1.4;
+    camera.position.y = Math.cos(t*0.05) * 0.9;
+    camera.lookAt(0,0,0);
+
+    tintLayer(nearLayer, currentColor.r, currentColor.g, currentColor.b, level);
+    tintLayer(farLayer,
+      Math.round((currentColor.r + 242)/2), Math.round((currentColor.g + 237)/2), Math.round((currentColor.b + 228)/2),
+      level*0.5
+    );
+    nearLayer.points.rotation.y = t * 0.015;
+    farLayer.points.rotation.y = -t * 0.008;
+    // gentle per-particle drift via vertex shader would be ideal, but a
+    // whole-layer slow rotation + bob reads the same at this scale/density
+    nearLayer.points.position.y = Math.sin(t*0.25) * 0.3;
+
+    glow.material.color.setRGB(currentColor.r/255, currentColor.g/255, currentColor.b/255);
+    glow.material.opacity = 0.22 + level * 0.35;
+    glow.scale.setScalar(14 + level*4);
+
+    if(pulseT < 1){
+      pulseT = Math.min(pulseT + dt/0.6, 1);
+      var ease = 1 - Math.pow(1-pulseT, 2);
+      pulse.material.color.setRGB(currentColor.r/255, currentColor.g/255, currentColor.b/255);
+      pulse.material.opacity = (1-ease) * 0.5;
+      pulse.scale.setScalar(4 + ease*20);
+    }
+
+    renderer.render(scene, camera);
+  }
 })();
 </script>
 </body>
