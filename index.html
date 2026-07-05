@@ -2752,8 +2752,8 @@ window.VXData = {
 
   var tier = reduceMotion ? 'off' : ((isMobile || lowCore) ? 'reduced' : 'full');
   var TIER_COUNTS = { full: 980, reduced: 420 };
-  var LIGHT_COUNT = { full: 3, reduced: 2 };
-  var RAY_COUNT   = { full: 5, reduced: 3 };
+  var LIGHT_COUNT = { full: 4, reduced: 3 };
+  var RAY_COUNT   = { full: 7, reduced: 4 };
 
   // On-brand anchor hues (amber · violet · ice-blue) — every color in the
   // scene is a mix of these three, weighted by real bass/mid/treble, so
@@ -2837,7 +2837,7 @@ window.VXData = {
   var scene3, camera3, renderer3, clock3;
   var particles, particleGeo, particleCount = 0;
   var pPos, pSize, pAlpha, pColor, pBand, pAnchor, pSpin;
-  var lights = [], rayMeshes = [], ambient;
+  var lights = [], rayMeshes = [], lightCores = [], ambient;
   var currentWorld = null;
   var lastVarUpdate = 0;
   var flashLight = 0; // extra punch on drops, decays
@@ -2906,20 +2906,33 @@ window.VXData = {
 
     // Real moving point lights, one per registered band-group (bass/mid/
     // treble), each illuminating the lit "ray" planes below.
+    var glowTex = makeGlowTexture();
     var groups = ['bass', 'mid', 'treble'];
     for(var li = 0; li < LIGHT_COUNT[tier]; li++){
-      var light = new THREE.PointLight(0xffffff, 0, 22, 2);
+      var light = new THREE.PointLight(0xffffff, 0, 30, 1.7);
       light.userData.group = groups[li % groups.length];
       light.userData.phase = Math.random() * Math.PI * 2;
       lights.push(light);
       scene3.add(light);
+
+      // visible glowing core for each light — this is what actually reads
+      // as a cinematic light source under the particles, rather than an
+      // invisible point that only tints distant geometry.
+      var coreMat = new THREE.SpriteMaterial({
+        map: glowTex, color: 0xffffff, transparent: true, opacity: 0,
+        depthWrite: false, blending: THREE.AdditiveBlending
+      });
+      var core = new THREE.Sprite(coreMat);
+      core.scale.set(4, 4, 1);
+      lightCores.push(core);
+      scene3.add(core);
     }
 
-    var rayGeo = new THREE.PlaneGeometry(2.6, 2.6, 1, 1);
-    var glowTex = makeGlowTexture();
+    var rayGeo = new THREE.PlaneGeometry(3.6, 3.6, 1, 1);
     for(var ri = 0; ri < RAY_COUNT[tier]; ri++){
       var rayMat = new THREE.MeshStandardMaterial({
-        color: 0xffffff, alphaMap: glowTex, transparent: true, opacity: 0.09,
+        color: 0xffffff, emissive: 0xffffff, emissiveMap: glowTex,
+        alphaMap: glowTex, transparent: true, opacity: 0.14,
         roughness: 1, metalness: 0, side: THREE.DoubleSide,
         depthWrite: false, blending: THREE.AdditiveBlending
       });
@@ -3046,24 +3059,37 @@ window.VXData = {
       camera3.position.z = 11 - flashLight * 1.4;
       camera3.lookAt(0, 0, -4);
 
-      // real lights, each bound to a band-group, sweeping through space
+      // real lights, each bound to a band-group, sweeping through space —
+      // pushed brighter and closer to camera so they read as unmistakable,
+      // colored light sources rather than a faint tint on distant geometry.
       lights.forEach(function(light, li){
         var g = light.userData.group;
         var e = g === 'bass' ? audio.bass : (g === 'mid' ? audio.mid : audio.treble);
         var ph = light.userData.phase + t * (0.25 + (e || 0) * 0.6);
-        light.position.set(Math.sin(ph) * 6, Math.cos(ph * 0.8) * 3.5, -3 + Math.sin(ph * 0.5) * 3);
+        light.position.set(Math.sin(ph) * 6, Math.cos(ph * 0.8) * 3.5, -2 + Math.sin(ph * 0.5) * 3);
         var hue2 = (g === 'bass' ? HUE.bass : (g === 'mid' ? HUE.mid : HUE.treble)) + currentWorld.hueOffset;
-        light.color = hueToRGB(hue2, 0.6, 0.55);
-        light.intensity = ((e || 0) * 1.1 + beat * 0.6 + flashLight * 1.3) * (0.3 + energy);
+        var lc = hueToRGB(hue2, 0.85, 0.62);
+        light.color = lc;
+        light.intensity = (0.55 + (e || 0) * 2.6 + beat * 1.4 + flashLight * 2.6) * (0.45 + energy);
+
+        var core = lightCores[li];
+        if(core){
+          core.position.copy(light.position);
+          core.material.color.copy(lc);
+          var coreEnergy = Math.min(1, 0.16 + (e || 0) * 0.95 + beat * 0.5 + flashLight * 0.75);
+          core.material.opacity = coreEnergy * intensity;
+          var coreScale = 3 + coreEnergy * 5.5;
+          core.scale.set(coreScale, coreScale, 1);
+        }
       });
-      ambient.intensity = 0.32 + level * 0.28 + flashLight * 0.35;
+      ambient.intensity = 0.3 + level * 0.4 + flashLight * 0.5;
 
       rayMeshes.forEach(function(mesh, ri){
         var g = mesh.userData.group;
         var e = g === 'bass' ? audio.bass : (g === 'mid' ? audio.mid : audio.treble);
         mesh.rotation.z += dt * 0.05 * currentWorld.rotationDir;
-        mesh.position.set(Math.sin(t * 0.09 + ri) * 3.5, Math.cos(t * 0.07 + ri) * 2, -7 - ri * 0.5);
-        mesh.material.opacity = (0.03 + (e || 0) * 0.1 + flashLight * 0.1) * intensity;
+        mesh.position.set(Math.sin(t * 0.09 + ri) * 3.8, Math.cos(t * 0.07 + ri) * 2.2, -6 - ri * 0.4);
+        mesh.material.opacity = (0.1 + (e || 0) * 0.34 + flashLight * 0.4) * intensity;
       });
     }
 
@@ -3098,6 +3124,7 @@ window.VXData = {
       renderer3.setPixelRatio(1);
       rayMeshes.forEach(function(m, i){ if(i >= 2){ m.visible = false; } });
       lights.forEach(function(l, i){ if(i >= 2){ l.intensity = 0; } });
+      lightCores.forEach(function(c, i){ if(i >= 2){ c.visible = false; } });
     } else if(tier === 'reduced'){
       tier = 'off';
       teardownScene();
@@ -3110,11 +3137,12 @@ window.VXData = {
     if(renderer3){
       particleGeo && particleGeo.dispose();
       rayMeshes.forEach(function(m){ m.material.dispose(); m.geometry.dispose(); });
+      lightCores.forEach(function(c){ c.material.dispose(); });
       renderer3.dispose();
     }
     canvas.style.opacity = 0;
     scene3 = camera3 = renderer3 = particles = null;
-    rayMeshes = []; lights = [];
+    rayMeshes = []; lights = []; lightCores = [];
   }
 
   /* ---------- public entry points, wired to the Audio Engine ---------- */
