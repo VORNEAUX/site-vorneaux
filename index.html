@@ -499,7 +499,7 @@
   }
   .editions-caption{
     position:absolute;
-    left:2rem;
+    left:7.2rem;
     bottom:2rem;
     z-index:4;
     max-width:400px;
@@ -2256,6 +2256,11 @@ window.VXData = {
   var synthNodes = null;
   var currentIndex = -1;
   var isPlaying = false;
+
+  // Natural end of track: the audio has genuinely stopped, so the UI must
+  // reflect that (Play icon, dock exits "playing" state) rather than keep
+  // showing a paused-looking "playing" indicator after playback is over.
+  audioEl.addEventListener('ended', function(){ stopPlayback(); });
 
   function initAudioGraph(){
     if(audioCtx) return;
