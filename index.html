@@ -1331,12 +1331,44 @@ window.VXData = {
    matters more than the background dressing.
 ========================================================= */
 window.VX_SCROLL_ACTIVE = false;
+/* Shared rAF-batched scroll dispatch. Dragging the native scrollbar
+   thumb fires the 'scroll' event synchronously on the main thread —
+   often dozens of times per animation frame, unlike wheel/touch
+   scrolling which the compositor coalesces down to one event per
+   frame on its own. Any handler that reads window.scrollY and writes
+   to style/classList directly inside a raw 'scroll' listener was
+   therefore doing that DOM work dozens of times per frame during a
+   scrollbar drag — real layout-thrashing, competing with the WebGL
+   render loop for the same main thread and causing the stutter.
+   window.VX_onScroll() is the single subscription point: it fires at
+   most once per rendered frame (via requestAnimationFrame) no matter
+   how many raw 'scroll' events land in between, so every listener
+   registered through it gets smooth, frame-locked scroll-driven
+   updates whether the visitor uses the wheel, a trackpad, touch, or
+   drags the scrollbar thumb by hand. */
 (function(){
   var idleTimer = null;
+  var subscribers = [];
+  var ticking = false;
+
+  window.VX_onScroll = function(fn){ subscribers.push(fn); };
+
+  function flush(){
+    ticking = false;
+    for(var i = 0; i < subscribers.length; i++){
+      subscribers[i]();
+    }
+  }
+
   window.addEventListener('scroll', function(){
     window.VX_SCROLL_ACTIVE = true;
     clearTimeout(idleTimer);
     idleTimer = setTimeout(function(){ window.VX_SCROLL_ACTIVE = false; }, 180);
+
+    if(!ticking){
+      ticking = true;
+      requestAnimationFrame(flush);
+    }
   }, {passive:true});
 })();
 </script>
@@ -1353,7 +1385,7 @@ window.VX_SCROLL_ACTIVE = false;
     if(window.scrollY > 40){ nav.classList.add('scrolled'); }
     else{ nav.classList.remove('scrolled'); }
   }
-  window.addEventListener('scroll', onScrollNav, {passive:true});
+  window.VX_onScroll(onScrollNav);
   onScrollNav();
 
   /* ---------- Cursor glow (desktop only) ---------- */
@@ -1378,7 +1410,7 @@ window.VX_SCROLL_ACTIVE = false;
     heroInner.style.setProperty('--heroOpacity', Math.max(1 - progress * 1.5, 0));
   }
   if(!reduceMotion){
-    window.addEventListener('scroll', onScrollHero, {passive:true});
+    window.VX_onScroll(onScrollHero);
   }
 
   /* ---------- Scroll reveal ---------- */
@@ -2374,7 +2406,7 @@ window.VX_SCROLL_ACTIVE = false;
   "use strict";
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   window.VX_AUDIO = {
-    level: 0, bass: 0, mid: 0, treble: 0, beat: 0, drop: 0, calm: 1,
+    level: 0, bass: 0, mid: 0, treble: 0, beat: 0, drop: 0, calm: 1, tempoPeriod: 0,
     anticipation: 0, playing: false, seed: 0,
     bands: new Float32Array(16) // filled once the analyser starts running
   };
@@ -2560,6 +2592,18 @@ window.VX_SCROLL_ACTIVE = false;
      structured — this is what lets individual bands feel distinct instead
      of one blurry "loudness" number. */
   var NUM_BANDS = 16;
+  // Fast-attack / slow-release envelope follower. A symmetric lerp (same
+  // coefficient rising and falling) is what made the scene feel like it
+  // was "easing toward" the music instead of being driven by it: a kick
+  // hit and a kick's decay were smoothed at the same rate, so the visual
+  // peak always landed a few frames after the actual transient. Using a
+  // steep attack and a gentler release means the value jumps to meet a
+  // real onset almost immediately (tight sync) while still decaying
+  // smoothly instead of chattering between hits.
+  function envFollow(current, target, attack, release){
+    var c = target > current ? attack : release;
+    return current + (target - current) * c;
+  }
   var bandMap = null; // bandMap[binIndex] = bandIndex
   function buildBandMap(binCount){
     var map = new Uint8Array(binCount);
@@ -2576,8 +2620,8 @@ window.VX_SCROLL_ACTIVE = false;
     if(!AC) return;
     audioCtx = new AC();
     analyser = audioCtx.createAnalyser();
-    analyser.fftSize = 512;
-    analyser.smoothingTimeConstant = 0.68;
+    analyser.fftSize = 1024;
+    analyser.smoothingTimeConstant = 0.42;
     freqData = new Uint8Array(analyser.frequencyBinCount);
     bandMap = buildBandMap(freqData.length);
     try{
@@ -2739,7 +2783,7 @@ window.VX_SCROLL_ACTIVE = false;
     if(window.scrollY > window.innerHeight * 0.6){ dock.classList.add('visible'); }
     else{ dock.classList.remove('visible'); }
   }
-  window.addEventListener('scroll', onScrollDock, {passive:true});
+  window.VX_onScroll(onScrollDock);
   onScrollDock();
 
   /* ---------- Reactive visuals: dock bars, list bars, ambient glow ---------- */
@@ -2782,7 +2826,7 @@ window.VX_SCROLL_ACTIVE = false;
       for(var bi = 0; bi < NUM_BANDS; bi++){
         bandPrev[bi] = bandLevels[bi];
         var raw = bandCounts[bi] ? (bandSums[bi] / bandCounts[bi]) / 255 : 0;
-        bandLevels[bi] += (raw - bandLevels[bi]) * 0.5; // per-band smoothing, snappier than the overall level
+        bandLevels[bi] = envFollow(bandLevels[bi], raw, 0.72, 0.2); // fast attack, slower release — the band arrives on the hit itself, not a few frames later
       }
       // bass = first ~3 bands, mid = next ~7, treble = the rest (log-spaced,
       // so this maps roughly to sub/kick, body/vocals, air/cymbals)
@@ -2795,10 +2839,10 @@ window.VX_SCROLL_ACTIVE = false;
       bandLevels.fill(0);
     }
 
-    smoothedLevel += (target - smoothedLevel) * 0.15;
-    smoothedBass += (bassT - smoothedBass) * 0.3;
-    smoothedMid += (midT - smoothedMid) * 0.22;
-    smoothedTreble += (trebleT - smoothedTreble) * 0.22;
+    smoothedLevel = envFollow(smoothedLevel, target, 0.5, 0.1);
+    smoothedBass = envFollow(smoothedBass, bassT, 0.7, 0.14);
+    smoothedMid = envFollow(smoothedMid, midT, 0.55, 0.13);
+    smoothedTreble = envFollow(smoothedTreble, trebleT, 0.55, 0.13);
     window.VX_AUDIO.level = smoothedLevel;
     window.VX_AUDIO.bass = smoothedBass;
     window.VX_AUDIO.mid = smoothedMid;
@@ -2824,32 +2868,33 @@ window.VX_SCROLL_ACTIVE = false;
        rhythm doesn't live in the low end) — whichever fires first still
        counts as one onset, so tracks that are light on bass stay locked
        to their actual beat instead of drifting onto an independent cycle. */
-    bassAvg += (bassT - bassAvg) * 0.045;
+    bassAvg += (bassT - bassAvg) * 0.07;
     var bassFlux = bassT - bandPrev[0];
-    var bassHit = bassT > bassAvg * 1.28 + 0.045 && bassFlux > 0.015;
+    var bassHit = bassT > bassAvg * 1.24 + 0.04 && bassFlux > 0.012;
 
-    overallAvg += (target - overallAvg) * 0.045;
+    overallAvg += (target - overallAvg) * 0.07;
     var overallFlux = target - prevOverallLevel;
     prevOverallLevel = target;
-    var broadHit = target > overallAvg * 1.22 + 0.05 && overallFlux > 0.045;
+    var broadHit = target > overallAvg * 1.18 + 0.045 && overallFlux > 0.038;
 
-    if(isPlaying && (bassHit || broadHit) && (now - lastBeatTime) > 210){
+    if(isPlaying && (bassHit || broadHit) && (now - lastBeatTime) > 140){
       var gap = lastBeatTime ? (now - lastBeatTime) / 1000 : 0;
       lastBeatTime = now;
-      window.VX_AUDIO.beat = Math.min(1, Math.max((bassT - bassAvg) * 2.2, (target - overallAvg) * 2.6));
+      window.VX_AUDIO.beat = Math.min(1, Math.max((bassT - bassAvg) * 2.4, (target - overallAvg) * 2.8));
       window.dispatchEvent(new CustomEvent('vx:beat', { detail: { strength: window.VX_AUDIO.beat } }));
-      // tempo estimation: keep recent plausible gaps (54–214 BPM) and
+      // tempo estimation: keep recent plausible gaps (46–260 BPM) and
       // track their running median, so the scene can anticipate the
       // next hit instead of only reacting after the fact
-      if(gap > 0.28 && gap < 1.1){
+      if(gap > 0.23 && gap < 1.3){
         beatIntervals.push(gap);
         if(beatIntervals.length > 8){ beatIntervals.shift(); }
         var sorted = beatIntervals.slice().sort(function(a,b){ return a-b; });
         var median = sorted[Math.floor(sorted.length / 2)];
-        tempoPeriod = tempoPeriod ? lerp1(tempoPeriod, median, 0.35) : median;
+        tempoPeriod = tempoPeriod ? lerp1(tempoPeriod, median, 0.45) : median;
+        window.VX_AUDIO.tempoPeriod = tempoPeriod;
       }
     } else {
-      window.VX_AUDIO.beat *= 0.88;
+      window.VX_AUDIO.beat *= 0.82;
     }
 
     /* ---------- predictive tempo phase (fills the gaps between hits) --- */
@@ -2979,7 +3024,7 @@ window.VX_SCROLL_ACTIVE = false;
 
   var tier = reduceMotion ? 'off' : ((isMobile || lowCore) ? 'reduced' : 'full');
   var TIER_COUNTS = { full: 980, reduced: 420 };
-  var LIGHT_COUNT = { full: 4, reduced: 3 };
+  var LIGHT_COUNT = { full: 7, reduced: 5 };
   var RAY_COUNT   = { full: 7, reduced: 4 };
 
   // On-brand anchor hues (amber · violet · ice-blue) — every color in the
@@ -3162,6 +3207,68 @@ window.VX_SCROLL_ACTIVE = false;
   var currentWorld = null;
   var lastVarUpdate = 0;
   var flashLight = 0; // extra punch on drops, decays
+  var lastCueTime = 0; // last time the lighting director changed the rig
+
+  /* ---------- Stage-lighting director ----------
+     Real concert lighting rigs don't run every fixture at once on a
+     fixed loop — an operator decides, moment to moment, how many
+     lights are up, which ones, and where, based on what the song is
+     doing right now. This reproduces that: on a real onset (or a
+     drop), it re-rolls which fixtures in the pool are "on", gives any
+     fixture that just switched on a fresh position in the scene, and
+     lets everything else fade to black. A short cooldown keeps it
+     from re-cueing on literally every beat of a fast track (which
+     would just read as strobing chaos) while still changing often
+     enough to feel alive and non-repeating. */
+  function runLightingCue(now, forceFull){
+    var audio = window.VX_AUDIO || {};
+    var cooldown = audio.tempoPeriod ? Math.max(90, audio.tempoPeriod * 340) : 260;
+    if(!forceFull && now - lastCueTime < cooldown) return;
+    lastCueTime = now;
+
+    var calmNow = audio.calm != null ? audio.calm : 1;
+    var energyNow = 1 - calmNow * 0.82;
+    var pool = lights.length;
+    if(!pool) return;
+
+    var count;
+    if(forceFull){
+      count = pool;
+    } else {
+      count = 1 + Math.round(energyNow * (pool - 1) + (audio.drop || 0) * (pool - 1));
+      if(calmNow > 0.72){ count = Math.max(1, Math.round(count * 0.4)); }
+      count = Math.max(1, Math.min(pool, count));
+    }
+
+    // shuffle fixture indices, pick the first `count` as the active set
+    // (skip any fixture the perf monitor has permanently retired)
+    var idxs = [];
+    for(var i = 0; i < pool; i++){ if(!lights[i].userData.retired){ idxs.push(i); } }
+    count = Math.min(count, idxs.length || 1);
+    for(var s = idxs.length - 1; s > 0; s--){
+      var j = Math.floor(Math.random() * (s + 1));
+      var tmp = idxs[s]; idxs[s] = idxs[j]; idxs[j] = tmp;
+    }
+    var activeSet = {};
+    for(var k = 0; k < count; k++){ activeSet[idxs[k]] = true; }
+
+    lights.forEach(function(light, li){
+      var willBeActive = !!activeSet[li];
+      var ud = light.userData;
+      if(willBeActive && !ud.active){
+        // this fixture is coming alive on this cue — give it a brand
+        // new position in the scene rather than reusing the last spot,
+        // so fixtures genuinely move around the stage over the song
+        var ang = Math.random() * Math.PI * 2;
+        var rad = 2.6 + Math.random() * 6;
+        ud.baseX = Math.cos(ang) * rad;
+        ud.baseY = (Math.random() - 0.5) * 5.5;
+        ud.baseZ = -1.5 - Math.random() * 6;
+        ud.phase = Math.random() * Math.PI * 2;
+      }
+      ud.active = willBeActive;
+    });
+  }
 
   var VERT = [
     'attribute float aSize;',
@@ -3240,6 +3347,17 @@ window.VX_SCROLL_ACTIVE = false;
       light.userData.phase = Math.random() * Math.PI * 2;
       light.userData.kickSeed = Math.random() * Math.PI * 2;
       light.userData.kickX = 0; light.userData.kickY = 0; light.userData.kickZ = 0;
+      // Stage-lighting director state: baseX/Y/Z is this fixture's current
+      // "gel position" in the scene (reassigned on a cue, not fixed for
+      // the whole track); active/activeAmt is whether the director has
+      // this fixture switched on right now and how far it has faded
+      // in/out of that state — this is what lets fixtures genuinely
+      // appear and disappear instead of always glowing in place.
+      light.userData.baseX = (Math.random() - 0.5) * 8;
+      light.userData.baseY = (Math.random() - 0.5) * 4.5;
+      light.userData.baseZ = -2 - Math.random() * 5;
+      light.userData.active = false;
+      light.userData.activeAmt = 0;
       lights.push(light);
       scene3.add(light);
 
@@ -3391,24 +3509,31 @@ window.VX_SCROLL_ACTIVE = false;
       // for color — genuinely sped up/slowed by the music's own energy and
       // anticipation, and punched by a real decaying kick vector on every
       // onset (set in the vx:beat listener below), not just glowing in place.
+      // The director above decides which fixtures are "on" right now and
+      // where each one sits (userData.baseX/Y/Z) — this loop only handles
+      // the moment-to-moment sweep, color and fade around that assignment,
+      // so a fixture genuinely appears/disappears and relocates over the
+      // course of a track instead of all of them looping forever in place.
       lights.forEach(function(light, li){
-        var g = light.userData.group;
-        var bandE = bands[light.userData.band] || 0;
+        var ud = light.userData;
+        if(ud.retired){ light.intensity = 0; return; }
+        var g = ud.group;
+        var bandE = bands[ud.band] || 0;
         var groupE = g === 'bass' ? audio.bass : (g === 'mid' ? audio.mid : audio.treble);
         var e = groupE * 0.45 + bandE * 0.55;
 
-        light.userData.kickX *= 0.9; light.userData.kickY *= 0.9; light.userData.kickZ *= 0.9;
+        ud.kickX *= 0.9; ud.kickY *= 0.9; ud.kickZ *= 0.9;
 
         // orbital speed itself rises with energy AND anticipation, so a
         // light visibly gathers pace into the next hit instead of just
         // sitting on a fixed-period loop underneath a brightness pulse
         var speedMul = 0.25 + e * 0.75 + anticip * 0.5;
-        var ph = light.userData.phase + t * speedMul;
+        var ph = ud.phase + t * speedMul;
         var kick = beat * 1.9 + flashLight * 1.2;
         light.position.set(
-          Math.sin(ph) * (6 + kick) + light.userData.kickX,
-          Math.cos(ph * 0.8) * (3.5 + kick * 0.6) + light.userData.kickY,
-          -2 + Math.sin(ph * 0.5) * 3 + kick * 0.9 + light.userData.kickZ
+          ud.baseX + Math.sin(ph) * (2.2 + kick) + ud.kickX,
+          ud.baseY + Math.cos(ph * 0.8) * (1.5 + kick * 0.6) + ud.kickY,
+          ud.baseZ + Math.sin(ph * 0.5) * (1.8) + kick * 0.9 + ud.kickZ
         );
 
         // color: anchored to the track's own identity hue, but genuinely
@@ -3419,14 +3544,21 @@ window.VX_SCROLL_ACTIVE = false;
         var hueDrift = (audio.treble - audio.bass) * 42 + Math.sin(t * 0.15 + li) * 10 + drop * 55;
         var lc = hueToRGB(baseHue + hueDrift, 0.85, 0.6);
         light.color = lc;
-        light.intensity = (0.35 + e * 2.0 + beat * 1.3 + flashLight * 2.0) * (0.45 + energy);
+
+        // fade toward whatever the director just decided — faster in
+        // (a cue reads as a real light snapping on) than out (a fixture
+        // going dark settles rather than cutting instantly)
+        var activeTarget = ud.active ? 1 : 0;
+        ud.activeAmt += (activeTarget - ud.activeAmt) * (ud.active ? 0.22 : 0.1);
+
+        light.intensity = (0.35 + e * 2.0 + beat * 1.3 + flashLight * 2.0) * (0.45 + energy) * ud.activeAmt;
 
         var core = lightCores[li];
         if(core){
           core.position.copy(light.position);
           core.material.color.copy(lc);
           var coreEnergy = Math.min(1, 0.1 + e * 0.9 + beat * 0.6 + flashLight * 0.7);
-          core.material.opacity = coreEnergy * intensity;
+          core.material.opacity = coreEnergy * intensity * ud.activeAmt;
           // pulse: base breathing tied to this light's own band, plus a
           // sharp momentary kick on the beat itself
           var beatKick = 1 + beat * 0.6;
@@ -3489,7 +3621,7 @@ window.VX_SCROLL_ACTIVE = false;
       particleGeo.setDrawRange(0, keep);
       renderer3.setPixelRatio(1);
       rayMeshes.forEach(function(m, i){ if(i >= 2){ m.visible = false; } });
-      lights.forEach(function(l, i){ if(i >= 2){ l.intensity = 0; } });
+      lights.forEach(function(l, i){ if(i >= 2){ l.userData.active = false; l.userData.retired = true; l.intensity = 0; } });
       lightCores.forEach(function(c, i){ if(i >= 2){ c.visible = false; } });
     } else if(tier === 'reduced'){
       tier = 'off';
@@ -3528,6 +3660,8 @@ window.VX_SCROLL_ACTIVE = false;
       return;
     }
     reformWorld(seed);
+    lastCueTime = 0;
+    runLightingCue(performance.now(), false);
     if(!running){
       running = true;
       requestAnimationFrame(tick3);
@@ -3558,6 +3692,9 @@ window.VX_SCROLL_ACTIVE = false;
       var a = anchorFor((i + Math.floor(rand() * particleCount)) % particleCount, particleCount, currentWorld.pattern, rand);
       pAnchor[i*3] = a[0]; pAnchor[i*3+1] = a[1]; pAnchor[i*3+2] = a[2];
     }
+    // a drop is the one moment the whole rig should blaze at once,
+    // like a lighting op throwing every fixture up on the hit
+    runLightingCue(performance.now(), true);
   });
 
   // Every real onset gives each light rig its own fresh, random-direction
@@ -3574,6 +3711,11 @@ window.VX_SCROLL_ACTIVE = false;
       light.userData.kickY = Math.sin(a1) * strength * 1.6;
       light.userData.kickZ = Math.sin(a2) * strength * 1.8;
     });
+    // stronger onsets are the ones a real lighting operator would cue
+    // off — quieter ones just ripple through the rig already lit
+    if(strength > 0.32){
+      runLightingCue(performance.now(), false);
+    }
   });
 })();
 </script>
