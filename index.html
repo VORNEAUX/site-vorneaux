@@ -95,7 +95,7 @@
   nav.scrolled{
     padding:1rem 2.5rem;
     background:rgba(5,5,9,0.78);
-    backdrop-filter:blur(10px);
+    backdrop-filter:blur(14px);
     border-bottom:1px solid var(--line);
   }
   @media (max-width:700px){ nav, nav.scrolled{padding:1.1rem 1.4rem;} }
@@ -505,10 +505,13 @@
   }
   .editions-caption{
     position:absolute;
-    left:6rem;
+    /* left arrow sits at left:1.8rem with a 54px diameter, i.e. it
+       occupies roughly 1.8rem–5.2rem — the caption starts well clear
+       of that so its text is never clipped or covered by the button */
+    left:6.5rem;
     bottom:2rem;
     z-index:4;
-    max-width:400px;
+    max-width:380px;
     padding:1.7rem 1.9rem;
     background:linear-gradient(160deg, rgba(15,15,23,0.6), rgba(9,9,15,0.28));
     border:1px solid var(--gold-dim);
@@ -519,7 +522,9 @@
   }
   .editions-caption.is-leaving{ opacity:0; transform:translateY(12px); }
   @media (max-width:700px){
-    .editions-caption{ left:4.2rem; right:1rem; bottom:1rem; max-width:none; padding:1.25rem 1.4rem; }
+    /* on mobile both arrows shrink to 44px at 0.7rem, so clear each with
+       matching left/right insets instead of the desktop-only offset */
+    .editions-caption{ left:4.4rem; right:4.4rem; bottom:1rem; max-width:none; padding:1.25rem 1.4rem; }
   }
   .edition-index{
     font-family:var(--sans);
@@ -797,8 +802,8 @@
     pointer-events:none;
     opacity:0;
     background:
-      radial-gradient(120% 90% at 50% 45%, transparent 34%, rgba(5,5,9,0.76) 100%),
-      linear-gradient(rgba(5,5,9,0.44), rgba(5,5,9,0.44));
+      radial-gradient(120% 90% at 50% 45%, transparent 38%, rgba(5,5,9,0.68) 100%),
+      linear-gradient(rgba(5,5,9,0.36), rgba(5,5,9,0.36));
   }
   #immersiveFlash{
     position:fixed;
@@ -1315,31 +1320,64 @@ window.VXData = {
 </script>
 
 <script>
+/* =========================================================
+   Shared scroll-activity flag — every decorative WebGL loop on
+   the page reads this instead of listening to scroll itself.
+   While the user is actively scrolling (including dragging the
+   native scrollbar), those renderers back off to every-other-
+   frame so the compositor + GPU always have headroom. The
+   audio-reactive immersive scene (tick3) never reads this flag
+   and always stays at full rate — staying locked to the music
+   matters more than the background dressing.
+========================================================= */
+window.VX_SCROLL_ACTIVE = false;
+/* Shared rAF-batched scroll dispatch. Dragging the native scrollbar
+   thumb fires the 'scroll' event synchronously on the main thread —
+   often dozens of times per animation frame, unlike wheel/touch
+   scrolling which the compositor coalesces down to one event per
+   frame on its own. Any handler that reads window.scrollY and writes
+   to style/classList directly inside a raw 'scroll' listener was
+   therefore doing that DOM work dozens of times per frame during a
+   scrollbar drag — real layout-thrashing, competing with the WebGL
+   render loop for the same main thread and causing the stutter.
+   window.VX_onScroll() is the single subscription point: it fires at
+   most once per rendered frame (via requestAnimationFrame) no matter
+   how many raw 'scroll' events land in between, so every listener
+   registered through it gets smooth, frame-locked scroll-driven
+   updates whether the visitor uses the wheel, a trackpad, touch, or
+   drags the scrollbar thumb by hand. */
+(function(){
+  var idleTimer = null;
+  var subscribers = [];
+  var ticking = false;
+
+  window.VX_onScroll = function(fn){ subscribers.push(fn); };
+
+  function flush(){
+    ticking = false;
+    for(var i = 0; i < subscribers.length; i++){
+      subscribers[i]();
+    }
+  }
+
+  window.addEventListener('scroll', function(){
+    window.VX_SCROLL_ACTIVE = true;
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(function(){ window.VX_SCROLL_ACTIVE = false; }, 180);
+
+    if(!ticking){
+      ticking = true;
+      requestAnimationFrame(flush);
+    }
+  }, {passive:true});
+})();
+</script>
+
+<script>
 (function(){
   "use strict";
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var isMobile = window.innerWidth < 720;
-
-  /* ---------- Shared scroll batching ----------
-     A scrollbar drag can fire scroll events far faster than the
-     display refreshes. Running DOM writes directly on each one forces
-     extra style/layout work that competes with the audio-reactive
-     WebGL loops for the same main thread, which is what reads as
-     "stutter" while scrolling during playback. Every scroll-driven
-     update in this file (here and in the player script) goes through
-     this single rAF-batched dispatcher instead: at most one flush per
-     rendered frame, no matter how many raw scroll events arrive. */
-  var vxScrollQueued = false;
-  var vxScrollCallbacks = [];
-  window.VX_registerScroll = function(fn){ vxScrollCallbacks.push(fn); };
-  window.addEventListener('scroll', function(){
-    if(vxScrollQueued) return;
-    vxScrollQueued = true;
-    requestAnimationFrame(function(){
-      vxScrollQueued = false;
-      for(var i = 0; i < vxScrollCallbacks.length; i++){ vxScrollCallbacks[i](); }
-    });
-  }, {passive:true});
 
   /* ---------- Nav scroll state ---------- */
   var nav = document.getElementById('mainNav');
@@ -1347,7 +1385,7 @@ window.VXData = {
     if(window.scrollY > 40){ nav.classList.add('scrolled'); }
     else{ nav.classList.remove('scrolled'); }
   }
-  window.VX_registerScroll(onScrollNav);
+  window.VX_onScroll(onScrollNav);
   onScrollNav();
 
   /* ---------- Cursor glow (desktop only) ---------- */
@@ -1372,9 +1410,8 @@ window.VXData = {
     heroInner.style.setProperty('--heroOpacity', Math.max(1 - progress * 1.5, 0));
   }
   if(!reduceMotion){
-    window.VX_registerScroll(onScrollHero);
+    window.VX_onScroll(onScrollHero);
   }
-
 
   /* ---------- Scroll reveal ---------- */
   var revealEls = document.querySelectorAll('.reveal');
@@ -1513,6 +1550,10 @@ window.VXData = {
   // forms once when scrolled into view, then stays formed (no dissolve)
   var footerShouldForm = reduceMotion;
   var footerProgress = reduceMotion ? 1 : 0;
+  // only worth drawing this small scene while it's actually on screen —
+  // otherwise it was silently rendering every frame for the entire
+  // session, competing for GPU time with nothing to show for it
+  var footerInView = false;
 
   function resizeFooterCanvas(){
     var box = footerCanvas.parentElement.getBoundingClientRect();
@@ -1523,15 +1564,24 @@ window.VXData = {
   resizeFooterCanvas();
 
   if('IntersectionObserver' in window){
-    var footerIO = new IntersectionObserver(function(entries){
+    var footerFormIO = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
         if(entry.isIntersecting){
           footerShouldForm = true;
-          footerIO.unobserve(entry.target);
+          footerFormIO.unobserve(entry.target);
         }
       });
     }, {threshold:0.3});
-    footerIO.observe(document.getElementById('connect'));
+    footerFormIO.observe(document.getElementById('connect'));
+
+    // separate, looser observer purely for the render-gate above — kept
+    // alive for the page's whole life (unlike the one-shot form trigger)
+    var footerViewIO = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){ footerInView = entry.isIntersecting; });
+    }, {threshold:0, rootMargin:'200px 0px'});
+    footerViewIO.observe(document.getElementById('connect'));
+  } else {
+    footerInView = true;
   }
 
   /* --- Mouse-driven camera parallax --- */
@@ -1544,9 +1594,19 @@ window.VXData = {
   function lerp(a,b,t){ return a + (b-a)*t; }
 
   var clock = new THREE.Clock();
+  var heroSkipFrame = false;
 
   function animate(){
     requestAnimationFrame(animate);
+    // this ambient background is purely decorative, so while the user is
+    // actively scrolling (e.g. dragging the scrollbar) it halves its own
+    // rate rather than compete with the compositor for GPU time — dt
+    // still accumulates correctly across the skipped frame, so motion
+    // stays smooth and simply advances in slightly bigger steps
+    if(window.VX_SCROLL_ACTIVE){
+      heroSkipFrame = !heroSkipFrame;
+      if(heroSkipFrame) return;
+    }
     var dt = Math.min(clock.getDelta(), 0.05);
 
     // form the V on load
@@ -1595,19 +1655,24 @@ window.VXData = {
 
     renderer.render(scene, camera);
 
-    // footer: assemble once into the V, then hold formed and still
-    if(footerShouldForm && footerProgress < 1){
-      footerProgress = Math.min(footerProgress + dt * 0.5, 1);
-      var fEase = 1 - Math.pow(1 - footerProgress, 3);
-      var fPosAttr = fGeo.getAttribute('position');
-      for(var q = 0; q < fCount; q++){
-        fPosAttr.array[q*3]   = lerp(fScatter[q*3],   fTarget[q*3],   fEase);
-        fPosAttr.array[q*3+1] = lerp(fScatter[q*3+1], fTarget[q*3+1], fEase);
-        fPosAttr.array[q*3+2] = lerp(fScatter[q*3+2], fTarget[q*3+2], fEase);
+    // footer: assemble once into the V, then hold formed and still —
+    // and only touch this renderer at all while the footer is actually
+    // on screen (or mid-assembly), instead of drawing an unseen scene
+    // on every single frame of the entire session
+    if(footerInView || (footerShouldForm && footerProgress < 1)){
+      if(footerShouldForm && footerProgress < 1){
+        footerProgress = Math.min(footerProgress + dt * 0.5, 1);
+        var fEase = 1 - Math.pow(1 - footerProgress, 3);
+        var fPosAttr = fGeo.getAttribute('position');
+        for(var q = 0; q < fCount; q++){
+          fPosAttr.array[q*3]   = lerp(fScatter[q*3],   fTarget[q*3],   fEase);
+          fPosAttr.array[q*3+1] = lerp(fScatter[q*3+1], fTarget[q*3+1], fEase);
+          fPosAttr.array[q*3+2] = lerp(fScatter[q*3+2], fTarget[q*3+2], fEase);
+        }
+        fPosAttr.needsUpdate = true;
       }
-      fPosAttr.needsUpdate = true;
+      footerRenderer.render(footerScene, footerCamera);
     }
-    footerRenderer.render(footerScene, footerCamera);
   }
   animate();
 
@@ -2204,9 +2269,17 @@ window.VXData = {
     return { bob: idleBob, rot: idleRot, tiltY: tiltY, tiltX: tiltX };
   }
 
+  var editionsSkipFrame = false;
   function loop(){
     if(!visible){ rafId = null; return; }
     rafId = requestAnimationFrame(loop);
+    // decorative showcase, not the music-sync-critical scene — eases off
+    // to every other frame while the user is actively scrolling so the
+    // scrollbar drag itself always stays buttery smooth
+    if(window.VX_SCROLL_ACTIVE){
+      editionsSkipFrame = !editionsSkipFrame;
+      if(editionsSkipFrame) return;
+    }
     var dt = Math.min(clock.getDelta(), 0.05);
     var t = clock.elapsedTime;
 
@@ -2333,7 +2406,7 @@ window.VXData = {
   "use strict";
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   window.VX_AUDIO = {
-    level: 0, bass: 0, mid: 0, treble: 0, beat: 0, snare: 0, transient: 0, drop: 0, calm: 1,
+    level: 0, bass: 0, mid: 0, treble: 0, beat: 0, drop: 0, calm: 1, tempoPeriod: 0,
     anticipation: 0, playing: false, seed: 0,
     bands: new Float32Array(16) // filled once the analyser starts running
   };
@@ -2519,6 +2592,18 @@ window.VXData = {
      structured — this is what lets individual bands feel distinct instead
      of one blurry "loudness" number. */
   var NUM_BANDS = 16;
+  // Fast-attack / slow-release envelope follower. A symmetric lerp (same
+  // coefficient rising and falling) is what made the scene feel like it
+  // was "easing toward" the music instead of being driven by it: a kick
+  // hit and a kick's decay were smoothed at the same rate, so the visual
+  // peak always landed a few frames after the actual transient. Using a
+  // steep attack and a gentler release means the value jumps to meet a
+  // real onset almost immediately (tight sync) while still decaying
+  // smoothly instead of chattering between hits.
+  function envFollow(current, target, attack, release){
+    var c = target > current ? attack : release;
+    return current + (target - current) * c;
+  }
   var bandMap = null; // bandMap[binIndex] = bandIndex
   function buildBandMap(binCount){
     var map = new Uint8Array(binCount);
@@ -2535,8 +2620,8 @@ window.VXData = {
     if(!AC) return;
     audioCtx = new AC();
     analyser = audioCtx.createAnalyser();
-    analyser.fftSize = 512;
-    analyser.smoothingTimeConstant = 0.68;
+    analyser.fftSize = 1024;
+    analyser.smoothingTimeConstant = 0.42;
     freqData = new Uint8Array(analyser.frequencyBinCount);
     bandMap = buildBandMap(freqData.length);
     try{
@@ -2698,8 +2783,7 @@ window.VXData = {
     if(window.scrollY > window.innerHeight * 0.6){ dock.classList.add('visible'); }
     else{ dock.classList.remove('visible'); }
   }
-  if(window.VX_registerScroll){ window.VX_registerScroll(onScrollDock); }
-  else{ window.addEventListener('scroll', onScrollDock, {passive:true}); }
+  window.VX_onScroll(onScrollDock);
   onScrollDock();
 
   /* ---------- Reactive visuals: dock bars, list bars, ambient glow ---------- */
@@ -2710,11 +2794,10 @@ window.VXData = {
   var bandSumsScratch = new Float64Array(NUM_BANDS);
   var bandCountsScratch = new Float64Array(NUM_BANDS);
   var bassAvg = 0;
+  var overallAvg = 0, prevOverallLevel = 0; // broadband flux, catches onsets on tracks that aren't bass-heavy
   var lastBeatTime = 0;
   var beatIntervals = [];       // recent onset-to-onset gaps, for tempo estimation
   var tempoPeriod = 0;          // smoothed estimate, seconds; 0 = not established yet
-  var snareAvg = 0;
-  var lastSnareTime = 0;
   var shortEnergy = 0, longEnergy = 0; // for drop detection
   var quietSince = 0;           // performance.now() when level first dropped low
   var calm = 1;                 // 1 = very quiet, 0 = fully energetic
@@ -2743,7 +2826,7 @@ window.VXData = {
       for(var bi = 0; bi < NUM_BANDS; bi++){
         bandPrev[bi] = bandLevels[bi];
         var raw = bandCounts[bi] ? (bandSums[bi] / bandCounts[bi]) / 255 : 0;
-        bandLevels[bi] += (raw - bandLevels[bi]) * 0.5; // per-band smoothing, snappier than the overall level
+        bandLevels[bi] = envFollow(bandLevels[bi], raw, 0.72, 0.2); // fast attack, slower release — the band arrives on the hit itself, not a few frames later
       }
       // bass = first ~3 bands, mid = next ~7, treble = the rest (log-spaced,
       // so this maps roughly to sub/kick, body/vocals, air/cymbals)
@@ -2756,10 +2839,10 @@ window.VXData = {
       bandLevels.fill(0);
     }
 
-    smoothedLevel += (target - smoothedLevel) * 0.15;
-    smoothedBass += (bassT - smoothedBass) * 0.3;
-    smoothedMid += (midT - smoothedMid) * 0.22;
-    smoothedTreble += (trebleT - smoothedTreble) * 0.22;
+    smoothedLevel = envFollow(smoothedLevel, target, 0.5, 0.1);
+    smoothedBass = envFollow(smoothedBass, bassT, 0.7, 0.14);
+    smoothedMid = envFollow(smoothedMid, midT, 0.55, 0.13);
+    smoothedTreble = envFollow(smoothedTreble, trebleT, 0.55, 0.13);
     window.VX_AUDIO.level = smoothedLevel;
     window.VX_AUDIO.bass = smoothedBass;
     window.VX_AUDIO.mid = smoothedMid;
@@ -2779,49 +2862,40 @@ window.VXData = {
     }
     window.VX_AUDIO.calm = calm;
 
-    /* ---------- onset / beat detection (bass-band flux = kick) ---------- */
-    bassAvg += (bassT - bassAvg) * 0.045;
+    /* ---------- onset / beat detection (bass flux, broadband fallback) ----
+       A hit is real if EITHER the bass band spikes (kick/sub-driven tracks)
+       OR the overall level spikes (vocal/guitar/mid-driven tracks whose
+       rhythm doesn't live in the low end) — whichever fires first still
+       counts as one onset, so tracks that are light on bass stay locked
+       to their actual beat instead of drifting onto an independent cycle. */
+    bassAvg += (bassT - bassAvg) * 0.07;
     var bassFlux = bassT - bandPrev[0];
-    if(isPlaying && bassT > bassAvg * 1.28 + 0.045 && bassFlux > 0.015 && (now - lastBeatTime) > 210){
+    var bassHit = bassT > bassAvg * 1.24 + 0.04 && bassFlux > 0.012;
+
+    overallAvg += (target - overallAvg) * 0.07;
+    var overallFlux = target - prevOverallLevel;
+    prevOverallLevel = target;
+    var broadHit = target > overallAvg * 1.18 + 0.045 && overallFlux > 0.038;
+
+    if(isPlaying && (bassHit || broadHit) && (now - lastBeatTime) > 140){
       var gap = lastBeatTime ? (now - lastBeatTime) / 1000 : 0;
       lastBeatTime = now;
-      window.VX_AUDIO.beat = Math.min(1, (bassT - bassAvg) * 2.2);
+      window.VX_AUDIO.beat = Math.min(1, Math.max((bassT - bassAvg) * 2.4, (target - overallAvg) * 2.8));
       window.dispatchEvent(new CustomEvent('vx:beat', { detail: { strength: window.VX_AUDIO.beat } }));
-      // tempo estimation: keep recent plausible gaps (54–214 BPM) and
+      // tempo estimation: keep recent plausible gaps (46–260 BPM) and
       // track their running median, so the scene can anticipate the
       // next hit instead of only reacting after the fact
-      if(gap > 0.28 && gap < 1.1){
+      if(gap > 0.23 && gap < 1.3){
         beatIntervals.push(gap);
         if(beatIntervals.length > 8){ beatIntervals.shift(); }
         var sorted = beatIntervals.slice().sort(function(a,b){ return a-b; });
         var median = sorted[Math.floor(sorted.length / 2)];
-        tempoPeriod = tempoPeriod ? lerp1(tempoPeriod, median, 0.35) : median;
+        tempoPeriod = tempoPeriod ? lerp1(tempoPeriod, median, 0.45) : median;
+        window.VX_AUDIO.tempoPeriod = tempoPeriod;
       }
     } else {
-      window.VX_AUDIO.beat *= 0.88;
+      window.VX_AUDIO.beat *= 0.82;
     }
-
-    /* ---------- snare / percussive onset (upper-mid + treble flux) ----
-       Same idea as the kick detector above, but tuned to the snap/snare
-       register (bands 7–15) instead of sub-bass, and with a shorter
-       refractory window since snares/hats can land faster than kicks.
-       This is what lets the scene react to the actual backbeat instead
-       of only ever pulsing on the bass. */
-    var snareBandT = 0;
-    for(var sb = 7; sb < NUM_BANDS; sb++){ snareBandT += bandLevels[sb]; }
-    snareBandT /= (NUM_BANDS - 7);
-    var snareFlux = snareBandT - ((bandPrev[7] + bandPrev[8] + bandPrev[9]) / 3);
-    snareAvg += (snareBandT - snareAvg) * 0.05;
-    if(isPlaying && snareBandT > snareAvg * 1.32 + 0.05 && snareFlux > 0.02 && (now - lastSnareTime) > 110){
-      lastSnareTime = now;
-      window.VX_AUDIO.snare = Math.min(1, (snareBandT - snareAvg) * 2.6);
-      window.dispatchEvent(new CustomEvent('vx:snare', { detail: { strength: window.VX_AUDIO.snare } }));
-    } else {
-      window.VX_AUDIO.snare *= 0.82;
-    }
-    // combined "something just hit" signal — used wherever the scene
-    // should react to rhythm in general rather than to kick specifically
-    window.VX_AUDIO.transient = Math.max(window.VX_AUDIO.beat, window.VX_AUDIO.snare * 0.9);
 
     /* ---------- predictive tempo phase (fills the gaps between hits) --- */
     if(isPlaying && tempoPeriod > 0 && lastBeatTime){
@@ -2913,32 +2987,535 @@ window.VXData = {
 /* =========================================================
    IMMERSIVE MODE
    A cinematic layer that takes over the site whenever a Signal
-   plays. It reads window.VX_AUDIO — populated every frame by the
-   Audio Engine script above with 16 log-spaced frequency bands,
-   a tempo estimate, a beat pulse, a drop pulse and a "calm" value
-   — and uses it to drive every particle, light and camera move
-   directly, frame by frame. Nothing here runs on its own timer;
-   everything is a function of the current audio state.
+   plays. It reads a live audio snapshot (level/bass/mid/treble,
+   16 bands, beat/drop pulses, a tempo estimate, a "calm" value)
+   and drives every particle, light and camera move directly,
+   frame by frame. Nothing here runs on its own timer — every
+   visual is a function of the current audio state.
 
-   Structure:
-   - MusicDirector: reads VX_AUDIO and turns it into a small set
-     of director-level values (energy, warmth, calm, punch) plus
-     per-particle band assignments.
-   - Particle field: a custom ShaderMaterial (not the stock
-     PointsMaterial) so each particle can have its own size,
-     alpha and color updated every frame — real appear/dissolve,
-     real per-particle color, not a global tint.
-   - Real THREE.PointLights sweep through the 3D space, colored
-     and driven by specific bands, lighting real geometry (the
-     "rays") rather than faking illumination.
-   - Tiered performance (full / reduced / off) with automatic,
-     one-way downgrade if the frame rate can't keep up, and an
-     immediate 'off' tier when prefers-reduced-motion is set.
-   - Never touches text color — only backgrounds/borders/glows —
-     so readability is never at risk regardless of intensity.
+   ARCHITECTURE — why this is split into an "engine" + a "runner":
+   Dragging the native scrollbar thumb scrolls the page on the
+   main thread *synchronously*, which can starve anything else
+   that also lives on the main thread — including a WebGL render
+   loop driven by requestAnimationFrame. The fix is to give the
+   heavy per-frame simulation and the actual render calls their
+   own thread, via a Worker + OffscreenCanvas, so they keep
+   running at a steady rate no matter how busy the main thread
+   gets. VXImmersiveEngine() below is written with no direct
+   reference to window/document/navigator — every environment
+   dependency comes in through `env` — so the *exact same source*
+   can run either directly on the main thread (the fallback for
+   browsers without OffscreenCanvas support, or if anything about
+   the worker path fails) or be shipped verbatim into a Worker.
+   Only cheap, DOM-only bookkeeping (canvas opacity, body class,
+   the page's live CSS accent variables) stays on the main thread,
+   in a lightweight ticker that has no WebGL work in it at all.
+
+   Lighting: every fixture in the rig is always "available". Each
+   frame, each one independently compares its own assigned
+   frequency band + the track's overall energy against its own
+   on/off thresholds (with hysteresis) and switches itself on or
+   off — so how many fixtures are lit, which ones, and where they
+   sit is a direct, continuous readout of the music, never a
+   scripted loop and never the same twice between songs.
 ========================================================= */
 (function(){
   "use strict";
+
+  /* ============================================================
+     SHARED ENGINE — runs on the main thread OR inside a Worker.
+     No window/document/navigator references beyond what `env`
+     supplies, so this function's own source can be shipped into
+     a Worker unmodified (see buildWorkerRunner() below).
+  ============================================================ */
+  function VXImmersiveEngine(env){
+    var THREE = env.THREE;
+    var tier = env.tier;
+    var TIER_COUNTS = { full: 980, reduced: 420 };
+    var LIGHT_COUNT = { full: 7, reduced: 5 };
+    var RAY_COUNT   = { full: 7, reduced: 4 };
+
+    // On-brand anchor hues (amber · violet · ice-blue) — every color in
+    // the scene is a mix of these three, weighted by real bass/mid/
+    // treble, so the palette always reads as generated-from-the-music
+    // AND as VORNEAUX.
+    var HUE = { bass: 36, mid: 270, treble: 200 };
+
+    function hueToRGB(h, s, l){
+      var c = new THREE.Color();
+      c.setHSL((h % 360) / 360, s, l);
+      return c;
+    }
+
+    var running = false;
+    var latest = {
+      level: 0, bass: 0, mid: 0, treble: 0, beat: 0, drop: 0,
+      calm: 1, anticipation: 0, tempoPeriod: 0, intensity: 0,
+      themeHue: 39, playing: false, bands: null
+    };
+
+    /* ---------- deterministic per-track "world" ---------- */
+    function mulberry32(seed){
+      return function(){
+        seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+        var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    function buildWorld(seed){
+      var rand = mulberry32(seed || 1);
+      var patterns = ['spiral', 'ring', 'wave', 'scatter'];
+      var themeHue = latest.themeHue != null ? latest.themeHue : 168;
+      return {
+        pattern: patterns[Math.floor(rand() * patterns.length)],
+        hueOffset: (themeHue - 168) + (rand() * 16 - 8),
+        rotationDir: rand() > 0.5 ? 1 : -1,
+        driftRadius: 1.1 + rand() * 1.4,
+        rand: rand
+      };
+    }
+
+    function anchorFor(i, count, pattern, rand){
+      var t = i / count, x, y, z;
+      if(pattern === 'spiral'){
+        var ang = t * Math.PI * 11 + rand() * 0.4;
+        var rad = 1 + t * 9.5;
+        x = Math.cos(ang) * rad; y = (rand() - 0.5) * 8; z = Math.sin(ang) * rad - 5;
+      } else if(pattern === 'ring'){
+        var ang2 = rand() * Math.PI * 2;
+        var rad2 = 4.5 + rand() * 4.5;
+        x = Math.cos(ang2) * rad2; y = (rand() - 0.5) * 3.2; z = Math.sin(ang2) * rad2 - 5;
+      } else if(pattern === 'wave'){
+        x = (rand() - 0.5) * 23; z = (rand() - 0.5) * 18 - 5;
+        y = Math.sin(x * 0.4 + z * 0.3) * 2.5 + (rand() - 0.5) * 1.4;
+      } else {
+        x = (rand() - 0.5) * 25; y = (rand() - 0.5) * 15; z = (rand() - 0.5) * 20 - 5;
+      }
+      return [x, y, z];
+    }
+
+    var VERT = [
+      'attribute float aSize;',
+      'attribute float aAlpha;',
+      'attribute vec3 aColor;',
+      'varying float vAlpha;',
+      'varying vec3 vColor;',
+      'void main(){',
+      '  vAlpha = aAlpha;',
+      '  vColor = aColor;',
+      '  vec4 mv = modelViewMatrix * vec4(position, 1.0);',
+      '  gl_PointSize = aSize * (340.0 / -mv.z);',
+      '  gl_Position = projectionMatrix * mv;',
+      '}'
+    ].join('\n');
+    var FRAG = [
+      'precision mediump float;',
+      'varying float vAlpha;',
+      'varying vec3 vColor;',
+      'void main(){',
+      '  vec2 uv = gl_PointCoord - vec2(0.5);',
+      '  float d = length(uv);',
+      '  float a = smoothstep(0.5, 0.0, d) * vAlpha;',
+      '  if(a <= 0.003) discard;',
+      '  gl_FragColor = vec4(vColor, a);',
+      '}'
+    ].join('\n');
+
+    var scene3, camera3, renderer3, clock3;
+    var particles, particleGeo, particleCount = 0;
+    var pPos, pSize, pAlpha, pColor, pBand, pAnchor, pSpin;
+    var lights = [], rayMeshes = [], lightCores = [], ambient;
+    var currentWorld = null;
+    var flashLight = 0; // extra punch on drops, decays
+    var forceAllUntil = 0; // timestamp: while now < this, every fixture blazes (drop moment)
+
+    function makeGlowTexture(){
+      var c = env.createCanvas(128, 128);
+      var ctx = c.getContext('2d');
+      var g = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+      g.addColorStop(0, 'rgba(255,255,255,1)');
+      g.addColorStop(0.35, 'rgba(255,255,255,0.5)');
+      g.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, 128, 128);
+      return new THREE.CanvasTexture(c);
+    }
+
+    function buildScene(){
+      if(typeof THREE === 'undefined' || tier === 'off') return false;
+      renderer3 = new THREE.WebGLRenderer({ canvas: env.canvas, alpha: true, antialias: false });
+      renderer3.setPixelRatio(Math.min(env.dpr, tier === 'full' ? 1.75 : 1.25));
+      renderer3.setSize(env.width, env.height, env.hasDomStyle);
+
+      scene3 = new THREE.Scene();
+      camera3 = new THREE.PerspectiveCamera(50, env.width / env.height, 0.1, 100);
+      camera3.position.z = 11;
+
+      ambient = new THREE.AmbientLight(0x2a2430, 0.5);
+      scene3.add(ambient);
+
+      particleCount = TIER_COUNTS[tier];
+      pPos    = new Float32Array(particleCount * 3);
+      pSize   = new Float32Array(particleCount);
+      pAlpha  = new Float32Array(particleCount);
+      pColor  = new Float32Array(particleCount * 3);
+      pBand   = new Uint8Array(particleCount);
+      pAnchor = new Float32Array(particleCount * 3);
+      pSpin   = new Float32Array(particleCount);
+
+      particleGeo = new THREE.BufferGeometry();
+      particleGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+      particleGeo.setAttribute('aSize', new THREE.BufferAttribute(pSize, 1));
+      particleGeo.setAttribute('aAlpha', new THREE.BufferAttribute(pAlpha, 1));
+      particleGeo.setAttribute('aColor', new THREE.BufferAttribute(pColor, 3));
+
+      var particleMat = new THREE.ShaderMaterial({
+        vertexShader: VERT, fragmentShader: FRAG,
+        transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
+      });
+      particles = new THREE.Points(particleGeo, particleMat);
+      scene3.add(particles);
+
+      // Real moving point lights — a rig of stage spots, each one locked
+      // to its own frequency band. Every fixture is created up front and
+      // stays "available" for the whole track; updateLightingDirector()
+      // below is what decides, every frame, which ones are actually lit.
+      var glowTex = makeGlowTexture();
+      var groups = ['bass', 'mid', 'treble'];
+      var bandSlots = [1, 4, 8, 12, 6, 14, 10];
+      for(var li = 0; li < LIGHT_COUNT[tier]; li++){
+        var light = new THREE.PointLight(0xffffff, 0, 30, 1.7);
+        var ud = light.userData;
+        ud.group = groups[li % groups.length];
+        ud.band = bandSlots[li % bandSlots.length];
+        ud.phase = Math.random() * Math.PI * 2;
+        ud.kickX = 0; ud.kickY = 0; ud.kickZ = 0;
+        ud.baseX = (Math.random() - 0.5) * 8;
+        ud.baseY = (Math.random() - 0.5) * 4.5;
+        ud.baseZ = -2 - Math.random() * 5;
+        ud.active = false;
+        ud.activeAmt = 0;
+        // Per-fixture sensitivity: its own on/off trigger points (with a
+        // hysteresis gap so it doesn't flicker right at the edge). Each
+        // fixture re-rolls these the moment it turns on, so the same
+        // spot in the rig doesn't always fire at the same energy level.
+        ud.onT = 0.32 + Math.random() * 0.3;
+        ud.offT = ud.onT - (0.14 + Math.random() * 0.1);
+        lights.push(light);
+        scene3.add(light);
+
+        var coreMat = new THREE.SpriteMaterial({
+          map: glowTex, color: 0xffffff, transparent: true, opacity: 0,
+          depthWrite: false, blending: THREE.AdditiveBlending
+        });
+        var core = new THREE.Sprite(coreMat);
+        core.scale.set(2, 2, 1);
+        lightCores.push(core);
+        scene3.add(core);
+      }
+
+      var rayGeo = new THREE.PlaneGeometry(1.7, 1.7, 1, 1);
+      for(var ri = 0; ri < RAY_COUNT[tier]; ri++){
+        var rayMat = new THREE.MeshStandardMaterial({
+          color: 0xffffff, alphaMap: glowTex, transparent: true, opacity: 0.12,
+          roughness: 1, metalness: 0, side: THREE.DoubleSide,
+          depthWrite: false, blending: THREE.AdditiveBlending
+        });
+        var mesh = new THREE.Mesh(rayGeo, rayMat);
+        mesh.userData.group = groups[ri % groups.length];
+        mesh.userData.band = bandSlots[ri % bandSlots.length];
+        rayMeshes.push(mesh);
+        scene3.add(mesh);
+      }
+
+      clock3 = new THREE.Clock();
+      return true;
+    }
+
+    function onResize(w, h, dpr){
+      env.width = w; env.height = h; env.dpr = dpr;
+      if(!renderer3) return;
+      renderer3.setPixelRatio(Math.min(dpr, tier === 'full' ? 1.75 : 1.25));
+      renderer3.setSize(w, h, env.hasDomStyle);
+      camera3.aspect = w / h;
+      camera3.updateProjectionMatrix();
+    }
+
+    function reformWorld(seed){
+      if(!scene3 && !buildScene()) return;
+      currentWorld = buildWorld(seed);
+      var rand = currentWorld.rand;
+      for(var i = 0; i < particleCount; i++){
+        var band = i % 16;
+        pBand[i] = band;
+        pSpin[i] = 0.4 + rand() * 1.1;
+        var a = anchorFor(i, particleCount, currentWorld.pattern, rand);
+        pAnchor[i*3] = a[0]; pAnchor[i*3+1] = a[1]; pAnchor[i*3+2] = a[2];
+      }
+    }
+
+    function lerp(a, b, t){ return a + (b - a) * t; }
+
+    /* ---------- per-fixture reactive lighting (continuous, no timer) ----
+       Every fixture is always available; each one independently compares
+       its own designated band/energy reading against its own on/off
+       thresholds (hysteresis prevents edge-flicker) and switches itself
+       on or off. However many fixtures currently clear their threshold
+       is however many are lit — never scripted, never timed, and it
+       emerges differently from every track's actual energy. A real drop
+       forces the whole rig up at once, like an operator throwing every
+       fixture on the hit; a quiet passage naturally leaves just one (or
+       none, in which case the single most "awake" fixture stays up so
+       the stage is never fully dark while something is playing). */
+    function updateLightingDirector(bands, audio){
+      var blazing = env.now() < forceAllUntil;
+      var anyActive = false;
+      var bestIdx = -1, bestDrive = -1;
+
+      lights.forEach(function(light, li){
+        var ud = light.userData;
+        if(ud.retired) return;
+        var bandE = bands[ud.band] || 0;
+        var g = ud.group;
+        var groupE = g === 'bass' ? audio.bass : (g === 'mid' ? audio.mid : audio.treble);
+        var drive = bandE * 0.6 + groupE * 0.25 + audio.beat * 0.55 + audio.drop * 0.7 + audio.anticipation * 0.2;
+        if(drive > bestDrive){ bestDrive = drive; bestIdx = li; }
+
+        var wasActive = ud.active;
+        if(blazing){
+          ud.active = true;
+        } else if(ud.active){
+          if(drive < ud.offT){ ud.active = false; }
+        } else {
+          if(drive > ud.onT){ ud.active = true; }
+        }
+
+        if(ud.active && !wasActive){
+          // this fixture just came alive — fresh spot on the stage, and
+          // a freshly rolled threshold pair for next time
+          var ang = Math.random() * Math.PI * 2;
+          var rad = 2.6 + Math.random() * 6;
+          ud.baseX = Math.cos(ang) * rad;
+          ud.baseY = (Math.random() - 0.5) * 5.5;
+          ud.baseZ = -1.5 - Math.random() * 6;
+          ud.phase = Math.random() * Math.PI * 2;
+          ud.onT = 0.32 + Math.random() * 0.3;
+          ud.offT = ud.onT - (0.14 + Math.random() * 0.1);
+        }
+        if(ud.active) anyActive = true;
+      });
+
+      if(!anyActive && audio.playing && bestIdx !== -1){
+        lights[bestIdx].userData.active = true;
+      }
+    }
+
+    function tick(){
+      if(!running) return;
+      env.raf(tick);
+      var dt = Math.min(clock3.getDelta(), 0.05);
+      var t = clock3.elapsedTime;
+
+      var audio = latest;
+      var bands = audio.bands || new Float32Array(16);
+      var level = audio.level || 0;
+      var beat = audio.beat || 0;
+      var drop = audio.drop || 0;
+      var calm = audio.calm != null ? audio.calm : 1;
+      var anticip = audio.anticipation || 0;
+      var amt = audio.intensity || 0;
+      flashLight = Math.max(flashLight * 0.88, drop);
+      var energy = (1 - calm * 0.82);
+
+      if(currentWorld){
+        for(var i = 0; i < particleCount; i++){
+          var band = pBand[i];
+          var bandE = bands[band] || 0;
+          var pulse = bandE + beat * 0.5 + anticip * 0.22;
+          var ax = pAnchor[i*3], ay = pAnchor[i*3+1], az = pAnchor[i*3+2];
+
+          var spin = pSpin[i] * currentWorld.rotationDir * (0.3 + energy * 1.1);
+          var ang = t * spin + i * 0.017;
+          var radius = 0.3 + pulse * (band < 3 ? 2.6 : (band < 10 ? 1.4 : 0.7));
+          pPos[i*3]   = ax + Math.cos(ang) * radius * 0.6;
+          pPos[i*3+1] = ay + Math.sin(ang * 1.3) * radius * 0.5;
+          pPos[i*3+2] = az + Math.sin(ang) * radius * 0.6;
+
+          pSize[i] = (0.055 + pulse * 0.13 + beat * 0.07) * (0.55 + energy * 0.85);
+          pAlpha[i] = Math.min(1, 0.22 + pulse * 1.7) * (0.45 + energy * 0.7);
+
+          var hue = HUE.bass * (band < 3 ? 1 : 0) + HUE.mid * (band >= 3 && band < 10 ? 1 : 0) + HUE.treble * (band >= 10 ? 1 : 0);
+          hue += currentWorld.hueOffset;
+          var col = hueToRGB(hue, 0.6, 0.56 + pulse * 0.22);
+          pColor[i*3] = col.r; pColor[i*3+1] = col.g; pColor[i*3+2] = col.b;
+        }
+        particleGeo.getAttribute('position').needsUpdate = true;
+        particleGeo.getAttribute('aSize').needsUpdate = true;
+        particleGeo.getAttribute('aAlpha').needsUpdate = true;
+        particleGeo.getAttribute('aColor').needsUpdate = true;
+
+        var camPush = 1 + flashLight * 0.5;
+        camera3.position.x = Math.sin(t * 0.07) * currentWorld.driftRadius * camPush;
+        camera3.position.y = Math.cos(t * 0.05) * currentWorld.driftRadius * 0.4 * camPush;
+        camera3.position.z = 11 - flashLight * 1.4;
+        camera3.lookAt(0, 0, -4);
+
+        updateLightingDirector(bands, {
+          bass: audio.bass, mid: audio.mid, treble: audio.treble,
+          beat: beat, drop: drop, anticipation: anticip, playing: audio.playing
+        });
+
+        lights.forEach(function(light, li){
+          var ud = light.userData;
+          if(ud.retired){ light.intensity = 0; return; }
+          var g = ud.group;
+          var bandE = bands[ud.band] || 0;
+          var groupE = g === 'bass' ? audio.bass : (g === 'mid' ? audio.mid : audio.treble);
+          var e = groupE * 0.45 + bandE * 0.55;
+
+          ud.kickX *= 0.9; ud.kickY *= 0.9; ud.kickZ *= 0.9;
+
+          var speedMul = 0.25 + e * 0.75 + anticip * 0.5;
+          var ph = ud.phase + t * speedMul;
+          var kick = beat * 1.9 + flashLight * 1.2;
+          light.position.set(
+            ud.baseX + Math.sin(ph) * (2.2 + kick) + ud.kickX,
+            ud.baseY + Math.cos(ph * 0.8) * (1.5 + kick * 0.6) + ud.kickY,
+            ud.baseZ + Math.sin(ph * 0.5) * 1.8 + kick * 0.9 + ud.kickZ
+          );
+
+          var baseHue = (g === 'bass' ? HUE.bass : (g === 'mid' ? HUE.mid : HUE.treble)) + currentWorld.hueOffset;
+          var hueDrift = (audio.treble - audio.bass) * 42 + Math.sin(t * 0.15 + li) * 10 + drop * 55;
+          var lc = hueToRGB(baseHue + hueDrift, 0.85, 0.6);
+          light.color = lc;
+
+          var activeTarget = ud.active ? 1 : 0;
+          ud.activeAmt += (activeTarget - ud.activeAmt) * (ud.active ? 0.22 : 0.1);
+
+          light.intensity = (0.35 + e * 2.0 + beat * 1.3 + flashLight * 2.0) * (0.45 + energy) * ud.activeAmt;
+
+          var core = lightCores[li];
+          if(core){
+            core.position.copy(light.position);
+            core.material.color.copy(lc);
+            var coreEnergy = Math.min(1, 0.1 + e * 0.9 + beat * 0.6 + flashLight * 0.7);
+            core.material.opacity = coreEnergy * amt * ud.activeAmt;
+            var beatKick = 1 + beat * 0.6;
+            var coreScale = (1 + coreEnergy * 1.9) * beatKick;
+            core.scale.set(coreScale, coreScale, 1);
+          }
+        });
+        ambient.intensity = 0.28 + level * 0.32 + flashLight * 0.4;
+
+        rayMeshes.forEach(function(mesh, ri){
+          var g = mesh.userData.group;
+          var bandE = bands[mesh.userData.band] || 0;
+          var groupE = g === 'bass' ? audio.bass : (g === 'mid' ? audio.mid : audio.treble);
+          var e = groupE * 0.5 + bandE * 0.5;
+          var kick = beat * 2.2 + flashLight * 1.3;
+          mesh.rotation.z += dt * (0.05 + beat * 0.14 + anticip * 0.05) * currentWorld.rotationDir;
+          mesh.position.set(
+            Math.sin(t * 0.09 + ri) * (3.8 + kick),
+            Math.cos(t * 0.07 + ri) * (2.2 + kick * 0.6),
+            -6 - ri * 0.4 + kick
+          );
+          mesh.material.opacity = (0.08 + e * 0.28 + flashLight * 0.3) * amt;
+          var rayScale = 1 + e * 0.55 + beat * 0.3;
+          mesh.scale.set(rayScale, rayScale, 1);
+        });
+      }
+
+      monitorPerf(dt);
+      renderer3.render(scene3, camera3);
+
+      // idle out once fully faded and nothing is playing, to save power
+      if(amt <= 0.001 && !audio.playing){ running = false; }
+    }
+
+    /* ---------- adaptive, one-way performance downgrade ---------- */
+    var frameTimes = [];
+    function monitorPerf(dt){
+      frameTimes.push(dt);
+      if(frameTimes.length < 90) return;
+      var avg = frameTimes.reduce(function(a,b){ return a+b; }, 0) / frameTimes.length;
+      frameTimes.length = 0;
+      if(tier === 'full' && avg > 0.028){ downgrade(); }
+      else if(tier === 'reduced' && avg > 0.045){ downgrade(); }
+    }
+
+    function downgrade(){
+      if(tier === 'full'){
+        tier = 'reduced';
+        var keep = Math.floor(TIER_COUNTS.full * 0.42);
+        particleGeo.setDrawRange(0, keep);
+        renderer3.setPixelRatio(1);
+        rayMeshes.forEach(function(m, i){ if(i >= 2){ m.visible = false; } });
+        lights.forEach(function(l, i){ if(i >= 2){ l.userData.active = false; l.userData.retired = true; l.intensity = 0; } });
+        lightCores.forEach(function(c, i){ if(i >= 2){ c.visible = false; } });
+      } else if(tier === 'reduced'){
+        tier = 'off';
+        teardownScene();
+        env.report('off');
+      }
+    }
+
+    function teardownScene(){
+      running = false;
+      if(renderer3){
+        particleGeo && particleGeo.dispose();
+        rayMeshes.forEach(function(m){ m.material.dispose(); m.geometry.dispose(); });
+        lightCores.forEach(function(c){ c.material.dispose(); });
+        renderer3.dispose();
+      }
+      scene3 = camera3 = renderer3 = particles = null;
+      rayMeshes = []; lights = []; lightCores = [];
+    }
+
+    return {
+      enter: function(seed){
+        if(tier === 'off') return;
+        reformWorld(seed);
+        forceAllUntil = 0;
+        if(!running){ running = true; env.raf(tick); }
+      },
+      onDrop: function(){
+        if(!currentWorld || tier === 'off') return;
+        forceAllUntil = env.now() + 900;
+        var rand = currentWorld.rand;
+        for(var i = 0; i < particleCount; i++){
+          var a = anchorFor((i + Math.floor(rand() * particleCount)) % particleCount, particleCount, currentWorld.pattern, rand);
+          pAnchor[i*3] = a[0]; pAnchor[i*3+1] = a[1]; pAnchor[i*3+2] = a[2];
+        }
+      },
+      beat: function(strength){
+        if(tier === 'off') return;
+        lights.forEach(function(light){
+          var a1 = Math.random() * Math.PI * 2;
+          var a2 = Math.random() * Math.PI * 2;
+          light.userData.kickX = Math.cos(a1) * strength * 2.2;
+          light.userData.kickY = Math.sin(a1) * strength * 1.6;
+          light.userData.kickZ = Math.sin(a2) * strength * 1.8;
+        });
+      },
+      themeRefined: function(hue){
+        if(currentWorld){ currentWorld.hueOffset = hue - 168; }
+      },
+      updateAudio: function(snapshot){
+        latest = snapshot;
+        if(!running && snapshot.intensity > 0.001 && scene3){ running = true; env.raf(tick); }
+      },
+      resize: function(w, h, dpr){ onResize(w, h, dpr); }
+    };
+  }
+
+  /* ============================================================
+     BOOTSTRAP — decides whether to run the engine on the main
+     thread or hand it off to a Worker + OffscreenCanvas, wires up
+     the DOM-only presentation layer, and bridges audio/UI events
+     to whichever runner is active.
+  ============================================================ */
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var isMobile = window.innerWidth < 720;
   var lowCore = (navigator.hardwareConcurrency || 4) <= 4;
@@ -2949,87 +3526,17 @@ window.VXData = {
   var canvas = document.getElementById('immersiveScene');
 
   var tier = reduceMotion ? 'off' : ((isMobile || lowCore) ? 'reduced' : 'full');
-  var TIER_COUNTS = { full: 980, reduced: 420 };
-  var LIGHT_COUNT = { full: 4, reduced: 3 };
-  var RAY_COUNT   = { full: 7, reduced: 4 };
 
-  // On-brand anchor hues (amber · violet · ice-blue) — every color in the
-  // scene is a mix of these three, weighted by real bass/mid/treble, so
-  // the palette always reads as generated-from-the-music AND as VORNEAUX.
+  // On-brand anchor hues, reused here only for the CSS accent math below
+  // (the engine has its own copy for the 3D scene).
   var HUE = { bass: 36, mid: 270, treble: 200 };
 
-  function hueToRGB(h, s, l){
-    var c = new THREE.Color();
-    c.setHSL((h % 360) / 360, s, l);
-    return c;
-  }
+  window.VX_THEME = window.VX_THEME || {
+    hue: 39, sat: 0.46, light: 0.61,
+    targetHue: 39, targetSat: 0.46, targetLight: 0.61
+  };
+  var THEME_DEFAULT_FALLBACK = { hue: 39, sat: 0.46, light: 0.61 };
 
-  var active = false, intensity = 0, running = false;
-
-  /* ---------- deterministic per-track "world" ---------- */
-  function mulberry32(seed){
-    return function(){
-      seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
-      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-    };
-  }
-
-  function buildWorld(seed){
-    var rand = mulberry32(seed || 1);
-    var patterns = ['spiral', 'ring', 'wave', 'scatter'];
-    // Anchor the tri-tone bass/mid/treble palette (centered around hue
-    // ~168, the mean of HUE.bass/mid/treble) to the shared song-identity
-    // hue, so the 3D scene and the site-wide CSS accent always agree —
-    // plus a little per-track jitter so it never feels mechanical.
-    var themeHue = (window.VX_THEME && window.VX_THEME.hue != null) ? window.VX_THEME.hue : 168;
-    return {
-      pattern: patterns[Math.floor(rand() * patterns.length)],
-      hueOffset: (themeHue - 168) + (rand() * 16 - 8),
-      rotationDir: rand() > 0.5 ? 1 : -1,
-      driftRadius: 1.1 + rand() * 1.4,
-      rand: rand
-    };
-  }
-
-  function anchorFor(i, count, pattern, rand){
-    var t = i / count, x, y, z;
-    if(pattern === 'spiral'){
-      var ang = t * Math.PI * 11 + rand() * 0.4;
-      var rad = 1 + t * 9.5;
-      x = Math.cos(ang) * rad; y = (rand() - 0.5) * 8; z = Math.sin(ang) * rad - 5;
-    } else if(pattern === 'ring'){
-      var ang2 = rand() * Math.PI * 2;
-      var rad2 = 4.5 + rand() * 4.5;
-      x = Math.cos(ang2) * rad2; y = (rand() - 0.5) * 3.2; z = Math.sin(ang2) * rad2 - 5;
-    } else if(pattern === 'wave'){
-      x = (rand() - 0.5) * 23; z = (rand() - 0.5) * 18 - 5;
-      y = Math.sin(x * 0.4 + z * 0.3) * 2.5 + (rand() - 0.5) * 1.4;
-    } else {
-      x = (rand() - 0.5) * 25; y = (rand() - 0.5) * 15; z = (rand() - 0.5) * 20 - 5;
-    }
-    return [x, y, z];
-  }
-
-  /* ---------- CSS-only fallback (tier === 'off') ---------- */
-  var cssTicker = null;
-  function ensureCssTicker(){
-    if(cssTicker) return;
-    cssTicker = setInterval(function(){
-      var target = active ? 1 : 0;
-      intensity += (target - intensity) * 0.12;
-      if(!active && intensity < 0.01){ intensity = 0; body.classList.remove('immersive-active'); }
-      var audio = window.VX_AUDIO || {};
-      vignette.style.opacity = (intensity * 0.7).toFixed(3);
-      writeAccentVars(audio, intensity);
-    }, 100);
-  }
-
-  /* Advances the shared VX_THEME hue/sat/light a step closer to their
-     targets — called every time writeAccentVars runs, so the transition
-     between one song's color and the next is always smooth, whichever
-     tier (full WebGL or CSS-only fallback) is driving the page. */
   function stepTheme(){
     var th = window.VX_THEME;
     if(!th) return;
@@ -3039,12 +3546,6 @@ window.VXData = {
     th.light += (th.targetLight - th.light) * 0.16;
   }
 
-  /* ---------- Contrast-safe color math ----------
-     Everything below exists so "the whole site adopts the song's color"
-     never comes at the cost of readability: every text/accent tone is
-     checked against the (dark) page background and nudged lighter,
-     automatically, until it clears a real WCAG contrast ratio — the hue
-     (the song's identity) is never touched, only lightness/saturation. */
   function hslToRgb(h, s, l){
     h = (((h % 360) + 360) % 360) / 360;
     var r, g, b;
@@ -3074,11 +3575,7 @@ window.VXData = {
     var a = Math.max(l1, l2) + 0.05, b = Math.min(l1, l2) + 0.05;
     return a / b;
   }
-  // matches the page's own (darkened) --obsidian background
   var BG_LUMINANCE = relLuminance(5, 5, 9);
-  /* Nudges lightness up until the color reaches minRatio against the
-     page background, capping out at near-white so it never inverts the
-     hue's character — just brightens it enough to stay legible. */
   function ensureReadableL(h, s, l, minRatio){
     for(var i = 0; i < 14 && l < 0.97; i++){
       var rgb = hslToRgb(h, s, l);
@@ -3093,200 +3590,184 @@ window.VXData = {
     var th = window.VX_THEME || THEME_DEFAULT_FALLBACK;
     var bass = audio.bass || 0, mid = audio.mid || 0, treble = audio.treble || 0;
     var total = bass + mid + treble + 0.001;
-    // the song's own stable identity color, gently pulled by whichever
-    // band is currently dominant — mostly steady, never chaotic
     var liveHue = (HUE.bass * bass + HUE.mid * mid + HUE.treble * treble) / total;
     var dh = ((liveHue - th.hue + 540) % 360) - 180;
     var hue = (th.hue + dh * 0.18 + 360) % 360;
     var sat = Math.min(80, th.sat * 100 + (audio.level || 0) * 14 + (audio.beat || 0) * 10);
     var lightRaw = Math.min(74, th.light * 100 + (audio.level || 0) * 7 + (audio.beat || 0) * 6);
 
-    // --imm-accent is used as TEXT/icon color in many places across the
-    // site (labels, links, borders), not only as decoration, so it must
-    // clear a solid contrast ratio on its own — same hue, safe lightness.
     var accentL = ensureReadableL(hue, sat / 100, lightRaw / 100, 4.6) * 100;
     document.documentElement.style.setProperty('--imm-accent', 'hsl(' + hue.toFixed(1) + ' ' + sat.toFixed(0) + '% ' + accentL.toFixed(0) + '%)');
     document.documentElement.style.setProperty('--imm-accent-dim', 'hsl(' + hue.toFixed(1) + ' ' + sat.toFixed(0) + '% ' + accentL.toFixed(0) + '% / ' + (0.38 * Math.max(amt, 0.4)).toFixed(2) + ')');
 
-    // --imm-ivory: primary text/headline tone — a light, whisper-tinted
-    // version of the song's hue. Already near-white, so contrast against
-    // a near-black background stays excellent regardless of hue.
     var ivoryL = ensureReadableL(hue, 0.22, 0.90, 8.5) * 100;
     document.documentElement.style.setProperty('--imm-ivory', 'hsl(' + hue.toFixed(1) + ' 22% ' + ivoryL.toFixed(0) + '%)');
 
-    // --imm-smoke: secondary/muted text tone — subtler tint, still kept
-    // well clear of the readability floor for body copy.
     var smokeL = ensureReadableL(hue, 0.16, 0.62, 4.7) * 100;
     document.documentElement.style.setProperty('--imm-smoke', 'hsl(' + hue.toFixed(1) + ' 16% ' + smokeL.toFixed(0) + '%)');
 
-    // --imm-line: hairline borders/dividers — a faint tint, decorative
-    // only, so no contrast floor is needed here.
     document.documentElement.style.setProperty('--imm-line', 'hsl(' + hue.toFixed(1) + ' 20% 16% / 0.9)');
   }
-  var THEME_DEFAULT_FALLBACK = { hue: 39, sat: 0.46, light: 0.61 };
 
-  /* ---------- WebGL scene (tiers 'full' / 'reduced') ---------- */
-  var scene3, camera3, renderer3, clock3;
-  var particles, particleGeo, particleCount = 0;
-  var pPos, pSize, pAlpha, pColor, pBand, pAnchor, pSpin;
-  var lights = [], rayMeshes = [], lightCores = [], ambient;
-  var currentWorld = null;
+  /* ---------- CSS-only fallback (tier === 'off', or engine unusable) --- */
+  var cssTicker = null;
+  var active = false;
+  function ensureCssTicker(){
+    if(cssTicker) return;
+    cssTicker = setInterval(function(){
+      var target = active ? 1 : 0;
+      cssIntensity += (target - cssIntensity) * 0.12;
+      if(!active && cssIntensity < 0.01){ cssIntensity = 0; body.classList.remove('immersive-active'); }
+      var audio = window.VX_AUDIO || {};
+      vignette.style.opacity = (cssIntensity * 0.7).toFixed(3);
+      writeAccentVars(audio, cssIntensity);
+    }, 100);
+  }
+  var cssIntensity = 0;
+
+  /* ---------- runner selection: Worker+OffscreenCanvas, or main thread ---------- */
+  var runner = null; // { enter, onDrop, beat, themeRefined, updateAudio, resize }
+  var usingWorker = false;
+  var worker = null;
+
+  function buildMainThreadRunner(){
+    var env = {
+      THREE: window.THREE,
+      canvas: canvas,
+      tier: tier,
+      dpr: window.devicePixelRatio || 1,
+      width: window.innerWidth, height: window.innerHeight,
+      hasDomStyle: true,
+      raf: function(fn){ requestAnimationFrame(fn); },
+      now: function(){ return performance.now(); },
+      createCanvas: function(w, h){ var c = document.createElement('canvas'); c.width = w; c.height = h; return c; },
+      report: function(type){ if(type === 'off'){ active2CssFallback(); } }
+    };
+    return VXImmersiveEngine(env);
+  }
+
+  function active2CssFallback(){
+    usingWorker = false; runner = null;
+    body.classList.add('immersive-active');
+    ensureCssTicker();
+  }
+
+  function buildWorkerRunner(){
+    if(tier === 'off') return null;
+    if(!canvas.transferControlToOffscreen || typeof Worker === 'undefined' || typeof OffscreenCanvas === 'undefined'){
+      return null;
+    }
+    try {
+      var offscreen = canvas.transferControlToOffscreen();
+      var bootSrc =
+        'self.onmessage = function(e){\n' +
+        '  var msg = e.data;\n' +
+        '  try {\n' +
+        '    if(msg.type === "init"){\n' +
+        '      var env = {\n' +
+        '        THREE: self.THREE,\n' +
+        '        canvas: msg.canvas,\n' +
+        '        tier: msg.tier,\n' +
+        '        dpr: msg.dpr, width: msg.width, height: msg.height,\n' +
+        '        hasDomStyle: false,\n' +
+        '        raf: (self.requestAnimationFrame ? function(fn){ self.requestAnimationFrame(fn); } : function(fn){ setTimeout(fn, 16); }),\n' +
+        '        now: function(){ return self.performance.now(); },\n' +
+        '        createCanvas: function(w,h){ return new OffscreenCanvas(w,h); },\n' +
+        '        report: function(type){ self.postMessage({type:type}); }\n' +
+        '      };\n' +
+        '      self.__vxEngine = VXImmersiveEngine(env);\n' +
+        '    } else if(self.__vxEngine){\n' +
+        '      if(msg.type === "enter"){ self.__vxEngine.enter(msg.seed); }\n' +
+        '      else if(msg.type === "drop"){ self.__vxEngine.onDrop(); }\n' +
+        '      else if(msg.type === "beat"){ self.__vxEngine.beat(msg.strength); }\n' +
+        '      else if(msg.type === "theme"){ self.__vxEngine.themeRefined(msg.hue); }\n' +
+        '      else if(msg.type === "audio"){ self.__vxEngine.updateAudio(msg.audio); }\n' +
+        '      else if(msg.type === "resize"){ self.__vxEngine.resize(msg.width, msg.height, msg.dpr); }\n' +
+        '    }\n' +
+        '  } catch(err){\n' +
+        '    self.postMessage({type:"error", message:(err && err.message) || String(err)});\n' +
+        '  }\n' +
+        '};\n';
+      var src = 'importScripts(' + JSON.stringify(THREE_SRC_URL) + ');\n' +
+                 'var VXImmersiveEngine = ' + VXImmersiveEngine.toString() + ';\n' +
+                 bootSrc;
+      var blob = new Blob([src], { type: 'application/javascript' });
+      var url = URL.createObjectURL(blob);
+      worker = new Worker(url);
+      URL.revokeObjectURL(url);
+
+      worker.onmessage = function(e){
+        var msg = e.data;
+        if(!msg) return;
+        if(msg.type === 'off'){ active2CssFallback(); }
+        else if(msg.type === 'error'){ fallBackToMainThread(); }
+      };
+      worker.onerror = function(){ fallBackToMainThread(); };
+
+      worker.postMessage({
+        type: 'init', canvas: offscreen, tier: tier,
+        dpr: Math.min(window.devicePixelRatio || 1, tier === 'full' ? 1.75 : 1.25),
+        width: window.innerWidth, height: window.innerHeight
+      }, [offscreen]);
+
+      usingWorker = true;
+      return {
+        enter: function(seed){ worker.postMessage({ type: 'enter', seed: seed }); },
+        onDrop: function(){ worker.postMessage({ type: 'drop' }); },
+        beat: function(strength){ worker.postMessage({ type: 'beat', strength: strength }); },
+        themeRefined: function(hue){ worker.postMessage({ type: 'theme', hue: hue }); },
+        updateAudio: function(snapshot){
+          worker.postMessage({ type: 'audio', audio: {
+            level: snapshot.level, bass: snapshot.bass, mid: snapshot.mid, treble: snapshot.treble,
+            beat: snapshot.beat, drop: snapshot.drop, calm: snapshot.calm,
+            anticipation: snapshot.anticipation, tempoPeriod: snapshot.tempoPeriod,
+            intensity: snapshot.intensity, themeHue: snapshot.themeHue,
+            playing: snapshot.playing, bands: snapshot.bands
+          }});
+        },
+        resize: function(w, h, dpr){ worker.postMessage({ type: 'resize', width: w, height: h, dpr: dpr }); }
+      };
+    } catch(err){
+      return null;
+    }
+  }
+
+  function fallBackToMainThread(){
+    if(worker){ try{ worker.terminate(); }catch(e){} worker = null; }
+    usingWorker = false;
+    if(tier === 'off'){ active2CssFallback(); return; }
+    runner = buildMainThreadRunner();
+  }
+
+  var THREE_SRC_URL = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+
+  if(tier !== 'off'){
+    runner = buildWorkerRunner();
+    if(!runner){ runner = buildMainThreadRunner(); }
+  }
+
+  window.addEventListener('resize', function(){
+    if(runner && runner.resize){
+      runner.resize(window.innerWidth, window.innerHeight, Math.min(window.devicePixelRatio || 1, tier === 'full' ? 1.75 : 1.25));
+    }
+  });
+
+  /* ---------- main-thread presentation ticker ----------
+     DOM-only: canvas opacity, vignette, body class, live CSS accent
+     variables. No WebGL work happens here, so even if the browser
+     throttles this loop during a scrollbar drag, nothing about the
+     3D scene's own frame rate is affected — that runs independently
+     (on its own thread, if the Worker path is active). */
+  var presentRunning = false;
+  var intensity = 0;
   var lastVarUpdate = 0;
-  var flashLight = 0; // extra punch on drops, decays
-  var scenePace = 0.5;   // smoothed "how fast is the scene moving right now"
-  var driftPhaseX = 0, driftPhaseY = 0, rayPhase = 0, lightPacePhase = 0; // integrated, never jump
+  var presentClockPrev = 0;
 
-  var VERT = [
-    'attribute float aSize;',
-    'attribute float aAlpha;',
-    'attribute vec3 aColor;',
-    'varying float vAlpha;',
-    'varying vec3 vColor;',
-    'void main(){',
-    '  vAlpha = aAlpha;',
-    '  vColor = aColor;',
-    '  vec4 mv = modelViewMatrix * vec4(position, 1.0);',
-    '  gl_PointSize = aSize * (340.0 / -mv.z);',
-    '  gl_Position = projectionMatrix * mv;',
-    '}'
-  ].join('\n');
-  var FRAG = [
-    'precision mediump float;',
-    'varying float vAlpha;',
-    'varying vec3 vColor;',
-    'void main(){',
-    '  vec2 uv = gl_PointCoord - vec2(0.5);',
-    '  float d = length(uv);',
-    '  float a = smoothstep(0.5, 0.0, d) * vAlpha;',
-    '  if(a <= 0.003) discard;',
-    '  gl_FragColor = vec4(vColor, a);',
-    '}'
-  ].join('\n');
-
-  function buildScene(){
-    if(typeof THREE === 'undefined' || tier === 'off') return false;
-    renderer3 = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: false });
-    renderer3.setPixelRatio(Math.min(window.devicePixelRatio, tier === 'full' ? 1.75 : 1.25));
-    renderer3.setSize(window.innerWidth, window.innerHeight);
-
-    scene3 = new THREE.Scene();
-    camera3 = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
-    camera3.position.z = 11;
-
-    ambient = new THREE.AmbientLight(0x2a2430, 0.5);
-    scene3.add(ambient);
-
-    particleCount = TIER_COUNTS[tier];
-    pPos    = new Float32Array(particleCount * 3);
-    pSize   = new Float32Array(particleCount);
-    pAlpha  = new Float32Array(particleCount);
-    pColor  = new Float32Array(particleCount * 3);
-    pBand   = new Uint8Array(particleCount);
-    pAnchor = new Float32Array(particleCount * 3);
-    pSpin   = new Float32Array(particleCount); // per-particle orbital speed variance
-
-    particleGeo = new THREE.BufferGeometry();
-    particleGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-    particleGeo.setAttribute('aSize', new THREE.BufferAttribute(pSize, 1));
-    particleGeo.setAttribute('aAlpha', new THREE.BufferAttribute(pAlpha, 1));
-    particleGeo.setAttribute('aColor', new THREE.BufferAttribute(pColor, 3));
-
-    var particleMat = new THREE.ShaderMaterial({
-      vertexShader: VERT, fragmentShader: FRAG,
-      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
-    });
-    particles = new THREE.Points(particleGeo, particleMat);
-    scene3.add(particles);
-
-    // Real moving point lights, one per registered band-group (bass/mid/
-    // treble), each illuminating the lit "ray" planes below.
-    var glowTex = makeGlowTexture();
-    var groups = ['bass', 'mid', 'treble'];
-    for(var li = 0; li < LIGHT_COUNT[tier]; li++){
-      var light = new THREE.PointLight(0xffffff, 0, 30, 1.7);
-      light.userData.group = groups[li % groups.length];
-      light.userData.phase = Math.random() * Math.PI * 2;
-      lights.push(light);
-      scene3.add(light);
-
-      // visible glowing core for each light — this is what actually reads
-      // as a cinematic light source under the particles, rather than an
-      // invisible point that only tints distant geometry.
-      var coreMat = new THREE.SpriteMaterial({
-        map: glowTex, color: 0xffffff, transparent: true, opacity: 0,
-        depthWrite: false, blending: THREE.AdditiveBlending
-      });
-      var core = new THREE.Sprite(coreMat);
-      core.scale.set(2, 2, 1);
-      lightCores.push(core);
-      scene3.add(core);
-    }
-
-    var rayGeo = new THREE.PlaneGeometry(1.7, 1.7, 1, 1);
-    for(var ri = 0; ri < RAY_COUNT[tier]; ri++){
-      var rayMat = new THREE.MeshStandardMaterial({
-        color: 0xffffff, alphaMap: glowTex, transparent: true, opacity: 0.12,
-        roughness: 1, metalness: 0, side: THREE.DoubleSide,
-        depthWrite: false, blending: THREE.AdditiveBlending
-      });
-      var mesh = new THREE.Mesh(rayGeo, rayMat);
-      mesh.userData.group = groups[ri % groups.length];
-      rayMeshes.push(mesh);
-      scene3.add(mesh);
-    }
-
-    clock3 = new THREE.Clock();
-    window.addEventListener('resize', onResize3);
-    return true;
-  }
-
-  // Soft radial falloff so light patches read as small, elegant glows
-  // rather than hard-edged rectangles — a supporting element, not the
-  // dominant shape on screen.
-  function makeGlowTexture(){
-    var c = document.createElement('canvas');
-    c.width = c.height = 128;
-    var ctx = c.getContext('2d');
-    var g = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
-    g.addColorStop(0, 'rgba(255,255,255,1)');
-    g.addColorStop(0.35, 'rgba(255,255,255,0.5)');
-    g.addColorStop(1, 'rgba(255,255,255,0)');
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, 128, 128);
-    return new THREE.CanvasTexture(c);
-  }
-
-  function onResize3(){
-    if(!renderer3) return;
-    renderer3.setSize(window.innerWidth, window.innerHeight);
-    camera3.aspect = window.innerWidth / window.innerHeight;
-    camera3.updateProjectionMatrix();
-  }
-
-  /* Assigns every particle a frequency band + a base 3D anchor from the
-     track's generated world. Individual reactivity — not a global tint —
-     is what makes the field feel directed by the music rather than just
-     decorated by it. */
-  function reformWorld(seed){
-    if(!scene3 && !buildScene()) return;
-    currentWorld = buildWorld(seed);
-    var rand = currentWorld.rand;
-    for(var i = 0; i < particleCount; i++){
-      var band = i % 16; // spread evenly across all 16 analyser bands
-      pBand[i] = band;
-      pSpin[i] = 0.4 + rand() * 1.1;
-      var a = anchorFor(i, particleCount, currentWorld.pattern, rand);
-      pAnchor[i*3] = a[0]; pAnchor[i*3+1] = a[1]; pAnchor[i*3+2] = a[2];
-    }
-  }
-
-  function lerp(a, b, t){ return a + (b - a) * t; }
-
-  function tick3(){
-    if(!running) return;
-    requestAnimationFrame(tick3);
-    var dt = Math.min(clock3.getDelta(), 0.05);
-    var t = clock3.elapsedTime;
+  function presentTick(now){
+    if(!presentRunning) return;
+    requestAnimationFrame(presentTick);
+    var dt = presentClockPrev ? Math.min((now - presentClockPrev) / 1000, 0.05) : 0.016;
+    presentClockPrev = now;
 
     var target = active ? 1 : 0;
     intensity += (target - intensity) * (dt * 1.6);
@@ -3296,181 +3777,30 @@ window.VXData = {
       body.classList.remove('immersive-active');
       canvas.style.opacity = 0;
       vignette.style.opacity = 0;
-      running = false;
+      presentRunning = false;
       return;
     }
     body.classList.add('immersive-active');
+    canvas.style.opacity = intensity.toFixed(3);
 
     var audio = window.VX_AUDIO || {};
-    var bands = audio.bands || new Float32Array(16);
-    var level = audio.level || 0;
-    var beat = audio.beat || 0;
-    var snare = audio.snare || 0;
-    var transient = audio.transient || Math.max(beat, snare * 0.9);
-    var drop = audio.drop || 0;
-    var calm = audio.calm != null ? audio.calm : 1;
-    var anticip = audio.anticipation || 0;
-    flashLight = Math.max(flashLight * 0.88, drop);
-
-    var energy = (1 - calm * 0.82); // how "awake" the whole scene is right now
-    // overall pace of the scene — every orbit/rotation speed below reads
-    // from this, so quiet passages genuinely slow down and busy ones
-    // genuinely speed up. Smoothed (not snapped straight to the target)
-    // and always advanced by dt — never multiplied against the raw
-    // elapsed clock — so a sudden transient accelerates the scene
-    // instead of making it visibly jump.
-    var paceTarget = 0.3 + energy * 0.85 + level * 0.7 + transient * 0.35;
-    scenePace += (paceTarget - scenePace) * Math.min(1, dt * 2.6);
-    driftPhaseX += dt * 0.07 * scenePace;
-    driftPhaseY += dt * 0.05 * scenePace;
-    rayPhase    += dt * 0.09 * scenePace;
-    lightPacePhase += dt * scenePace * 0.35;
-
-    if(currentWorld){
-      for(var i = 0; i < particleCount; i++){
-        var band = pBand[i];
-        var bandE = bands[band] || 0;
-        var pulse = bandE + beat * 0.5 + snare * 0.35 + anticip * 0.22;
-        var ax = pAnchor[i*3], ay = pAnchor[i*3+1], az = pAnchor[i*3+2];
-
-        // orbital motion around the anchor, speed/radius tied to this
-        // particle's own band energy — bass particles swing wide and
-        // slow, treble particles flicker fast and tight.
-        var spin = pSpin[i] * currentWorld.rotationDir * scenePace;
-        var ang = t * spin + i * 0.017;
-        var radius = 0.3 + pulse * (band < 3 ? 2.6 : (band < 10 ? 1.4 : 0.7));
-        pPos[i*3]   = ax + Math.cos(ang) * radius * 0.6;
-        pPos[i*3+1] = ay + Math.sin(ang * 1.3) * radius * 0.5;
-        pPos[i*3+2] = az + Math.sin(ang) * radius * 0.6;
-
-        pSize[i] = (0.055 + pulse * 0.13 + beat * 0.07 + snare * 0.05) * (0.55 + energy * 0.85);
-        // particles genuinely appear/disappear: quiet bands fade low,
-        // but keep enough of a floor that they read as the scene's
-        // main character rather than disappearing between hits
-        pAlpha[i] = Math.min(1, 0.22 + pulse * 1.7) * (0.45 + energy * 0.7);
-
-        // a quick, subtle hue flicker on percussive hits — the "color
-        // shifts when the music calls for it" effect, layered on top of
-        // (never replacing) the track's own identity hue
-        var hue = HUE.bass * (band < 3 ? 1 : 0) + HUE.mid * (band >= 3 && band < 10 ? 1 : 0) + HUE.treble * (band >= 10 ? 1 : 0);
-        hue += currentWorld.hueOffset + snare * 16 + drop * 24;
-        var col = hueToRGB(hue, 0.6, 0.56 + pulse * 0.22);
-        pColor[i*3] = col.r; pColor[i*3+1] = col.g; pColor[i*3+2] = col.b;
-      }
-      particleGeo.getAttribute('position').needsUpdate = true;
-      particleGeo.getAttribute('aSize').needsUpdate = true;
-      particleGeo.getAttribute('aAlpha').needsUpdate = true;
-      particleGeo.getAttribute('aColor').needsUpdate = true;
-
-      // camera: slow directed drift, punched outward on a drop
-      var camPush = 1 + flashLight * 0.5;
-      camera3.position.x = Math.sin(driftPhaseX) * currentWorld.driftRadius * camPush;
-      camera3.position.y = Math.cos(driftPhaseY) * currentWorld.driftRadius * 0.4 * camPush;
-      camera3.position.z = 11 - flashLight * 1.4;
-      camera3.lookAt(0, 0, -4);
-
-      // real lights, each bound to a band-group, sweeping through space —
-      // sized and paced to read as small, precise light sources that
-      // visibly pulse AND physically move with the beat, not just glow.
-      // Stage-light behavior: kick pushes them out radially, snare gives
-      // them a sharp extra flare and a momentary hue kick of their own,
-      // and their sweep speed itself follows the music's own energy.
-      lights.forEach(function(light, li){
-        var g = light.userData.group;
-        var e = g === 'bass' ? audio.bass : (g === 'mid' ? audio.mid : audio.treble);
-        var ph = light.userData.phase + t * (0.22 + (e || 0) * 0.7) + lightPacePhase;
-        var kick = beat * 1.7 + snare * 1.1 + flashLight * 1.1;
-        light.position.set(
-          Math.sin(ph) * (6 + kick),
-          Math.cos(ph * 0.8) * (3.5 + kick * 0.6),
-          -2 + Math.sin(ph * 0.5) * 3 + kick * 0.9
-        );
-        var hue2 = (g === 'bass' ? HUE.bass : (g === 'mid' ? HUE.mid : HUE.treble)) + currentWorld.hueOffset + snare * 20 + drop * 30;
-        var lc = hueToRGB(hue2, 0.85, 0.6);
-        light.color = lc;
-        light.intensity = (0.35 + (e || 0) * 1.8 + beat * 1.2 + snare * 1.0 + flashLight * 2.0) * (0.45 + energy);
-
-        var core = lightCores[li];
-        if(core){
-          core.position.copy(light.position);
-          core.material.color.copy(lc);
-          var coreEnergy = Math.min(1, 0.1 + (e || 0) * 0.85 + beat * 0.6 + snare * 0.5 + flashLight * 0.7);
-          core.material.opacity = coreEnergy * intensity;
-          // pulse: base breathing tied to the band's own energy, plus a
-          // sharp momentary kick on the beat/snare itself
-          var beatKick = 1 + beat * 0.55 + snare * 0.4;
-          var coreScale = (1 + coreEnergy * 1.8) * beatKick;
-          core.scale.set(coreScale, coreScale, 1);
-        }
-      });
-      ambient.intensity = 0.26 + level * 0.32 + flashLight * 0.4;
-
-      rayMeshes.forEach(function(mesh, ri){
-        var g = mesh.userData.group;
-        var e = g === 'bass' ? audio.bass : (g === 'mid' ? audio.mid : audio.treble);
-        var kick = beat * 2.2 + snare * 1.4 + flashLight * 1.3;
-        mesh.rotation.z += dt * (0.05 + transient * 0.22) * currentWorld.rotationDir;
-        mesh.position.set(
-          Math.sin(rayPhase + ri) * (3.8 + kick),
-          Math.cos(rayPhase * 0.78 + ri) * (2.2 + kick * 0.6),
-          -6 - ri * 0.4 + kick
-        );
-        mesh.material.opacity = (0.08 + (e || 0) * 0.26 + snare * 0.16 + flashLight * 0.3) * intensity;
-        var rayScale = 1 + (e || 0) * 0.5 + beat * 0.3 + snare * 0.22;
-        mesh.scale.set(rayScale, rayScale, 1);
-      });
-    }
-
+    var t = now / 1000;
     if(t - lastVarUpdate > 0.12){
       lastVarUpdate = t;
       writeAccentVars(audio, intensity);
-      var vig = Math.min(0.9, 0.7 + level * 0.15) * intensity;
+      var vig = Math.min(0.94, 0.78 + (audio.level || 0) * 0.14) * intensity;
       vignette.style.opacity = vig.toFixed(3);
     }
-    canvas.style.opacity = intensity.toFixed(3);
 
-    monitorPerf(dt);
-    renderer3.render(scene3, camera3);
-  }
-
-  /* ---------- adaptive, one-way performance downgrade ---------- */
-  var frameTimes = [];
-  function monitorPerf(dt){
-    frameTimes.push(dt);
-    if(frameTimes.length < 90) return;
-    var avg = frameTimes.reduce(function(a,b){ return a+b; }, 0) / frameTimes.length;
-    frameTimes.length = 0;
-    if(tier === 'full' && avg > 0.028){ downgrade(); }
-    else if(tier === 'reduced' && avg > 0.045){ downgrade(); }
-  }
-
-  function downgrade(){
-    if(tier === 'full'){
-      tier = 'reduced';
-      var keep = Math.floor(TIER_COUNTS.full * 0.42);
-      particleGeo.setDrawRange(0, keep);
-      renderer3.setPixelRatio(1);
-      rayMeshes.forEach(function(m, i){ if(i >= 2){ m.visible = false; } });
-      lights.forEach(function(l, i){ if(i >= 2){ l.intensity = 0; } });
-      lightCores.forEach(function(c, i){ if(i >= 2){ c.visible = false; } });
-    } else if(tier === 'reduced'){
-      tier = 'off';
-      teardownScene();
-      ensureCssTicker();
+    if(runner && runner.updateAudio){
+      runner.updateAudio({
+        level: audio.level || 0, bass: audio.bass || 0, mid: audio.mid || 0, treble: audio.treble || 0,
+        beat: audio.beat || 0, drop: audio.drop || 0, calm: audio.calm != null ? audio.calm : 1,
+        anticipation: audio.anticipation || 0, tempoPeriod: audio.tempoPeriod || 0,
+        intensity: intensity, themeHue: (window.VX_THEME && window.VX_THEME.hue) || 168,
+        playing: !!audio.playing, bands: audio.bands || new Float32Array(16)
+      });
     }
-  }
-
-  function teardownScene(){
-    running = false;
-    if(renderer3){
-      particleGeo && particleGeo.dispose();
-      rayMeshes.forEach(function(m){ m.material.dispose(); m.geometry.dispose(); });
-      lightCores.forEach(function(c){ c.material.dispose(); });
-      renderer3.dispose();
-    }
-    canvas.style.opacity = 0;
-    scene3 = camera3 = renderer3 = particles = null;
-    rayMeshes = []; lights = []; lightCores = [];
   }
 
   /* ---------- public entry points, wired to the Audio Engine ---------- */
@@ -3489,37 +3819,32 @@ window.VXData = {
       ensureCssTicker();
       return;
     }
-    reformWorld(seed);
-    if(!running){
-      running = true;
-      requestAnimationFrame(tick3);
-    }
+    if(runner && runner.enter){ runner.enter(seed); }
+    if(!presentRunning){ presentRunning = true; presentClockPrev = 0; requestAnimationFrame(presentTick); }
   });
 
   window.addEventListener('vx:immersive-exit', function(){
     active = false;
   });
 
-  // The cover-art color sample arrives a little after the track starts
-  // (it needs the image to load) — when it does, re-tune the already
-  // running world's hue in place rather than reshuffling everything.
+  // The cover-art color sample arrives a little after the track starts —
+  // when it does, re-tune the already-running world's hue in place.
   window.addEventListener('vx:theme-refined', function(e){
-    if(!currentWorld || !e.detail) return;
-    currentWorld.hueOffset = e.detail.hue - 168;
+    if(!e.detail) return;
+    if(runner && runner.themeRefined){ runner.themeRefined(e.detail.hue); }
   });
 
-  // Drops re-shuffle the particle anchors (a lighter, faster version of
-  // the full track-start reform) and give lights/camera an extra punch —
-  // handled directly inside tick3 via VX_AUDIO.drop, except for the
-  // anchor reshuffle, which happens here so it's a discrete event rather
-  // than a continuous one.
-  window.addEventListener('vx:drop', function(e){
-    if(!currentWorld || tier === 'off') return;
-    var rand = currentWorld.rand;
-    for(var i = 0; i < particleCount; i++){
-      var a = anchorFor((i + Math.floor(rand() * particleCount)) % particleCount, particleCount, currentWorld.pattern, rand);
-      pAnchor[i*3] = a[0]; pAnchor[i*3+1] = a[1]; pAnchor[i*3+2] = a[2];
-    }
+  // Drops give the rig and the particle field a discrete, extra punch.
+  window.addEventListener('vx:drop', function(){
+    if(tier === 'off') return;
+    if(runner && runner.onDrop){ runner.onDrop(); }
+  });
+
+  // Every real onset gives the light rig its own fresh kick vector.
+  window.addEventListener('vx:beat', function(e){
+    if(tier === 'off') return;
+    var strength = (e.detail && e.detail.strength) || 0.6;
+    if(runner && runner.beat){ runner.beat(strength); }
   });
 })();
 </script>
