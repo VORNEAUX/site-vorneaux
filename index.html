@@ -3258,6 +3258,16 @@ window.VX_SCROLL_ACTIVE = false;
       window.dispatchEvent(new CustomEvent('vx:immersive-enter', {
         detail: { seed: window.VX_AUDIO.seed, title: track.title || '' }
       }));
+      // The 3D engine builds this track's "world" (and its own base hue
+      // offset) the instant it receives vx:immersive-enter, from
+      // whatever theme snapshot it last saw — which is still the
+      // previous track's color (or the idle default, on a cold start),
+      // never this one. Without this explicit correction right after,
+      // the engine's particle/light rig stays locked to that stale hue
+      // for the entire song: since one of its three anchor hues sits
+      // almost exactly on the site's own default gold, that shows up as
+      // a periodic flash back to "the original color" on every bass hit.
+      window.dispatchEvent(new CustomEvent('vx:theme-refined', { detail: { hue: cachedTheme.hue } }));
     } else {
       // Fallback: the catalog-wide resolution hasn't finished yet (rare —
       // only possible in the first instant after the page loads). Show an
@@ -3269,6 +3279,11 @@ window.VX_SCROLL_ACTIVE = false;
       window.dispatchEvent(new CustomEvent('vx:immersive-enter', {
         detail: { seed: window.VX_AUDIO.seed, title: track.title || '' }
       }));
+      // Same correction as above, using the same instant hash-based hue
+      // as the initial snapTheme() call, so the 3D rig and the CSS/site
+      // accent agree from the very first frame instead of only once the
+      // cover art finishes resolving a moment later.
+      window.dispatchEvent(new CustomEvent('vx:theme-refined', { detail: { hue: window.VX_AUDIO.seed % 360 } }));
       extractCoverTheme(track.cover, function(hsl){
         if(currentIndex !== index || !window.VX_AUDIO.playing) return;
         var theme = hsl
