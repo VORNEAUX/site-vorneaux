@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Much Should You Charge as a Freelancer? The Tax-Inclusive Formula | VORNEAUX</title>
+<meta name="description" content="Most freelance rate calculators ignore taxes, downtime, and unbillable hours — so the number they give you is already wrong. Here's the formula that isn't.">
+<meta name="keywords" content="freelance rate calculator, how much to charge as a freelancer, freelance hourly rate after taxes, freelance pricing formula, self-employed tax rate">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://vorneaux.com/notes/freelance-rate-tax-formula.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How Much Should You Actually Charge as a Freelancer?">
+<meta property="og:description" content="Most freelance rate calculators ignore taxes, downtime, and unbillable hours — so the number they give you is already wrong. Here's the formula that isn't.">
+<meta property="og:url" content="https://vorneaux.com/notes/freelance-rate-tax-formula.html">
+<meta property="og:image" content="https://vorneaux.com/vorneaux-logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How Much Should You Actually Charge as a Freelancer?">
+<meta name="twitter:description" content="The rate formula that accounts for taxes, downtime, and unbillable hours — the three things every generic calculator skips.">
+<link rel="icon" href="../vorneaux-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How Much Should You Actually Charge as a Freelancer?",
+  "description": "Most freelance rate calculators ignore taxes, downtime, and unbillable hours — so the number they give you is already wrong. Here's the formula that isn't.",
+  "author": { "@type": "Organization", "name": "VORNEAUX" },
+  "publisher": {
+    "@type": "Organization",
+    "name": "VORNEAUX",
+    "logo": { "@type": "ImageObject", "url": "https://vorneaux.com/vorneaux-logo.png" }
+  },
+  "datePublished": "2026-07-09",
+  "dateModified": "2026-07-09",
+  "mainEntityOfPage": "https://vorneaux.com/notes/freelance-rate-tax-formula.html"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What's a fair hourly rate for a freelancer?",
+      "acceptedAnswer": { "@type": "Answer", "text": "There's no universal number — it depends on your target take-home pay, your tax rate, and how many hours you can actually bill in a year once downtime and admin work are subtracted. A rate that looks generous on paper can still leave you underpaid once taxes and unbillable hours are factored in." }
+    },
+    {
+      "@type": "Question",
+      "name": "Should freelance rates include tax?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Your rate should be calculated backward from the income you want to keep after tax, not forward from a number that feels competitive. Otherwise you're quietly donating part of every invoice to a bill you haven't set aside for yet." }
+    },
+    {
+      "@type": "Question",
+      "name": "How many hours a year can a freelancer actually bill?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Most independent workers can bill 50–65% of their working hours once time off, admin, marketing, and slow weeks are accounted for — rarely the full 40-hour week a rate calculation is often based on." }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --obsidian:#050509;
+    --midnight:#0D0E17;
+    --line:#191922;
+    --gold:#C9A96E;
+    --gold-dim:color-mix(in srgb, var(--gold) 35%, transparent);
+    --smoke:#9E9080;
+    --ivory:#F2EDE4;
+    --serif:'Cormorant Garamond', serif;
+    --sans:'Jost', sans-serif;
+    --body:'DM Sans', sans-serif;
+    --ease:cubic-bezier(.16,.8,.24,1);
+    --fleo-cyan:#00d4e8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto;} }
+  body{
+    background:var(--obsidian);
+    color:var(--ivory);
+    font-family:var(--body);
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  ::selection{background:var(--gold);color:var(--obsidian);}
+
+  /* ---------- ambient backdrop ---------- */
+  #ambient{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(700px circle at 15% -10%, color-mix(in srgb, var(--gold) 7%, transparent), transparent 60%),
+      radial-gradient(900px circle at 100% 20%, color-mix(in srgb, var(--gold) 5%, transparent), transparent 55%);
+  }
+
+  /* ---------- nav ---------- */
+  nav{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:22px 6vw;
+    background:color-mix(in srgb, var(--obsidian) 82%, transparent);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-mark{ display:flex; align-items:center; gap:10px; font-family:var(--sans); font-size:14px; letter-spacing:.16em; text-decoration:none; color:var(--ivory); }
+  .nav-mark svg{ width:20px; height:20px; }
+  .nav-mark svg path{ stroke:var(--gold); }
+  .nav-back{ font-family:var(--sans); font-size:13px; letter-spacing:.08em; text-decoration:none; color:var(--smoke); display:flex; align-items:center; gap:8px; transition:color .3s var(--ease); }
+  .nav-back:hover{ color:var(--gold); }
+
+  /* ---------- article shell ---------- */
+  main{ position:relative; z-index:1; max-width:760px; margin:0 auto; padding:0 6vw; }
+
+  .art-head{ padding:72px 0 44px; text-align:center; }
+  .eyebrow{ font-family:var(--sans); font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); }
+  .meta-line{ font-family:var(--sans); font-size:12.5px; letter-spacing:.06em; color:var(--smoke); margin-top:14px; }
+  h1.headline{
+    font-family:var(--serif); font-weight:400; font-style:italic;
+    font-size:clamp(34px,5.4vw,58px); line-height:1.08; letter-spacing:-.01em;
+    margin:20px 0 22px;
+  }
+  .deck{ font-family:var(--sans); font-weight:300; font-size:clamp(16px,2vw,19px); color:var(--smoke); max-width:560px; margin:0 auto; line-height:1.6; }
+
+  .divider{ width:64px; height:1px; background:var(--gold-dim); margin:36px auto 0; }
+
+  /* ---------- table of contents ---------- */
+  .toc{
+    margin:48px 0 56px; padding:26px 30px;
+    border:1px solid var(--line); border-radius:2px;
+    background:color-mix(in srgb, var(--midnight) 60%, transparent);
+  }
+  .toc-title{ font-family:var(--sans); font-size:11.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin-bottom:14px; }
+  .toc ol{ list-style:none; counter-reset:toc; }
+  .toc li{ counter-increment:toc; margin:9px 0; font-family:var(--sans); font-size:14.5px; }
+  .toc li::before{ content:counter(toc,decimal-leading-zero) " — "; color:var(--gold); font-size:12px; }
+  .toc a{ text-decoration:none; color:var(--ivory); border-bottom:1px solid transparent; transition:border-color .3s var(--ease), color .3s var(--ease); }
+  .toc a:hover{ color:var(--gold); border-color:var(--gold-dim); }
+
+  /* ---------- body copy ---------- */
+  .prose{ font-family:var(--body); font-size:17.5px; color:color-mix(in srgb, var(--ivory) 92%, transparent); }
+  .prose p{ margin:0 0 22px; }
+  .prose h2{
+    font-family:var(--serif); font-weight:400; font-size:clamp(26px,3.6vw,36px);
+    color:var(--ivory); margin:56px 0 18px; scroll-margin-top:100px;
+  }
+  .prose h2 em{ color:var(--gold); font-style:italic; }
+  .prose h3{ font-family:var(--sans); font-weight:500; font-size:19px; color:var(--gold); margin:32px 0 14px; letter-spacing:.01em; }
+  .prose ul, .prose ol{ margin:0 0 22px 22px; }
+  .prose li{ margin-bottom:10px; }
+  .prose strong{ color:var(--ivory); font-weight:600; }
+
+  blockquote{
+    margin:36px 0; padding:6px 0 6px 28px;
+    border-left:2px solid var(--gold);
+    font-family:var(--serif); font-style:italic; font-size:23px; line-height:1.5;
+    color:var(--ivory);
+  }
+
+  .stat-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:38px 0 42px; }
+  .stat-box{ border:1px solid var(--line); padding:22px 18px; text-align:center; border-radius:2px; }
+  .stat-num{ font-family:var(--serif); font-size:32px; color:var(--gold); }
+  .stat-label{ font-family:var(--sans); font-size:12px; color:var(--smoke); margin-top:6px; letter-spacing:.03em; }
+  @media (max-width:640px){ .stat-row{ grid-template-columns:1fr; } }
+
+  .formula-box{
+    margin:34px 0; padding:30px 28px;
+    border:1px solid var(--gold-dim); border-radius:2px;
+    background:color-mix(in srgb, var(--gold) 4%, transparent);
+    font-family:var(--sans); font-size:15.5px; color:var(--ivory);
+  }
+  .formula-box .f-title{ font-size:11.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); margin-bottom:14px; }
+  .formula-box code{ font-family:'DM Sans',monospace; color:var(--gold); }
+
+  /* ---------- product discovery card ---------- */
+  .discover-card{
+    margin:52px 0; padding:34px 32px;
+    border:1px solid color-mix(in srgb, var(--fleo-cyan) 35%, var(--line));
+    border-radius:3px;
+    background:
+      radial-gradient(500px circle at 90% -10%, color-mix(in srgb, var(--fleo-cyan) 10%, transparent), transparent 60%),
+      color-mix(in srgb, var(--midnight) 70%, transparent);
+    position:relative; overflow:hidden;
+  }
+  .discover-card::before{
+    content:''; position:absolute; left:0; top:0; bottom:0; width:2px;
+    background:var(--fleo-cyan);
+  }
+  .discover-tag{ font-family:var(--sans); font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--fleo-cyan); }
+  .discover-card h4{ font-family:var(--serif); font-weight:400; font-size:26px; color:var(--ivory); margin:12px 0 12px; }
+  .discover-card h4 em{ color:var(--fleo-cyan); font-style:italic; }
+  .discover-card p{ font-family:var(--body); font-size:15.5px; color:var(--smoke); margin-bottom:20px; line-height:1.65; }
+  .discover-btn{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:var(--sans); font-size:13px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--obsidian); background:var(--fleo-cyan);
+    padding:13px 24px; text-decoration:none; border-radius:2px;
+    transition:transform .3s var(--ease), box-shadow .3s var(--ease);
+  }
+  .discover-btn:hover{ transform:translateY(-2px); box-shadow:0 10px 26px color-mix(in srgb, var(--fleo-cyan) 30%, transparent); }
+
+  /* ---------- FAQ ---------- */
+  .faq-item{ border-top:1px solid var(--line); padding:24px 0; }
+  .faq-q{ font-family:var(--sans); font-size:16.5px; font-weight:500; color:var(--ivory); margin-bottom:10px; }
+  .faq-a{ font-family:var(--body); font-size:15.5px; color:var(--smoke); line-height:1.65; }
+
+  /* ---------- closing / signature ---------- */
+  .signoff{ margin:60px 0 40px; padding-top:30px; border-top:1px solid var(--line); font-family:var(--sans); font-size:13px; color:var(--smoke); letter-spacing:.04em; }
+  .signoff strong{ color:var(--gold); font-family:var(--sans); }
+
+  /* ---------- related ---------- */
+  .related{ margin:60px 0 90px; }
+  .related-title{ font-family:var(--sans); font-size:11.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin-bottom:22px; }
+  .related-grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  @media (max-width:640px){ .related-grid{ grid-template-columns:1fr; } }
+  .related-card{ display:block; padding:22px 20px; border:1px solid var(--line); border-radius:2px; text-decoration:none; transition:border-color .3s var(--ease), transform .3s var(--ease); }
+  .related-card:hover{ border-color:var(--gold-dim); transform:translateY(-3px); }
+  .related-tag{ font-family:var(--sans); font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--gold); }
+  .related-card h5{ font-family:var(--serif); font-weight:400; font-size:19px; color:var(--ivory); margin:10px 0 6px; }
+  .related-card p{ font-family:var(--body); font-size:13.5px; color:var(--smoke); }
+
+  /* ---------- footer ---------- */
+  footer{ border-top:1px solid var(--line); padding:44px 6vw; text-align:center; position:relative; z-index:1; }
+  .footer-tagline{ font-family:var(--serif); font-style:italic; font-size:15px; color:var(--smoke); }
+  .footer-row{ margin-top:16px; font-family:var(--sans); font-size:11.5px; letter-spacing:.06em; color:color-mix(in srgb, var(--smoke) 65%, transparent); }
+</style>
+</head>
+<body>
+
+<div id="ambient" aria-hidden="true"></div>
+
+<nav>
+  <a href="../index.html" class="nav-mark">
+    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 8 L20 32 L34 8" stroke="var(--gold)" stroke-width="2" stroke-linecap="square"/>
+    </svg>
+    VORNEAUX
+  </a>
+  <a href="../index.html#field-notes" class="nav-back">← Field Notes</a>
+</nav>
+
+<main>
+
+  <header class="art-head">
+    <span class="eyebrow">Field Notes · Money</span>
+    <h1 class="headline">How much should you actually charge <em>as a freelancer?</em></h1>
+    <p class="deck">The formula almost every rate calculator gets wrong — because it starts from your invoice instead of your tax return.</p>
+    <p class="meta-line">Published July 2026 · 8 min read</p>
+    <div class="divider"></div>
+  </header>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this note</div>
+    <ol>
+      <li><a href="#mistake">The mistake baked into every rate calculator</a></li>
+      <li><a href="#formula">The tax-inclusive formula</a></li>
+      <li><a href="#hours">Why your billable hours are lower than you think</a></li>
+      <li><a href="#worked-example">A worked example, start to finish</a></li>
+      <li><a href="#tools">Where a spreadsheet stops being enough</a></li>
+      <li><a href="#faq">Questions worth answering before you set a rate</a></li>
+    </ol>
+  </nav>
+
+  <article class="prose">
+
+    <p>Somewhere between your last invoice and your last tax bill, there's a number you never actually calculated: <strong>what you kept.</strong> Not what you billed — what landed in your account after tax, after the slow month in August, after the client who paid net-60 instead of net-15. Most freelancers set their rate once, based on a number that felt fair, and then spend the next year quietly discovering it wasn't.</p>
+
+    <p>That's not a discipline problem. It's a math problem — and it starts with how the rate was calculated in the first place.</p>
+
+    <h2 id="mistake">The mistake baked into every <em>rate calculator</em></h2>
+
+    <p>Search "freelance rate calculator" and you'll find dozens of tools that do the same thing: take a target annual income, divide it by roughly 2,000 working hours, and hand you an hourly number. It looks precise. It isn't.</p>
+
+    <p>That calculation assumes three things that are almost never true for an independent worker:</p>
+
+    <ul>
+      <li><strong>That you'll bill 40 hours a week, every week.</strong> No freelancer does. Between admin, proposals, invoicing, and the inevitable slow stretch, actual billable time is usually 50–65% of total working hours.</li>
+      <li><strong>That the number you land on is what you keep.</strong> It isn't — it's what you're paid before tax, before software costs, before the portion of every invoice that already belongs to the government.</li>
+      <li><strong>That every year looks the same.</strong> It doesn't. Client churn, seasonal demand, and the time it takes to replace a lost contract all eat into the "2,000 hours a year" the calculator assumed.</li>
+    </ul>
+
+    <p>The result is a rate that looks reasonable on a proposal and quietly underpays you all year — because it was built forward from a guess, instead of backward from what you actually need to keep.</p>
+
+    <blockquote>A rate isn't a number you feel comfortable quoting. It's a number you've already tested against your tax bill.</blockquote>
+
+    <h2 id="formula">The tax-inclusive <em>formula</em></h2>
+
+    <p>The fix is to reverse the calculation. Instead of starting with an hourly number and hoping it covers everything, start with what you need to keep — and work backward through taxes and billable hours until you arrive at the number that actually protects it.</p>
+
+    <div class="formula-box">
+      <div class="f-title">The formula</div>
+      <p style="margin-bottom:14px;">Hourly rate = <code>(Target take-home income ÷ (1 − effective tax rate)) ÷ realistic billable hours per year</code></p>
+      <p style="margin-bottom:0;">Three inputs, in order: <strong>1)</strong> what you want to keep after tax, <strong>2)</strong> your actual effective tax rate — not your bracket, your real average rate — and <strong>3)</strong> the hours you can genuinely bill, not the hours in a calendar.</p>
+    </div>
+
+    <p>The second input is where most freelancers guess. Tax rates aren't flat — they depend on income level, entity structure, and country, and they change what "target income" actually means in take-home terms. A freelancer in one country keeping 78% of every dollar after tax has a completely different rate math than one keeping 62%. Guessing here is where the formula quietly breaks.</p>
+
+    <h2 id="hours">Why your billable hours are <em>lower than you think</em></h2>
+
+    <div class="stat-row">
+      <div class="stat-box"><div class="stat-num">~1,850</div><div class="stat-label">total working hours in a typical freelance year</div></div>
+      <div class="stat-box"><div class="stat-num">30–40%</div><div class="stat-label">of that time spent on admin, proposals, and non-billable work</div></div>
+      <div class="stat-box"><div class="stat-num">~1,100</div><div class="stat-label">realistic billable hours once that's subtracted</div></div>
+    </div>
+
+    <p>That gap — between hours worked and hours billed — is the single most underestimated variable in freelance pricing. It's also the one most calculators skip entirely, because "hours per year" is easier to model as a fixed number than as the moving target it actually is.</p>
+
+    <h3>What actually eats into billable time</h3>
+    <ul>
+      <li>Proposals and discovery calls that don't convert</li>
+      <li>Invoicing, bookkeeping, and client admin</li>
+      <li>The gap between finishing one project and starting the next</li>
+      <li>Time off you're not paid for, because nobody else is paying it</li>
+    </ul>
+
+    <h2 id="worked-example">A worked example, <em>start to finish</em></h2>
+
+    <p>Take a freelancer who wants to keep $70,000 after tax, in a jurisdiction where their effective tax rate — federal, state, and self-employment tax combined — comes to roughly 28%. And say a realistic year gives them 1,100 billable hours once admin and downtime are subtracted.</p>
+
+    <p>$70,000 ÷ (1 − 0.28) = <strong>$97,222</strong> in gross freelance income needed. $97,222 ÷ 1,100 billable hours = <strong>$88.38/hour</strong>, not the $35/hour a naive "$70,000 ÷ 2,000 hours" calculation would have suggested.</p>
+
+    <p>That's not a rounding error. It's the difference between a rate that funds a comfortable year and one that quietly runs a deficit disguised as a full calendar.</p>
+
+    <h2 id="tools">Where a spreadsheet stops being <em>enough</em></h2>
+
+    <p>The formula above is straightforward once you've seen it. The hard part is keeping it accurate — because your effective tax rate shifts as your income does, your billable-hour ratio shifts project to project, and a static spreadsheet built in January is usually wrong by June.</p>
+
+    <p>This is the exact gap FLEO™ was built to close: a rate calculator that runs the same tax-inclusive logic above, but with real tax tables for 12 countries instead of one flat percentage you have to estimate yourself — plus per-project profit tracking, so you can see, project by project, whether your rate is actually holding up against reality.</p>
+
+    <div class="discover-card">
+      <span class="discover-tag">Discover · FLEO™</span>
+      <h4>Set your rate with the tax math <em>already inside it.</em></h4>
+      <p>FLEO™ is a single offline file — no subscription, no account — that calculates your real rate against actual tax logic for 12 countries, then tracks whether every project is keeping you above it. Built for freelancers who want the number right the first time.</p>
+      <a href="../discover/fleo.html" class="discover-btn">See how FLEO™ works →</a>
+    </div>
+
+    <p>Whether or not FLEO™ is the tool you reach for, the principle holds: your rate is a tax calculation wearing an hourly number as a disguise. Calculate it as one, and the invoices that follow finally mean what they say.</p>
+
+    <h2 id="faq">Questions worth answering <em>before you set a rate</em></h2>
+
+    <div class="faq-item">
+      <div class="faq-q">What's a fair hourly rate for a freelancer?</div>
+      <div class="faq-a">There's no universal number. It depends on your target take-home pay, your effective tax rate, and how many hours you can genuinely bill once downtime and admin are subtracted — a rate that looks generous on paper can still leave you underpaid once those are factored in.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Should freelance rates include tax?</div>
+      <div class="faq-a">Yes — your rate should be calculated backward from the income you want to keep after tax, not forward from a number that simply feels competitive. Otherwise part of every invoice is quietly funding a bill you haven't set aside for.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How many hours a year can a freelancer actually bill?</div>
+      <div class="faq-a">Most independent workers can realistically bill 50–65% of their total working hours once time off, admin, proposals, and slow stretches are accounted for — well short of the 40-hour week many rate calculators assume by default.</div>
+    </div>
+
+    <p class="signoff">Written under the <strong>VORNEAUX</strong> signal — notes on building things meant to be used, not demoed.</p>
+
+  </article>
+
+  <section class="related">
+    <div class="related-title">Continue reading</div>
+    <div class="related-grid">
+      <a href="prompt-engineering-beginners-guide.html" class="related-card">
+        <span class="related-tag">Field Notes · AI</span>
+        <h5>Why your ChatGPT prompts keep failing</h5>
+        <p>The framework that separates a generic answer from an expert one.</p>
+      </a>
+      <a href="systems-over-show.html" class="related-card">
+        <span class="related-tag">Field Notes · Philosophy</span>
+        <h5>Systems over show</h5>
+        <p>Why the tools that last are built for use, not for the demo.</p>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p class="footer-tagline">"Built before the moment has a name." — VORNEAUX</p>
+  <div class="footer-row">© 2026 VORNEAUX. All rights reserved.</div>
+</footer>
+
+</body>
+</html>
