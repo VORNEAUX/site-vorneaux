@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Write AI Prompts That Actually Work (Beyond Templates)</title>
+<meta name="description" content="Most prompt templates stop working the moment your task changes. Here are the reasoning frameworks behind prompts that actually hold up — role, context, chain-of-thought, and few-shot, explained with real examples.">
+<meta name="keywords" content="how to write ai prompts, prompt engineering for beginners, chatgpt prompt framework, how to write good prompts, ai prompt templates">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://vorneaux.com/notes/ai-prompt-engineering-guide.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to Write AI Prompts That Actually Work (Beyond Templates)">
+<meta property="og:description" content="Most prompt templates stop working the moment your task changes. Here are the reasoning frameworks behind prompts that actually hold up — role, context, chain-of-thought, and few-shot, explained with real examples.">
+<meta property="og:image" content="https://vorneaux.com/assets/brand/og-prompt-guide.jpg">
+<meta property="og:url" content="https://vorneaux.com/notes/ai-prompt-engineering-guide.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How to Write AI Prompts That Actually Work (Beyond Templates)">
+<meta name="twitter:description" content="Most prompt templates stop working the moment your task changes. Here are the reasoning frameworks behind prompts that actually hold up — role, context, chain-of-thought, and few-shot, explained with real examples.">
+<meta name="theme-color" content="#050509">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 8 L20 32 L34 8' stroke='%23C9A96E' stroke-width='2' fill='none'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@400;500;600&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Write AI Prompts That Actually Work (Beyond Templates)",
+  "description": "Most prompt templates stop working the moment your task changes. Here are the reasoning frameworks behind prompts that actually hold up — role, context, chain-of-thought, and few-shot, explained with real examples.",
+  "image": "https://vorneaux.com/assets/brand/og-prompt-guide.jpg",
+  "author": { "@type": "Organization", "name": "VORNEAUX" },
+  "publisher": { "@type": "Organization", "name": "VORNEAUX", "logo": { "@type": "ImageObject", "url": "https://vorneaux.com/assets/brand/logo.png" } },
+  "datePublished": "2026-07-09",
+  "dateModified": "2026-07-09",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://vorneaux.com/notes/ai-prompt-engineering-guide.html" },
+  "keywords": "how to write ai prompts, prompt engineering for beginners, chatgpt prompt framework, how to write good prompts, ai prompt templates"
+}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the best way to write AI prompts?","acceptedAnswer":{"@type":"Answer","text":"Specify four things deliberately: the role the AI should take, the context it needs, the precise task, and the output format. Combining a role with a chain-of-thought instruction (asking it to reason through the problem step by step) consistently produces more reliable results than a plain, one-line question."}},
+{"@type":"Question","name":"What is prompt engineering in simple terms?","acceptedAnswer":{"@type":"Answer","text":"It's the practice of structuring instructions to an AI model so it has everything it needs — role, context, task, and format — to produce a precise, usable answer on the first try, instead of a generic one that needs heavy editing."}},
+{"@type":"Question","name":"Why do my ChatGPT prompts stop working?","acceptedAnswer":{"@type":"Answer","text":"Templates are built for one specific combination of task, audience, and format. When any of those shifts — a new task, a different model version, a different output need — the template's assumptions no longer match, even though the wording still looks reasonable."}},
+{"@type":"Question","name":"What is chain-of-thought prompting?","acceptedAnswer":{"@type":"Answer","text":"Asking the model to reason through a problem in visible steps before giving a final answer, rather than jumping straight to a conclusion. It's especially effective for anything involving calculations, comparisons, or multi-step decisions."}},
+{"@type":"Question","name":"How many prompt frameworks do I actually need to know?","acceptedAnswer":{"@type":"Answer","text":"A small number — role-based, chain-of-thought, and few-shot cover the large majority of everyday tasks. The skill is knowing which one (or combination) fits the problem in front of you, not memorizing dozens of named techniques."}}]}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type":"ListItem","position":1,"name":"VORNEAUX","item":"https://vorneaux.com/"},
+    {"@type":"ListItem","position":2,"name":"Field Notes","item":"https://vorneaux.com/index.html#field-notes"},
+    {"@type":"ListItem","position":3,"name":"How to Write AI Prompts That Actually Work (Beyond Templates)","item":"https://vorneaux.com/notes/ai-prompt-engineering-guide.html"}
+  ]
+}
+</script>
+<style>
+:root{ --accent-override: #8B6BFF; }
+
+:root{
+  --obsidian:#050509;
+  --midnight:#0D0E17;
+  --card:#0B0C14;
+  --line:#191922;
+  --line-lit:#2A2A38;
+  --gold:#C9A96E;
+  --gold-dim:color-mix(in srgb, var(--gold) 35%, transparent);
+  --gold-glow:color-mix(in srgb, var(--gold) 55%, transparent);
+  --smoke:#9E9080;
+  --ivory:#F2EDE4;
+  --accent:var(--gold);
+  --accent-dim:color-mix(in srgb, var(--accent) 18%, transparent);
+  --serif:'Cormorant Garamond', serif;
+  --sans:'Jost', sans-serif;
+  --body:'DM Sans', sans-serif;
+  --mono:'JetBrains Mono', ui-monospace, monospace;
+  --ease:cubic-bezier(.16,.8,.24,1);
+  --maxw:1180px;
+  --read-w:700px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;scroll-padding-top:96px;}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto;}
+  *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;}
+}
+body{
+  background:var(--obsidian);
+  color:var(--ivory);
+  font-family:var(--body);
+  line-height:1.7;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  position:relative;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 55% 40% at 12% 0%, color-mix(in srgb, var(--accent) 8%, transparent) 0%, transparent 55%),
+    radial-gradient(ellipse 45% 40% at 100% 20%, color-mix(in srgb, var(--gold) 5%, transparent) 0%, transparent 55%);
+}
+a{color:inherit;text-decoration:none;}
+img{max-width:100%;display:block;}
+::selection{background:var(--gold);color:var(--obsidian);}
+::-webkit-scrollbar{width:8px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--line-lit);border-radius:4px;}
+
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 2.5rem;position:relative;z-index:1;}
+@media (max-width:700px){ .wrap{padding:0 1.4rem;} }
+
+.eyebrow{
+  font-family:var(--sans);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--accent);font-weight:500;display:flex;align-items:center;gap:10px;
+}
+.eyebrow::before{content:'';width:16px;height:1px;background:var(--accent);display:inline-block;flex-shrink:0;}
+
+/* ---------- Reading progress spine (desktop signature element) ---------- */
+#spine{
+  position:fixed;left:28px;top:50%;transform:translateY(-50%);
+  width:2px;height:min(50vh,460px);background:var(--line);border-radius:2px;
+  z-index:150;display:block;
+}
+#spineFill{
+  position:absolute;left:0;top:0;width:100%;height:0%;
+  background:linear-gradient(180deg,var(--accent),var(--gold));
+  border-radius:2px;transition:height .1s linear;
+  box-shadow:0 0 12px var(--accent-dim);
+}
+#spineDots{position:absolute;left:50%;top:0;width:1px;height:100%;}
+.spine-dot{
+  position:absolute;left:50%;width:7px;height:7px;border-radius:50%;
+  background:var(--obsidian);border:1.5px solid var(--line-lit);transform:translate(-50%,-50%);
+  transition:border-color .3s,background .3s,transform .3s;cursor:pointer;
+}
+.spine-dot.active{border-color:var(--accent);background:var(--accent);transform:translate(-50%,-50%) scale(1.3);}
+@media (max-width:1180px){ #spine{display:none;} }
+
+/* ---------- Mobile progress bar ---------- */
+#topProgress{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--gold));z-index:250;width:0%;transition:width .1s linear;}
+
+/* ---------- Nav ---------- */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.4rem 2.5rem;transition:padding .4s var(--ease), background .4s var(--ease), border-color .4s;
+  border-bottom:1px solid transparent;
+}
+nav.scrolled{padding:1rem 2.5rem;background:rgba(5,5,9,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom-color:var(--line);}
+@media (max-width:700px){ nav, nav.scrolled{padding:1.1rem 1.4rem;} }
+.nav-mark{display:flex;align-items:center;gap:.7rem;font-family:var(--sans);font-size:13px;letter-spacing:.24em;color:var(--ivory);}
+.nav-mark svg{width:20px;height:20px;display:block;}
+.nav-mark svg path{stroke:var(--gold);}
+.nav-links{display:flex;align-items:center;gap:2.2rem;}
+.nav-links a{font-family:var(--sans);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--smoke);transition:color .3s;position:relative;}
+.nav-links a:hover{color:var(--accent);}
+.nav-cta{
+  font-family:var(--sans);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--obsidian);background:var(--accent);padding:.75rem 1.3rem;border-radius:2px;
+  transition:transform .3s var(--ease), box-shadow .3s var(--ease); font-weight:500;
+}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 8px 22px -6px var(--accent-dim);}
+@media (max-width:860px){ .nav-links{display:none;} }
+
+/* ---------- Hero ---------- */
+.hero{padding:11rem 0 4.5rem;position:relative;overflow:hidden;}
+.hero-tag-row{display:flex;align-items:center;gap:1rem;margin-bottom:1.6rem;flex-wrap:wrap;}
+.hero-meta{font-family:var(--mono);font-size:11.5px;color:var(--smoke);letter-spacing:.04em;}
+.hero-meta span{color:var(--accent);}
+h1.headline{
+  font-family:var(--serif);font-weight:400;font-style:normal;
+  font-size:clamp(2.3rem,5.4vw,3.9rem);line-height:1.08;letter-spacing:-.01em;
+  max-width:15ch;color:#fff;margin-bottom:1.6rem;
+}
+h1.headline em{color:var(--accent);font-style:italic;}
+.hero-dek{font-family:var(--body);font-size:clamp(1.02rem,1.6vw,1.22rem);color:var(--smoke);max-width:56ch;line-height:1.75;}
+.hero-art{position:absolute;right:-6%;top:6%;width:52%;max-width:640px;opacity:.9;pointer-events:none;z-index:0;}
+@media (max-width:980px){ .hero-art{display:none;} }
+.hero-art svg{width:100%;height:auto;}
+
+/* ---------- Layout: article + sticky TOC ---------- */
+.article-layout{display:grid;grid-template-columns:220px minmax(0,var(--read-w));gap:4.5rem;justify-content:center;padding:1rem 0 5rem;}
+@media (max-width:1180px){ .article-layout{grid-template-columns:minmax(0,var(--read-w));justify-content:center;} }
+.toc-desktop{position:sticky;top:120px;align-self:start;}
+.toc-desktop .eyebrow{margin-bottom:1.1rem;}
+.toc-desktop ol{list-style:none;display:flex;flex-direction:column;gap:.65rem;}
+.toc-desktop a{font-size:12.5px;color:var(--smoke);line-height:1.5;transition:color .25s;display:block;}
+.toc-desktop a:hover, .toc-desktop a.active{color:var(--accent);}
+@media (max-width:1180px){ .toc-desktop{display:none;} }
+
+.toc-mobile{display:none;margin:0 0 2.5rem;border:1px solid var(--line);border-radius:4px;overflow:hidden;}
+.toc-mobile summary{
+  cursor:pointer;padding:1rem 1.2rem;font-family:var(--sans);font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--accent);display:flex;justify-content:space-between;align-items:center;
+}
+.toc-mobile ol{list-style:none;padding:0 1.2rem 1.1rem;display:flex;flex-direction:column;gap:.6rem;}
+.toc-mobile a{font-size:14px;color:var(--smoke);}
+@media (max-width:1180px){ .toc-mobile{display:block;} }
+
+/* ---------- Article typography ---------- */
+.article{max-width:var(--read-w);}
+.article > p.lede{
+  font-family:var(--serif);font-size:1.4rem;line-height:1.6;color:var(--ivory);
+  margin-bottom:2.4rem;font-weight:400;
+}
+.article > p.lede::first-letter{
+  font-family:var(--serif);font-size:4.4rem;line-height:.78;float:left;
+  padding:.06em .12em 0 0;color:var(--accent);font-weight:500;
+}
+.article h2{
+  font-family:var(--serif);font-weight:400;color:#fff;font-size:clamp(1.55rem,3vw,2.1rem);
+  line-height:1.22;margin:3.2rem 0 1.2rem;letter-spacing:-.005em;scroll-margin-top:110px;
+}
+.article h3{
+  font-family:var(--sans);font-weight:500;color:var(--ivory);font-size:1.02rem;
+  letter-spacing:.02em;margin:2.1rem 0 .9rem;
+}
+.article p{color:#C9C4B8;font-size:1.03rem;line-height:1.85;margin-bottom:1.35rem;}
+.article strong{color:var(--ivory);font-weight:600;}
+.article em{color:var(--accent);font-style:italic;}
+.article ul, .article ol{color:#C9C4B8;font-size:1.03rem;line-height:1.85;margin:0 0 1.5rem 1.3rem;}
+.article li{margin-bottom:.55rem;padding-left:.3rem;}
+.article ol{counter-reset:item;}
+.article a.inline-link{color:var(--accent);text-decoration:underline;text-decoration-color:var(--accent-dim);text-underline-offset:3px;}
+.article a.inline-link:hover{text-decoration-color:var(--accent);}
+
+blockquote.pull{
+  font-family:var(--serif);font-size:1.5rem;line-height:1.5;color:#fff;font-style:italic;
+  padding:.3rem 0 .3rem 1.6rem;border-left:2px solid var(--accent);margin:2.4rem 0;
+}
+blockquote.pull cite{display:block;font-family:var(--sans);font-style:normal;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--smoke);margin-top:.9rem;}
+
+.divider{width:44px;height:1px;background:var(--line-lit);margin:3rem 0;}
+
+table.data-table{width:100%;border-collapse:collapse;margin:1.6rem 0 2rem;font-size:.92rem;}
+table.data-table th{font-family:var(--sans);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);text-align:left;padding:.7rem .9rem;border-bottom:1px solid var(--line-lit);}
+table.data-table td{padding:.75rem .9rem;border-bottom:1px solid var(--line);color:#C9C4B8;}
+table.data-table tr:last-child td{border-bottom:none;}
+
+.callout{
+  margin:2.6rem 0;padding:1.9rem 2rem;border:1px solid var(--line-lit);border-left:2px solid var(--accent);
+  border-radius:3px;background:linear-gradient(135deg, color-mix(in srgb, var(--accent) 6%, transparent), transparent 60%);
+  position:relative;
+}
+.callout .co-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:.7rem;display:block;}
+.callout h4{font-family:var(--serif);font-weight:400;font-size:1.35rem;color:#fff;margin-bottom:.6rem;}
+.callout p{color:#B9B3A6;font-size:.96rem;margin-bottom:1.1rem;}
+.callout-btn{
+  display:inline-flex;align-items:center;gap:8px;font-family:var(--sans);font-size:11.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);border:1px solid var(--accent-dim);padding:.7rem 1.2rem;border-radius:2px;
+  transition:background .25s,color .25s,border-color .25s;
+}
+.callout-btn:hover{background:var(--accent);color:var(--obsidian);border-color:var(--accent);}
+
+/* ---------- Checklist card ---------- */
+.checklist{list-style:none;margin:1.6rem 0 2rem;display:flex;flex-direction:column;gap:.8rem;}
+.checklist li{display:flex;gap:.85rem;align-items:flex-start;font-size:1.01rem;color:#C9C4B8;line-height:1.6;}
+.checklist li svg{flex-shrink:0;margin-top:.28em;color:var(--accent);}
+
+/* ---------- FAQ ---------- */
+.faq-item{border-bottom:1px solid var(--line);}
+.faq-q{
+  width:100%;text-align:left;background:none;border:none;color:var(--ivory);cursor:pointer;
+  font-family:var(--sans);font-size:1.02rem;font-weight:500;padding:1.4rem 0;display:flex;justify-content:space-between;align-items:center;gap:1rem;
+}
+.faq-q:hover{color:var(--accent);}
+.faq-q .plus{flex-shrink:0;width:20px;height:20px;position:relative;}
+.faq-q .plus::before,.faq-q .plus::after{content:'';position:absolute;background:var(--accent);left:50%;top:50%;transform:translate(-50%,-50%);transition:transform .3s var(--ease),opacity .3s;}
+.faq-q .plus::before{width:12px;height:1.4px;}
+.faq-q .plus::after{width:1.4px;height:12px;}
+.faq-item.open .plus::after{transform:translate(-50%,-50%) rotate(90deg);opacity:0;}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s var(--ease);}
+.faq-a p{color:#B9B3A6;font-size:.98rem;line-height:1.75;padding-bottom:1.5rem;max-width:62ch;}
+.faq-item.open .faq-a{max-height:400px;}
+
+/* ---------- Final CTA ---------- */
+.final-cta{margin-top:4.5rem;padding:3rem 2.4rem;border:1px solid var(--line-lit);border-radius:6px;text-align:center;position:relative;overflow:hidden;background:var(--card);}
+.final-cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 0%, var(--accent-dim), transparent 70%);pointer-events:none;}
+.final-cta h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.6rem,3vw,2.2rem);color:#fff;margin-bottom:.9rem;position:relative;}
+.final-cta p{color:var(--smoke);max-width:48ch;margin:0 auto 1.8rem;font-size:.98rem;position:relative;}
+.btn-row{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;position:relative;}
+.btn{
+  display:inline-flex;align-items:center;gap:9px;font-family:var(--sans);font-weight:500;font-size:12.5px;
+  letter-spacing:.08em;text-transform:uppercase;padding:1rem 1.8rem;border-radius:2px;transition:all .3s var(--ease);
+}
+.btn-primary{background:var(--accent);color:var(--obsidian);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 28px -8px var(--accent-dim);}
+.btn-ghost{border:1px solid var(--line-lit);color:var(--ivory);}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+
+/* ---------- Related ---------- */
+.related{margin-top:4.5rem;}
+.related .eyebrow{margin-bottom:1.6rem;}
+.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem;}
+@media (max-width:820px){ .related-grid{grid-template-columns:1fr;} }
+.related-card{border:1px solid var(--line);border-radius:4px;padding:1.5rem;transition:border-color .3s,transform .3s;display:block;}
+.related-card:hover{border-color:var(--line-lit);transform:translateY(-3px);}
+.related-tag{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:.7rem;}
+.related-card h4{font-family:var(--serif);font-weight:400;font-size:1.15rem;color:#fff;margin-bottom:.5rem;line-height:1.3;}
+.related-card p{font-size:.88rem;color:var(--smoke);line-height:1.55;}
+
+/* ---------- Author / byline ---------- */
+.byline{display:flex;align-items:center;gap:.9rem;margin:2.4rem 0 0;padding-top:2rem;border-top:1px solid var(--line);}
+.byline-mark{width:34px;height:34px;border-radius:50%;border:1px solid var(--gold-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.byline-mark svg{width:15px;height:15px;}
+.byline-name{font-family:var(--sans);font-size:12.5px;letter-spacing:.06em;color:var(--ivory);}
+.byline-role{font-family:var(--mono);font-size:10.5px;color:var(--smoke);margin-top:2px;}
+
+/* ---------- Footer ---------- */
+footer{padding:5rem 0 3rem;border-top:1px solid var(--line);margin-top:3rem;position:relative;z-index:1;}
+.footer-tagline{font-family:var(--serif);font-style:italic;font-size:1.05rem;color:var(--smoke);text-align:center;margin-bottom:2.2rem;}
+.footer-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;font-family:var(--mono);font-size:11px;color:var(--smoke);}
+.footer-links{display:flex;gap:1.5rem;}
+.footer-links a{color:var(--smoke);transition:color .3s;}
+.footer-links a:hover{color:var(--accent);}
+
+/* ---------- Reveal ---------- */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .8s var(--ease),transform .8s var(--ease);}
+.reveal.in{opacity:1;transform:translateY(0);}
+
+:root{ --accent: #8B6BFF; }
+</style>
+</head>
+
+<body>
+
+<nav id="mainNav">
+  <a href="../index.html" class="nav-mark">
+    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 8 L20 32 L34 8" stroke-width="2" stroke-linecap="square"/>
+    </svg>
+    VORNEAUX
+  </a>
+  <div class="nav-links">
+    <a href="../index.html#field-notes">Field Notes</a>
+    <a href="../catalog.html">Signals</a>
+    <a href="../discover/fleo.html">FLEO™</a>
+    <a href="../discover/omnimind.html">OMNIMIND™</a>
+  </div>
+  <a href="../index.html#field-notes" class="nav-cta">All Articles</a>
+</nav>
+<div id="topProgress"></div>
+<div id="spine"><div id="spineFill"></div><div id="spineDots"></div></div>
+
+
+<style>#spineDots .spine-dot:nth-child(1){ top:0.0%; }
+#spineDots .spine-dot:nth-child(2){ top:16.666666666666664%; }
+#spineDots .spine-dot:nth-child(3){ top:33.33333333333333%; }
+#spineDots .spine-dot:nth-child(4){ top:50.0%; }
+#spineDots .spine-dot:nth-child(5){ top:66.66666666666666%; }
+#spineDots .spine-dot:nth-child(6){ top:83.33333333333334%; }
+#spineDots .spine-dot:nth-child(7){ top:100.0%; }</style>
+
+<main>
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-tag-row">
+      <span class="eyebrow">AI &amp; Systems</span>
+      <span class="hero-meta">Field Notes · <span>10 min read</span></span>
+    </div>
+    <h1 class="headline">How to Write AI Prompts That Actually <em>Work</em></h1>
+    <p class="hero-dek">Not another list of templates to copy and paste. The reasoning frameworks underneath — so your prompts still work when the task changes, the model changes, or the stakes go up.</p>
+  </div>
+  <div class="hero-art">
+<svg viewBox="0 0 600 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g stroke="#8B6BFF" stroke-width="1.2" opacity="0.85">
+    <circle cx="90" cy="250" r="7" fill="#8B6BFF" stroke="none"/>
+    <line x1="97" y1="250" x2="230" y2="140"/>
+    <line x1="97" y1="250" x2="230" y2="250"/>
+    <line x1="97" y1="250" x2="230" y2="360"/>
+    <circle cx="235" cy="140" r="5" fill="#8B6BFF" stroke="none" opacity="0.8"/>
+    <circle cx="235" cy="250" r="5" fill="#8B6BFF" stroke="none" opacity="0.8"/>
+    <circle cx="235" cy="360" r="5" fill="#8B6BFF" stroke="none" opacity="0.8"/>
+    <line x1="240" y1="140" x2="380" y2="90"/>
+    <line x1="240" y1="140" x2="380" y2="170"/>
+    <line x1="240" y1="250" x2="380" y2="220"/>
+    <line x1="240" y1="250" x2="380" y2="290"/>
+    <line x1="240" y1="360" x2="380" y2="330"/>
+    <line x1="240" y1="360" x2="380" y2="410"/>
+    <circle cx="385" cy="90" r="3.5" fill="#8B6BFF" stroke="none" opacity="0.6"/>
+    <circle cx="385" cy="170" r="3.5" fill="#8B6BFF" stroke="none" opacity="0.6"/>
+    <circle cx="385" cy="220" r="3.5" fill="#8B6BFF" stroke="none" opacity="0.6"/>
+    <circle cx="385" cy="290" r="3.5" fill="#8B6BFF" stroke="none" opacity="0.6"/>
+    <circle cx="385" cy="330" r="3.5" fill="#8B6BFF" stroke="none" opacity="0.6"/>
+    <circle cx="385" cy="410" r="3.5" fill="#8B6BFF" stroke="none" opacity="0.6"/>
+  </g>
+  <g opacity="0.15">
+    <line x1="40" y1="140" x2="560" y2="140" stroke="#ffffff"/>
+    <line x1="40" y1="340" x2="560" y2="340" stroke="#ffffff"/>
+  </g>
+</svg>
+</div>
+</section>
+
+<div class="wrap">
+<div class="article-layout">
+  
+<aside class="toc-desktop">
+  <span class="eyebrow">On this page</span>
+  <ol><li><a href="#why-templates-break">Why prompt templates break</a></li>
+<li><a href="#four-levers">The four levers every strong prompt pulls</a></li>
+<li><a href="#frameworks">Three frameworks, and when to use each</a></li>
+<li><a href="#before-after">Before / after: the same request, rebuilt</a></li>
+<li><a href="#mistakes">Mistakes that quietly sabotage your prompts</a></li>
+<li><a href="#your-own-system">Building a reusable prompt system</a></li>
+<li><a href="#faq">Frequently asked questions</a></li></ol>
+</aside>
+
+  <div>
+    
+<details class="toc-mobile">
+  <summary>On this page <span>↓</span></summary>
+  <ol><li><a href="#why-templates-break">Why prompt templates break</a></li>
+<li><a href="#four-levers">The four levers every strong prompt pulls</a></li>
+<li><a href="#frameworks">Three frameworks, and when to use each</a></li>
+<li><a href="#before-after">Before / after: the same request, rebuilt</a></li>
+<li><a href="#mistakes">Mistakes that quietly sabotage your prompts</a></li>
+<li><a href="#your-own-system">Building a reusable prompt system</a></li>
+<li><a href="#faq">Frequently asked questions</a></li></ol>
+</details>
+
+    <article class="article">
+      
+<p class="lede">Somewhere on your computer is a note, a doc, or a bookmarked thread full of "prompts that work." And at some point, one of them stopped working — the model updated, the task shifted slightly, or you needed something the template was never built to handle. That's not bad luck. It's the predictable failure mode of treating prompting as a collection of scripts instead of a skill.</p>
+
+<p>Templates are frozen answers to yesterday's question. What actually holds up is understanding the small number of structural moves that make any prompt work — so you can build a good one for a task nobody has written a template for yet, including the one you'll have next week.</p>
+
+<h2 id="why-templates-break">Why prompt templates break</h2>
+<p>A template encodes one specific combination of role, context, and format for one specific task. Change any of those three variables — a different audience, a different data source, a different output shape — and the template's logic no longer matches the job, even though the words still look reasonable pasted into the box.</p>
+<p>This is the same reason a single email template doesn't work for every client, and a single deck template doesn't work for every pitch. The underlying <em>structure</em> of good communication transfers. The specific words rarely do.</p>
+<p>The fix isn't a bigger library of templates. It's learning the handful of moves that make a prompt precise, so you can construct the right one on demand — in under a minute, for whatever the task actually is.</p>
+
+<h2 id="four-levers">The four levers every strong prompt pulls</h2>
+<p>Almost every reliable prompt — regardless of framework — is really just four decisions, made deliberately instead of left implicit:</p>
+
+<h3>1. Role — who is answering?</h3>
+<p>"Act as a senior tax accountant reviewing a freelancer's estimated quarterly payments" produces a fundamentally different answer than a bare question, because it constrains the model's assumed expertise, tone, and priorities before it writes a single word.</p>
+
+<h3>2. Context — what does it need to know that it can't guess?</h3>
+<p>The model doesn't know your business, your audience, or your constraints unless you tell it. Vague prompts force it to guess at context; guessed context is where generic, forgettable output comes from.</p>
+
+<h3>3. Task — what, precisely, should happen?</h3>
+<p>"Help me with my pricing" is a topic, not a task. "Calculate my minimum hourly rate given this income target, these expenses, and this tax bracket" is a task. The more precisely the task is stated, the less the model has to infer.</p>
+
+<h3>4. Format — what shape should the answer take?</h3>
+<p>A table, a numbered list, a short paragraph, a specific word count, a particular tone — leaving format unspecified means you'll get whatever the model's default happens to be, and then spend time reshaping it yourself.</p>
+<p>Every framework below is just a different way of sequencing these four levers for a different kind of problem.</p>
+
+<h2 id="frameworks">Three frameworks, and when to use each</h2>
+
+<h3>Role-based prompting — for expertise and tone</h3>
+<p>Best when you need a specific point of view or level of expertise applied consistently. Assign a role, give it a clear scope, and let it filter every answer through that lens: "You are a brand strategist reviewing this landing page for a premium audio product. Flag anything that reads generic."</p>
+
+<h3>Chain-of-thought — for anything with real reasoning steps</h3>
+<p>Best for calculations, decisions with trade-offs, or multi-step logic. Instead of asking for the answer directly, ask the model to reason through it step by step before concluding. This single change measurably reduces errors on anything involving numbers, comparisons, or sequenced logic — because it forces the intermediate steps into the open, where they can be checked.</p>
+
+<h3>Few-shot prompting — for matching a specific style or pattern</h3>
+<p>Best when the shape of the output matters as much as the content — a specific writing voice, a particular data format, a consistent structure across many outputs. Show two or three examples of exactly what "right" looks like before asking for a new one, and the model pattern-matches to your standard instead of a generic default.</p>
+<p>Strong prompts often combine two of these: a role for tone, chain-of-thought for the logic, and a format instruction to lock the shape — all in the same request.</p>
+
+<h2 id="before-after">Before / after: the same request, rebuilt</h2>
+<p><strong>Before</strong> (template-style, generic): <em>"Write a pricing page for my product."</em></p>
+<p><strong>After</strong> (framework-built): <em>"Act as a conversion copywriter who specializes in premium digital products. I'm writing the pricing section for [product], a one-time-purchase tool for [audience] that solves [specific problem]. Before writing, reason through what objection a skeptical buyer would raise at this price point, then write three short sections that pre-empt it: what's included, why it's priced this way, and a low-risk way to try it. Keep the tone confident, not salesy. Output in Markdown with H3 headers."</em></p>
+<p>Same underlying request. One version produces something you'll rewrite. The other gives you a working first draft — because it specified role, context, a reasoning step, and format, instead of leaving all four to chance.</p>
+
+<div class="callout">
+  <span class="co-eyebrow">A System Built On These Frameworks</span>
+  <h4>This is exactly what OMNIMIND™ is built around.</h4>
+  <p>OMNIMIND is an offline prompt system covering 150+ prompts across 12 domains, built on 8 named prompt-engineering frameworks — including the ones above — so instead of hunting for the right template, you build the right prompt on demand, every time, for whatever the task actually is.</p>
+  <a href="../discover/omnimind.html" class="callout-btn">Explore the OMNIMIND framework library →</a>
+</div>
+
+<h2 id="mistakes">Mistakes that quietly sabotage your prompts</h2>
+<ul class="checklist">
+  <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><strong>Asking and formatting in the same breath.</strong> Separate "what to figure out" from "how to present it" — bundling both often degrades the reasoning.</span></li>
+  <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><strong>Leaving the audience unstated.</strong> "Explain this" to whom — a beginner, a specialist, a client? The same fact needs a different explanation for each.</span></li>
+  <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><strong>Accepting the first answer as final.</strong> The best prompts are often the second version, refined after seeing what the first attempt got wrong.</span></li>
+  <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><strong>Reusing a prompt built for a different scale.</strong> A prompt tuned for a single email rarely holds up unchanged for a twelve-page report — the format lever needs to move with the task.</span></li>
+</ul>
+
+<h2 id="your-own-system">Building a reusable prompt system</h2>
+<p>The real goal isn't a bigger pile of one-off prompts — it's a small, personal library organized by <em>framework</em>, not by task, so you can recombine pieces instead of starting from a blank page every time. A useful structure:</p>
+<ol>
+  <li><strong>A handful of role definitions</strong> you reuse across tasks — strategist, editor, analyst, reviewer — each with a one-line scope.</li>
+  <li><strong>A short list of chain-of-thought scaffolds</strong> for the kinds of decisions you make repeatedly.</li>
+  <li><strong>A small set of format specs</strong> — the exact structures you actually use in your work — that you can bolt onto any request.</li>
+</ol>
+<p>Once those three pieces exist, most new tasks become a thirty-second assembly job instead of a search through old chat history for something close enough.</p>
+
+<div class="divider"></div>
+<h2 id="faq">Frequently asked questions</h2>
+
+      <div class="faq-list">
+<div class="faq-item">
+  <button class="faq-q"><span>What is the best way to write AI prompts?</span><span class="plus"></span></button>
+  <div class="faq-a"><p>Specify four things deliberately: the role the AI should take, the context it needs, the precise task, and the output format. Combining a role with a chain-of-thought instruction (asking it to reason through the problem step by step) consistently produces more reliable results than a plain, one-line question.</p></div>
+</div>
+
+<div class="faq-item">
+  <button class="faq-q"><span>What is prompt engineering in simple terms?</span><span class="plus"></span></button>
+  <div class="faq-a"><p>It's the practice of structuring instructions to an AI model so it has everything it needs — role, context, task, and format — to produce a precise, usable answer on the first try, instead of a generic one that needs heavy editing.</p></div>
+</div>
+
+<div class="faq-item">
+  <button class="faq-q"><span>Why do my ChatGPT prompts stop working?</span><span class="plus"></span></button>
+  <div class="faq-a"><p>Templates are built for one specific combination of task, audience, and format. When any of those shifts — a new task, a different model version, a different output need — the template's assumptions no longer match, even though the wording still looks reasonable.</p></div>
+</div>
+
+<div class="faq-item">
+  <button class="faq-q"><span>What is chain-of-thought prompting?</span><span class="plus"></span></button>
+  <div class="faq-a"><p>Asking the model to reason through a problem in visible steps before giving a final answer, rather than jumping straight to a conclusion. It's especially effective for anything involving calculations, comparisons, or multi-step decisions.</p></div>
+</div>
+
+<div class="faq-item">
+  <button class="faq-q"><span>How many prompt frameworks do I actually need to know?</span><span class="plus"></span></button>
+  <div class="faq-a"><p>A small number — role-based, chain-of-thought, and few-shot cover the large majority of everyday tasks. The skill is knowing which one (or combination) fits the problem in front of you, not memorizing dozens of named techniques.</p></div>
+</div></div>
+
+      <div class="byline">
+        <div class="byline-mark">
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 8 L20 32 L34 8" stroke="#C9A96E" stroke-width="2" stroke-linecap="square"/></svg>
+        </div>
+        <div>
+          <div class="byline-name">VORNEAUX</div>
+          <div class="byline-role">Field Notes · digital products &amp; systems</div>
+        </div>
+      </div>
+
+      <div class="final-cta reveal">
+        <h3>Build the system, not just the habit.</h3>
+        <p>Every idea in this article is available as a tool you can start using in the next five minutes — no subscription, no setup call.</p>
+        <div class="btn-row">
+          <a href="../discover/fleo.html" class="btn btn-primary">Explore FLEO™</a>
+          <a href="../discover/omnimind.html" class="btn btn-ghost">Explore OMNIMIND™</a>
+        </div>
+      </div>
+
+      <div class="related">
+        <span class="eyebrow">Continue reading</span>
+        <div class="related-grid">
+          
+<a href="how-to-price-freelance-work.html" class="related-card reveal">
+  <span class="related-tag">Pricing &amp; Money</span>
+  <h4>How Much Should You Really Charge as a Freelancer?</h4>
+  <p>The real rate formula — income, real billable hours, taxes, and margin.</p>
+</a>
+<a href="one-person-business-systems.html" class="related-card reveal">
+  <span class="related-tag">Systems</span>
+  <h4>How to Run a One-Person Business Without Burning Out</h4>
+  <p>The two systems every solo operator needs: financial clarity and AI leverage.</p>
+</a>
+          <a href="../index.html#field-notes" class="related-card reveal">
+            <span class="related-tag">Field Notes</span>
+            <h4>All articles</h4>
+            <p>Browse every Field Notes entry from VORNEAUX.</p>
+          </a>
+        </div>
+      </div>
+    </article>
+  </div>
+</div>
+</div>
+</main>
+
+
+<footer>
+  <div class="wrap">
+    <p class="footer-tagline">“Built before the moment has a name.” — VORNEAUX</p>
+    <div class="footer-row">
+      <span>&copy; 2026 VORNEAUX. All rights reserved.</span>
+      <div class="footer-links">
+        <a href="../index.html">Home</a>
+        <a href="../discover/fleo.html">FLEO™</a>
+        <a href="../discover/omnimind.html">OMNIMIND™</a>
+        <a href="../index.html#field-notes">Field Notes</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+document.getElementById('spineDots').innerHTML = '<div class="spine-dot" data-target="why-templates-break"></div><div class="spine-dot" data-target="four-levers"></div><div class="spine-dot" data-target="frameworks"></div><div class="spine-dot" data-target="before-after"></div><div class="spine-dot" data-target="mistakes"></div><div class="spine-dot" data-target="your-own-system"></div><div class="spine-dot" data-target="faq"></div>';
+</script>
+<script>
+// nav scroll state
+var nav = document.querySelector('nav');
+function onScroll(){
+  if(window.scrollY > 40){ nav.classList.add('scrolled'); } else { nav.classList.remove('scrolled'); }
+  updateProgress();
+}
+window.addEventListener('scroll', onScroll, {passive:true});
+onScroll();
+
+// reveal on scroll
+var revealEls = document.querySelectorAll('.reveal');
+if('IntersectionObserver' in window){
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:.12});
+  revealEls.forEach(function(el){ io.observe(el); });
+} else {
+  revealEls.forEach(function(el){ el.classList.add('in'); });
+}
+
+// reading progress (spine + mobile bar) + active section
+var article = document.querySelector('.article');
+var spineFill = document.getElementById('spineFill');
+var topProgress = document.getElementById('topProgress');
+var sections = Array.prototype.slice.call(document.querySelectorAll('.article h2[id]'));
+var dots = Array.prototype.slice.call(document.querySelectorAll('.spine-dot'));
+var tocLinksDesktop = Array.prototype.slice.call(document.querySelectorAll('.toc-desktop a'));
+
+function updateProgress(){
+  if(!article) return;
+  var rect = article.getBoundingClientRect();
+  var total = article.offsetHeight - window.innerHeight * 0.5;
+  var scrolled = Math.min(Math.max(-rect.top, 0), total);
+  var pct = total > 0 ? (scrolled/total)*100 : 0;
+  if(spineFill) spineFill.style.height = pct + '%';
+  if(topProgress) topProgress.style.width = pct + '%';
+
+  var activeId = null;
+  sections.forEach(function(sec){
+    if(sec.getBoundingClientRect().top < 140){ activeId = sec.id; }
+  });
+  dots.forEach(function(d){ d.classList.toggle('active', d.dataset.target === activeId); });
+  tocLinksDesktop.forEach(function(a){ a.classList.toggle('active', a.getAttribute('href') === '#' + activeId); });
+}
+updateProgress();
+
+dots.forEach(function(d){
+  d.addEventListener('click', function(){
+    var t = document.getElementById(d.dataset.target);
+    if(t) t.scrollIntoView({behavior:'smooth'});
+  });
+});
+
+// FAQ accordion
+document.querySelectorAll('.faq-item').forEach(function(item){
+  item.querySelector('.faq-q').addEventListener('click', function(){
+    var wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(function(o){ o.classList.remove('open'); });
+    if(!wasOpen) item.classList.add('open');
+  });
+});
+</script>
+</body>
+</html>
