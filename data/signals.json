@@ -1,13 +1,11 @@
 [
-  {
+    {
     "id": "one-heart-una-vida",
     "title": "One Heart // Una Vida",
     "tag": "Signal 004 · 2026",
     "duration": "3:14",
     "src": "assets/audio/tracks/one-heart-una-vida.mp3",
-    "cover": "assets/audio/covers/one-heart-una-vida.jpg",
-    "mood": "Two languages, one pulse — a slow-burn promise written in bilingual harmony.",
-    "accent": "#C9536E"
+    "cover": "assets/audio/covers/one-heart-una-vida.jpg"
   },
   {
     "id": "shadow-mode",
@@ -15,9 +13,7 @@
     "tag": "Signal 003 · 2026",
     "duration": "0:45",
     "src": "assets/audio/tracks/shadow-mode.mp3",
-    "cover": "assets/audio/covers/shadow-mode.jpg",
-    "mood": "Low light, lower profile — moving through the frame without ever entering it.",
-    "accent": "#6E5EC9"
+    "cover": "assets/audio/covers/shadow-mode.jpg"
   },
   {
     "id": "neon-rush",
@@ -25,9 +21,7 @@
     "tag": "Signal 002 · 2026",
     "duration": "1:03",
     "src": "assets/audio/tracks/neon-rush.mp3",
-    "cover": "assets/audio/covers/neon-rush.jpg",
-    "mood": "Wet asphalt and sodium light — a city accelerating past its own limits.",
-    "accent": "#4ED2C9"
+    "cover": "assets/audio/covers/neon-rush.jpg"
   },
   {
     "id": "lock-in-nightshift",
@@ -35,8 +29,6 @@
     "tag": "Signal 001 · 2026",
     "duration": "0:33",
     "src": "assets/audio/tracks/lock-in-nightshift.mp3",
-    "cover": "assets/audio/covers/lock-in-nightshift.jpg",
-    "mood": "Fluorescent hallways, deadline heartbeat — the mind locked in after everyone else has gone home.",
-    "accent": "#C9934E"
+    "cover": "assets/audio/covers/lock-in-nightshift.jpg"
   }
 ]
