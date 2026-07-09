@@ -3,14 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>SIGNALS — The Complete Archive · VORNEAUX</title>
-<meta name="description" content="Every transmission VORNEAUX has released, in one place — an archive built to be entered, not scrolled.">
-<meta property="og:title" content="SIGNALS — VORNEAUX">
-<meta property="og:description" content="The complete archive. Sound before the moment.">
+<title>Signals — The VORNEAUX Archive</title>
+<meta name="description" content="Every VORNEAUX signal, catalogued. A cinematic archive of original audio — sound before the moment has a name.">
+<meta property="og:title" content="Signals — VORNEAUX">
+<meta property="og:description" content="Every signal we've sent into the world, catalogued.">
+<meta property="og:image" content="vorneaux-logo.png">
 <link rel="icon" href="vorneaux-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Jost:wght@300;400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
     --obsidian:#050509;
@@ -24,11 +25,14 @@
     --sans:'Jost', sans-serif;
     --body:'DM Sans', sans-serif;
     --ease:cubic-bezier(.16,.8,.24,1);
-    /* Same reactive-theme tokens as the main site: idle defaults match
-       brand gold exactly, then get overridden per-chamber / per-track. */
-    --acc: var(--gold);
-    --acc-dim: var(--gold-dim);
-    --acc-ivory: var(--ivory);
+    /* Catalog ambient tokens — the archive's own "current atmosphere".
+       Idle default matches the brand gold 1:1; the moment a Signal
+       becomes active, these shift toward that track's own resolved
+       colour (see resolvePlateAccent in the script), the same way the
+       home page's immersive layer works, but scoped to this page. */
+    --cat-accent: var(--gold);
+    --cat-accent-dim: var(--gold-dim);
+    --cat-glow: color-mix(in srgb, var(--gold) 16%, transparent);
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -39,390 +43,505 @@
     font-family:var(--body);
     overflow-x:hidden;
     -webkit-font-smoothing:antialiased;
-    transition:background 1.1s var(--ease);
   }
-  ::selection{ background:var(--acc); color:var(--obsidian); }
-  a{ color:inherit; text-decoration:none; }
-  img{ display:block; max-width:100%; }
-  .wrap{ max-width:1180px; margin:0 auto; padding:0 clamp(1.4rem, 4vw, 3rem); }
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--cat-accent);color:var(--obsidian);}
+  button{font:inherit;}
 
-  /* ---------- Ambient starfield (canvas2D — light on every device) ---------- */
-  #field{
-    position:fixed; inset:0; width:100%; height:100%;
-    z-index:0; pointer-events:none;
-    opacity:0.85;
+  /* ---------- Load veil ---------- */
+  #loadVeil{
+    position:fixed; inset:0; z-index:400;
+    background:var(--obsidian);
+    display:flex; align-items:center; justify-content:center;
+    transition:opacity 1s var(--ease), visibility 1s var(--ease);
   }
-  #fieldWash{
-    position:fixed; inset:0; z-index:0; pointer-events:none;
-    background:radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--acc) 16%, transparent), transparent 62%),
-               radial-gradient(90% 70% at 85% 100%, color-mix(in srgb, var(--acc) 10%, transparent), transparent 65%);
-    transition:background 1.4s var(--ease);
+  #loadVeil svg{ width:44px;height:44px; opacity:0; animation:veilMark 1.6s var(--ease) forwards; }
+  @keyframes veilMark{
+    0%{opacity:0; transform:scale(0.85);}
+    55%{opacity:1; transform:scale(1);}
+    100%{opacity:0; transform:scale(1.04);}
   }
-  main, nav, footer{ position:relative; z-index:2; }
+  #loadVeil.hidden{ opacity:0; visibility:hidden; }
+  @media (prefers-reduced-motion:reduce){
+    #loadVeil{ transition:opacity .3s linear; }
+    #loadVeil svg{ animation:none; opacity:1; }
+  }
 
-  /* ---------- Nav ---------- */
+  /* ---------- Ambient canvas + grain + cursor glow ---------- */
+  #scene{ position:fixed; inset:0; width:100%; height:100%; z-index:0; display:block; }
+  #grain{
+    position:fixed; inset:-60px; z-index:55; pointer-events:none;
+    opacity:0.05; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation:grainShift 1s steps(2) infinite;
+  }
+  @keyframes grainShift{
+    0%{ transform:translate(0,0); } 50%{ transform:translate(-2%,1%); } 100%{ transform:translate(1%,-2%); }
+  }
+  @media (prefers-reduced-motion:reduce){ #grain{ animation:none; opacity:0.035; } }
+  .glow-cursor{
+    position:fixed; inset:0; z-index:1; pointer-events:none;
+    background:radial-gradient(480px circle at var(--mx,50%) var(--my,30%), color-mix(in srgb, var(--cat-accent) 8%, transparent), transparent 60%);
+    transition:opacity .4s ease, background 1.2s ease;
+  }
+  /* Archive-wide theme wash — the atmosphere behind the whole page
+     leans toward whichever Signal currently has focus. */
+  #catalogWash{
+    position:fixed; inset:0; z-index:1; pointer-events:none; opacity:0.55;
+    background:
+      radial-gradient(65% 55% at 12% 0%, color-mix(in srgb, var(--cat-accent) 16%, transparent), transparent 65%),
+      radial-gradient(60% 60% at 100% 100%, color-mix(in srgb, var(--cat-accent) 12%, transparent), transparent 70%);
+    transition:background 1.2s var(--ease);
+  }
+
+  main, header, footer{position:relative;z-index:2;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 2.5rem;}
+  @media (max-width:700px){ .wrap{padding:0 1.4rem;} }
+
+  .eyebrow{
+    font-family:var(--sans); font-size:11px; letter-spacing:0.22em;
+    text-transform:uppercase; color:var(--smoke); font-weight:400;
+  }
+
+  .reveal{ opacity:0; transform:translateY(34px); transition:opacity 1s var(--ease), transform 1s var(--ease); }
+  .reveal.in{opacity:1; transform:translateY(0);}
+  @media (prefers-reduced-motion:reduce){ .reveal{opacity:1; transform:none; transition:none;} }
+
+  section{ padding:8rem 0; position:relative; }
+  @media (max-width:700px){ section{padding:5rem 0;} }
+
+  /* ---------- Nav (identical language + mobile fix as index.html) ---------- */
   nav{
-    position:fixed; top:0; left:0; right:0; z-index:80;
+    position:fixed; top:0; left:0; right:0; z-index:120;
     display:flex; align-items:center; justify-content:space-between;
-    padding:1.6rem clamp(1.4rem, 4vw, 3rem);
-    background:linear-gradient(to bottom, rgba(5,5,9,0.85), transparent);
-    backdrop-filter:blur(6px);
+    padding:1.6rem 2.5rem;
+    transition:padding .4s var(--ease), background .4s var(--ease);
   }
-  .back-link{
-    display:flex; align-items:center; gap:0.6rem;
-    font-family:var(--sans); font-size:12px; letter-spacing:0.18em; text-transform:uppercase;
-    color:var(--smoke); transition:color .4s var(--ease);
+  nav.scrolled{ padding:1rem 2.5rem; background:rgba(5,5,9,0.94); border-bottom:1px solid var(--line); }
+  @media (max-width:700px){ nav, nav.scrolled{padding:1.1rem 1.4rem;} }
+  .nav-mark{ display:flex; align-items:center; gap:0.7rem; font-family:var(--sans); font-size:13px; letter-spacing:0.24em; color:var(--ivory); }
+  .nav-mark svg{width:20px;height:20px;display:block;}
+  .nav-mark svg path, #loadVeil svg path{ stroke:var(--gold); transition:stroke .8s var(--ease); }
+  .nav-links{display:flex;gap:2.4rem; align-items:center;}
+  .nav-links a{
+    font-family:var(--sans); font-size:11px; letter-spacing:0.16em; text-transform:uppercase;
+    color:var(--smoke); transition:color .3s ease; position:relative;
   }
-  .back-link:hover{ color:var(--ivory); }
-  .back-link svg{ width:13px; height:13px; transition:transform .3s var(--ease); }
-  .back-link:hover svg{ transform:translateX(-3px); }
-  .nav-title{
-    font-family:var(--sans); font-size:11px; letter-spacing:0.32em; text-transform:uppercase; color:var(--smoke);
+  .nav-links a:hover{color:var(--cat-accent);}
+  .nav-links a::after{
+    content:''; position:absolute; left:0; bottom:-6px; width:0; height:1px;
+    background:var(--cat-accent); transition:width .3s var(--ease);
   }
-  .nav-title b{ color:var(--acc); font-weight:500; transition:color .8s var(--ease); }
+  .nav-links a:hover::after{width:100%;}
+  .nav-links a.current{ color:var(--ivory); }
+  .nav-links a.current::after{ width:100%; background:var(--gold-dim); }
 
-  /* ---------- Threshold / hero ---------- */
-  #threshold{
-    min-height:100svh;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    text-align:center;
-    padding:7rem 1.4rem 4rem;
-    position:relative;
+  .nav-toggle{
+    display:none; position:relative; width:40px; height:40px; align-items:center; justify-content:center;
+    background:color-mix(in srgb, var(--gold) 5%, transparent); border:1px solid var(--gold-dim);
+    border-radius:2px; cursor:pointer; z-index:60; -webkit-tap-highlight-color:transparent; flex:none;
   }
-  .th-eyebrow{
-    font-family:var(--sans); font-size:11px; letter-spacing:0.4em; text-transform:uppercase;
-    color:var(--acc); margin-bottom:1.6rem; opacity:0;
+  .nav-toggle span, .nav-toggle span::before, .nav-toggle span::after{
+    content:''; position:absolute; left:50%; top:50%; width:17px; height:1px; background:var(--gold);
+    transform:translate(-50%,-50%); transition:transform .35s var(--ease), opacity .25s ease, background .3s ease;
+  }
+  .nav-toggle span::before{ transform:translate(-50%,-50%) translateY(-6px); }
+  .nav-toggle span::after{ transform:translate(-50%,-50%) translateY(6px); }
+  body.nav-open .nav-toggle span{ background:transparent; }
+  body.nav-open .nav-toggle span::before{ transform:translate(-50%,-50%) rotate(45deg); }
+  body.nav-open .nav-toggle span::after{ transform:translate(-50%,-50%) rotate(-45deg); }
+  body.nav-open{ overflow:hidden; }
+  .nav-scrim{
+    display:none; position:fixed; inset:0; z-index:118; background:rgba(3,3,6,0.55);
+    opacity:0; pointer-events:none; transition:opacity .4s var(--ease);
+  }
+  @media (max-width:860px){
+    .nav-toggle{ display:flex; }
+    .nav-scrim{ display:block; }
+    body.nav-open .nav-scrim{ opacity:1; pointer-events:auto; }
+    .nav-links{
+      position:fixed; top:var(--nav-h, 68px); left:0.9rem; right:0.9rem; z-index:119;
+      max-height:calc(100vh - var(--nav-h, 68px) - 1.6rem);
+      max-height:calc(100dvh - var(--nav-h, 68px) - 1.6rem);
+      overflow-y:auto; -webkit-overflow-scrolling:touch;
+      display:flex; flex-direction:column; gap:0; padding:0.6rem 1.6rem;
+      border-radius:16px; border:1px solid var(--gold-dim);
+      background:
+        radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--gold) 9%, transparent), transparent 60%),
+        linear-gradient(165deg, rgba(11,11,17,0.92), rgba(6,6,10,0.90));
+      backdrop-filter:blur(24px) saturate(140%);
+      -webkit-backdrop-filter:blur(24px) saturate(140%);
+      box-shadow:0 26px 60px rgba(0,0,0,0.5), 0 0 0 1px color-mix(in srgb, var(--gold) 4%, transparent) inset;
+      opacity:0; visibility:hidden; pointer-events:none;
+      transform:translateY(-12px) scale(0.98); transform-origin:top center;
+      transition:opacity .4s var(--ease), transform .4s var(--ease), visibility 0s linear .4s;
+    }
+    body.nav-open .nav-links{
+      opacity:1; visibility:visible; pointer-events:auto; transform:translateY(0) scale(1);
+      transition:opacity .4s var(--ease), transform .4s var(--ease), visibility 0s linear 0s;
+    }
+    .nav-links a{
+      font-family:var(--serif); font-size:1.18rem; font-weight:400; letter-spacing:0.02em;
+      color:var(--ivory); padding:0.85rem 0.2rem; border-bottom:1px solid var(--line);
+      opacity:0; transform:translateY(8px);
+      transition:opacity .3s ease, transform .3s ease, color .3s ease, border-color .3s ease;
+    }
+    .nav-links a:last-child{ border-bottom:none; }
+    .nav-links a::after{ display:none; }
+    body.nav-open .nav-links a{ opacity:1; transform:translateY(0); }
+    body.nav-open .nav-links a:nth-child(1){ transition-delay:.06s; }
+    body.nav-open .nav-links a:nth-child(2){ transition-delay:.10s; }
+    body.nav-open .nav-links a:nth-child(3){ transition-delay:.14s; }
+    body.nav-open .nav-links a:nth-child(4){ transition-delay:.18s; }
+    body.nav-open .nav-links a:nth-child(5){ transition-delay:.22s; }
+    body.nav-open .nav-links a:nth-child(6){ transition-delay:.26s; }
+  }
+
+  /* ---------- Archive hero ---------- */
+  .archive-hero{
+    min-height:100vh; min-height:100dvh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:8rem 2rem 4rem;
+  }
+  .archive-hero .eyebrow{ margin-bottom:1.3rem; }
+  .archive-hero h1{
+    font-family:var(--serif); font-weight:300; font-style:italic;
+    font-size:clamp(2.6rem, 7vw, 5.4rem); line-height:1.05; max-width:16em;
+    color:var(--ivory); letter-spacing:-0.01em;
+  }
+  .archive-hero .sub{
+    margin-top:1.6rem; max-width:36em; color:var(--smoke); font-size:1.02rem; line-height:1.7;
+  }
+  .archive-stat{
+    margin-top:2.6rem; display:flex; gap:2.6rem; flex-wrap:wrap; justify-content:center;
+  }
+  .archive-stat div{ text-align:center; }
+  .archive-stat b{
+    display:block; font-family:var(--serif); font-size:2rem; font-weight:400; color:var(--cat-accent);
     transition:color 1s var(--ease);
   }
-  .th-title{
-    font-family:var(--serif); font-weight:300; letter-spacing:0.02em;
-    font-size:clamp(3.6rem, 13vw, 9rem); line-height:0.92;
-    color:var(--ivory);
-    opacity:0;
+  .archive-stat span{ font-family:var(--sans); font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:var(--smoke); }
+  .scroll-cue{
+    position:absolute; bottom:2.4rem; left:50%; transform:translateX(-50%);
+    display:flex; flex-direction:column; align-items:center; gap:0.5rem;
   }
-  .th-title em{ font-style:italic; color:var(--acc); transition:color 1s var(--ease); }
-  .th-sub{
-    font-family:var(--body); font-size:clamp(0.95rem, 1.6vw, 1.15rem); color:var(--smoke);
-    max-width:38ch; margin:1.8rem auto 0; line-height:1.7; opacity:0;
-  }
-  .th-meta{
-    display:flex; gap:2.2rem; margin-top:2.6rem; opacity:0;
-    font-family:var(--sans); font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--smoke);
-  }
-  .th-meta b{ display:block; font-family:var(--serif); font-size:1.6rem; font-weight:300; color:var(--ivory); letter-spacing:0; text-transform:none; margin-bottom:0.3rem; }
+  .scroll-cue span:first-child{ font-family:var(--sans); font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--smoke); }
+  .scroll-cue .line{ width:1px; height:34px; background:linear-gradient(var(--cat-accent), transparent); animation:cueDrift 1.8s ease-in-out infinite; }
+  @keyframes cueDrift{ 0%,100%{opacity:0.3; transform:scaleY(0.7);} 50%{opacity:1; transform:scaleY(1);} }
+  @media (prefers-reduced-motion:reduce){ .scroll-cue .line{ animation:none; } }
 
-  .th-fade-in{ animation:thFadeIn 1.2s var(--ease) forwards; }
-  @keyframes thFadeIn{ from{ opacity:0; transform:translateY(16px); } to{ opacity:1; transform:translateY(0); } }
-  @media (prefers-reduced-motion:reduce){ .th-fade-in{ animation:thFadeInReduced .6s ease forwards; } }
-  @keyframes thFadeInReduced{ from{opacity:0;} to{opacity:1;} }
+  /* =========================================================
+     THE VAULT — the cinematic core of the archive. A perspective
+     stage holding one "plate" per Signal. Desktop/tablet: a coverflow
+     of tilted monoliths in 3D space, navigated by arrows, dots,
+     drag, or keyboard. Phones: the same plates, stacked and
+     scroll-snapped full-bleed — same materials, same atmosphere,
+     no 3D math needed on the smallest, least powerful screens.
+     ========================================================= */
+  .vault-head{ text-align:center; margin-bottom:3.6rem; }
+  .vault-head h2{
+    font-family:var(--serif); font-weight:300; font-size:clamp(1.9rem, 4vw, 2.8rem); color:var(--ivory); margin-top:0.6rem;
+  }
+  .vault-head p{ margin-top:0.9rem; color:var(--smoke); max-width:34em; margin-left:auto; margin-right:auto; }
 
-  /* Constellation — the doorway into the archive */
-  #constellation{
+  .vault-stage{
     position:relative;
-    width:100%; max-width:640px; height:150px;
-    margin-top:4.4rem;
-    opacity:0;
+    height:min(640px, 74vh);
+    perspective:1600px;
+    perspective-origin:50% 50%;
+    display:flex; align-items:center; justify-content:center;
+    touch-action:pan-y;
+    user-select:none;
+    -webkit-user-select:none;
   }
-  .node{
-    position:absolute; top:50%; left:50%;
-    width:14px; height:14px; border-radius:50%;
-    transform:translate(-50%,-50%);
-    cursor:pointer;
-    background:var(--node-color, var(--gold));
-    box-shadow:0 0 0 1px color-mix(in srgb, var(--node-color, var(--gold)) 40%, transparent),
-               0 0 22px 4px color-mix(in srgb, var(--node-color, var(--gold)) 55%, transparent);
-    transition:transform .4s var(--ease), box-shadow .4s var(--ease);
-    animation:nodeDrift 7s ease-in-out infinite;
-  }
-  .node:hover, .node:focus-visible{ transform:translate(-50%,-50%) scale(1.6); }
-  .node::after{
-    content:attr(data-title);
-    position:absolute; bottom:140%; left:50%; transform:translateX(-50%);
-    white-space:nowrap;
-    font-family:var(--sans); font-size:10px; letter-spacing:0.12em; text-transform:uppercase;
-    color:var(--ivory); background:rgba(5,5,9,0.9); border:1px solid var(--line);
-    padding:0.4rem 0.7rem; border-radius:3px;
-    opacity:0; pointer-events:none; transition:opacity .3s ease;
-  }
-  .node:hover::after, .node:focus-visible::after{ opacity:1; }
-  @keyframes nodeDrift{ 0%,100%{ margin-top:0; } 50%{ margin-top:-10px; } }
-  @media (prefers-reduced-motion:reduce){ .node{ animation:none; } }
-  .th-scroll-cue{
-    margin-top:3.6rem; font-family:var(--sans); font-size:10px; letter-spacing:0.3em; text-transform:uppercase;
-    color:var(--smoke); opacity:0;
-    display:flex; flex-direction:column; align-items:center; gap:0.7rem;
-  }
-  .th-scroll-cue span{
-    width:1px; height:34px; background:linear-gradient(to bottom, var(--smoke), transparent);
-    animation:cuePulse 2.2s ease-in-out infinite;
-  }
-  @keyframes cuePulse{ 0%,100%{ opacity:0.3; } 50%{ opacity:1; } }
-  @media (prefers-reduced-motion:reduce){ .th-scroll-cue span{ animation:none; opacity:0.6; } }
-
-  /* ---------- Gallery ---------- */
-  #gallery{ position:relative; padding:2rem 0 6rem; }
-  .chamber{
-    min-height:100svh;
-    display:grid;
-    grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);
-    align-items:center;
-    gap:clamp(2.4rem, 6vw, 6rem);
-    padding:5rem clamp(1.4rem, 4vw, 3rem);
-    max-width:1320px; margin:0 auto;
-    position:relative;
-  }
-  .chamber:nth-child(even){ direction:rtl; }
-  .chamber:nth-child(even) > *{ direction:ltr; }
-  .chamber-frame{
-    position:relative;
-    aspect-ratio:1/1;
-    max-width:520px;
-    width:100%;
-    margin:0 auto;
-    perspective:1200px;
-  }
-  .chamber-plate{
-    position:relative; width:100%; height:100%; border-radius:6px;
-    overflow:hidden;
-    border:1px solid color-mix(in srgb, var(--node-color, var(--gold)) 45%, var(--line));
-    box-shadow:0 40px 90px -30px rgba(0,0,0,0.7),
-               0 0 0 1px rgba(255,255,255,0.02) inset,
-               0 0 70px -10px color-mix(in srgb, var(--node-color, var(--gold)) 45%, transparent);
-    transition:transform .5s var(--ease), box-shadow .6s var(--ease), border-color .8s var(--ease);
+  .vault-track{
+    position:relative; width:100%; height:100%;
     transform-style:preserve-3d;
-    will-change:transform;
   }
-  .chamber-plate img{ width:100%; height:100%; object-fit:cover; display:block; }
-  .chamber-plate::after{
-    content:'';
-    position:absolute; inset:0;
-    background:linear-gradient(160deg, transparent 40%, rgba(5,5,9,0.55));
+  .vault-plate{
+    position:absolute; top:50%; left:50%;
+    width:min(300px, 62vw);
+    will-change:transform, opacity, filter;
+    transition:transform .85s var(--ease), opacity .85s var(--ease), filter .85s var(--ease);
+    cursor:pointer;
+  }
+  .vault-plate.is-active{ cursor:default; }
+  .vault-cover-wrap{
+    position:relative; border-radius:6px; overflow:visible;
+    aspect-ratio:1/1; /* gives absolutely-positioned children (reflection, orbit) a definite box to size against */
+  }
+  .vault-orbit{
+    position:absolute; inset:-14%; border-radius:50%; pointer-events:none;
+    opacity:0; transition:opacity .6s ease;
+  }
+  .vault-plate.is-active .vault-orbit{ opacity:0.8; }
+  .vault-orbit span{
+    position:absolute; inset:0; border-radius:50%; border:1px solid var(--cat-accent-dim);
+  }
+  .vault-orbit span:nth-child(1){ animation:vaultSpin 34s linear infinite; }
+  .vault-orbit span:nth-child(2){ inset:9%; border-color:color-mix(in srgb, var(--cat-accent) 45%, transparent); animation:vaultSpin 22s linear infinite reverse; }
+  @keyframes vaultSpin{ from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+  @media (prefers-reduced-motion:reduce){ .vault-orbit span{ animation:none; } }
+
+  .vault-cover{
+    position:relative; width:100%; aspect-ratio:1/1; border-radius:6px; overflow:hidden;
+    border:1px solid var(--line);
+    box-shadow:0 30px 70px -20px rgba(0,0,0,0.7);
+    background:linear-gradient(155deg, color-mix(in srgb, var(--gold) 14%, transparent), color-mix(in srgb, var(--gold) 2%, transparent));
+  }
+  .vault-cover img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+  .vault-plate.is-active .vault-cover{ border-color:var(--cat-accent-dim); box-shadow:0 40px 90px -18px rgba(0,0,0,0.75), 0 0 60px -10px var(--cat-glow); }
+
+  /* Foil sweep — a single specular pass across the cover, fired once
+     each time a plate becomes active. */
+  .vault-cover::after{
+    content:''; position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(115deg, transparent 20%, color-mix(in srgb, var(--ivory) 55%, transparent) 47%, transparent 74%);
+    background-size:250% 250%; background-position:130% 0%;
+    opacity:0; mix-blend-mode:overlay;
+  }
+  .vault-plate.sweep .vault-cover::after{ animation:vaultFoil 1.1s var(--ease); }
+  @keyframes vaultFoil{ 0%{opacity:0; background-position:130% 0%;} 20%{opacity:0.9;} 100%{opacity:0; background-position:-30% 100%;} }
+
+  /* Reflection ghost — a faded, blurred mirror of the cover beneath
+     the active plate. High-tier only (perf-gated by JS via the
+     .fx-reflect class on <body>). */
+  .vault-reflect{
+    position:absolute; left:0; right:0; top:100%; height:60%;
+    transform:scaleY(-1); border-radius:6px; overflow:hidden;
+    opacity:0; pointer-events:none;
+    -webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,0.32), transparent 78%);
+    mask-image:linear-gradient(to bottom, rgba(0,0,0,0.32), transparent 78%);
+    filter:blur(1.5px);
+  }
+  .vault-reflect img{ width:100%; height:167%; object-fit:cover; display:block; }
+  body.fx-reflect .vault-plate.is-active .vault-reflect{ opacity:1; }
+
+  .vault-meta{
+    margin-top:1.4rem; text-align:center; opacity:0; transform:translateY(10px);
+    transition:opacity .5s var(--ease), transform .5s var(--ease);
     pointer-events:none;
   }
-  .chamber-glow{
-    position:absolute; inset:-18%;
-    border-radius:50%;
-    background:radial-gradient(circle, color-mix(in srgb, var(--node-color, var(--gold)) 32%, transparent), transparent 68%);
-    filter:blur(6px);
-    z-index:-1;
-    opacity:0.75;
-    transition:background 1s var(--ease);
-    animation:glowBreathe 5s ease-in-out infinite;
-  }
-  @keyframes glowBreathe{ 0%,100%{ transform:scale(1); opacity:0.6; } 50%{ transform:scale(1.06); opacity:0.9; } }
-  @media (prefers-reduced-motion:reduce){ .chamber-glow{ animation:none; } }
+  .vault-plate.is-active .vault-meta{ opacity:1; transform:translateY(0); pointer-events:auto; transition-delay:.15s; }
+  .vault-tag{ font-family:var(--sans); font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--cat-accent); }
+  .vault-title{ font-family:var(--serif); font-size:clamp(1.3rem, 2.4vw, 1.7rem); color:var(--ivory); margin-top:0.35rem; }
+  .vault-mood{ font-family:var(--serif); font-style:italic; font-size:0.98rem; color:var(--smoke); margin-top:0.55rem; max-width:30em; margin-left:auto; margin-right:auto; line-height:1.6; }
 
-  .chamber-copy{ max-width:520px; }
-  .chamber-tag{
-    font-family:var(--sans); font-size:11px; letter-spacing:0.3em; text-transform:uppercase;
-    color:var(--node-color, var(--gold)); transition:color .8s var(--ease);
-    display:block; margin-bottom:1.3rem;
-  }
-  .chamber-title{
-    font-family:var(--serif); font-weight:300; font-style:italic;
-    font-size:clamp(2.4rem, 5.4vw, 4.4rem); line-height:1.04;
-    color:var(--ivory); margin-bottom:1.3rem;
-  }
-  .chamber-meta{
-    display:flex; align-items:center; gap:1.2rem; margin-bottom:2rem;
-    font-family:var(--sans); font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--smoke);
-  }
-  .chamber-meta .dot{ width:3px; height:3px; border-radius:50%; background:var(--smoke); }
-  .chamber-wavelength{
-    font-style:italic; font-family:var(--serif); text-transform:none; letter-spacing:0; font-size:1rem;
-    color:var(--node-color, var(--gold)); transition:color .8s var(--ease);
-  }
-  .chamber-controls{ display:flex; align-items:center; gap:1.4rem; }
-  .chamber-play{
-    width:60px; height:60px; border-radius:50%;
-    border:1px solid color-mix(in srgb, var(--node-color, var(--gold)) 50%, var(--line));
-    background:color-mix(in srgb, var(--node-color, var(--gold)) 8%, transparent);
-    color:var(--ivory);
-    display:flex; align-items:center; justify-content:center;
-    cursor:pointer;
-    transition:background .3s var(--ease), border-color .5s var(--ease), transform .3s var(--ease);
+  .vault-controls{ display:flex; align-items:center; justify-content:center; gap:1.1rem; margin-top:1.1rem; }
+  .vault-play{
+    width:2.7rem; height:2.7rem; border-radius:50%; border:1px solid var(--cat-accent-dim);
+    display:flex; align-items:center; justify-content:center; color:var(--cat-accent);
+    background:color-mix(in srgb, var(--cat-accent) 6%, transparent);
+    transition:border-color .3s ease, transform .2s ease, background .3s ease;
     flex-shrink:0;
   }
-  .chamber-play:hover{ transform:scale(1.06); background:color-mix(in srgb, var(--node-color, var(--gold)) 20%, transparent); }
-  .chamber-play svg{ width:20px; height:20px; }
-  .chamber-play .ic-pause{ display:none; }
-  .chamber.is-playing .chamber-play .ic-play{ display:none; }
-  .chamber.is-playing .chamber-play .ic-pause{ display:block; }
-  .chamber-bars{ display:flex; align-items:flex-end; gap:3px; height:22px; }
-  .chamber-bars span{
-    width:3px; background:var(--node-color, var(--gold)); opacity:0.3; height:20%;
-    border-radius:1px; transition:height .12s ease, opacity .3s ease, background .8s var(--ease);
-  }
-  .chamber.is-playing .chamber-bars span{ opacity:0.95; }
-  .chamber-index{
-    font-family:var(--serif); font-size:0.95rem; color:var(--smoke); letter-spacing:0.02em;
-  }
+  .vault-play:hover{ border-color:var(--cat-accent); }
+  .vault-play:active{ transform:scale(0.93); }
+  .vault-play svg{ width:14px; height:14px; }
+  .vault-duration{ font-family:var(--sans); font-size:11px; letter-spacing:0.04em; color:var(--smoke); }
+  .vault-bars{ display:flex; align-items:flex-end; gap:2px; height:1.2rem; }
+  .vault-bars span{ width:3px; background:var(--cat-accent); opacity:0.35; height:20%; border-radius:1px; transition:height .12s ease, opacity .3s ease; }
+  .vault-plate.is-playing .vault-bars span{ opacity:0.95; }
 
-  /* ---------- Desktop constellation rail ---------- */
-  #rail{
-    position:fixed; right:2.2rem; top:50%; transform:translateY(-50%);
-    z-index:70;
-    display:flex; flex-direction:column; gap:1.1rem;
-  }
-  .rail-node{
-    width:9px; height:9px; border-radius:50%;
-    background:var(--line);
-    border:1px solid var(--smoke);
-    cursor:pointer;
-    transition:all .4s var(--ease);
-  }
-  .rail-node.active{
-    background:var(--rail-color, var(--gold));
-    border-color:var(--rail-color, var(--gold));
-    box-shadow:0 0 12px 2px color-mix(in srgb, var(--rail-color, var(--gold)) 60%, transparent);
-    transform:scale(1.5);
-  }
-  @media (max-width:900px){ #rail{ display:none; } }
-
-  /* Mobile progress dots */
-  #mobileDots{
-    display:none;
-    position:fixed; bottom:calc(1.1rem + env(safe-area-inset-bottom));
-    left:50%; transform:translateX(-50%);
-    z-index:70;
-    gap:0.55rem;
-    padding:0.6rem 0.9rem;
-    background:rgba(5,5,9,0.75);
-    border:1px solid var(--line);
-    border-radius:99px;
-    backdrop-filter:blur(8px);
-  }
-  @media (max-width:900px){ #mobileDots{ display:flex; } }
-  .mdot{ width:6px; height:6px; border-radius:50%; background:var(--line); border:1px solid var(--smoke); transition:all .3s ease; }
-  .mdot.active{ background:var(--rail-color, var(--gold)); border-color:var(--rail-color, var(--gold)); transform:scale(1.4); }
-
-  /* ---------- Floating mini dock ---------- */
-  #miniDock{
-    position:fixed; left:50%; bottom:1.6rem; transform:translate(-50%, 140%);
-    z-index:75;
-    display:flex; align-items:center; gap:0.9rem;
-    padding:0.65rem 1.3rem 0.65rem 0.65rem;
-    background:rgba(5,5,9,0.82);
-    border:1px solid var(--line);
-    border-radius:99px;
-    backdrop-filter:blur(10px);
-    box-shadow:0 20px 50px -20px rgba(0,0,0,0.7);
-    transition:transform .5s var(--ease), border-color .8s var(--ease);
-  }
-  #miniDock.visible{ transform:translate(-50%, 0); }
-  #miniDock img{ width:34px; height:34px; border-radius:50%; object-fit:cover; }
-  #miniDock .md-title{ font-family:var(--sans); font-size:12px; letter-spacing:0.04em; color:var(--ivory); max-width:34vw; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  #miniDock button{
-    width:30px; height:30px; border-radius:50%; border:none; cursor:pointer;
-    background:var(--acc); color:var(--obsidian); display:flex; align-items:center; justify-content:center;
-    transition:background .8s var(--ease);
-  }
-  #miniDock button svg{ width:13px; height:13px; }
-  #miniDock .md-pause{ display:none; }
-  #miniDock.is-playing .md-play{ display:none; }
-  #miniDock.is-playing .md-pause{ display:flex; }
-  @media (max-width:900px){ #miniDock{ bottom:calc(4.4rem + env(safe-area-inset-bottom)); } }
-
-  /* ---------- Footer (identical to the rest of the site) ---------- */
-  footer{
-    padding:5rem 0 3rem;
-    border-top:1px solid var(--line);
-    text-align:center;
-  }
-  .footer-tagline{ font-family:var(--serif); font-style:italic; font-size:1.2rem; color:var(--smoke); margin-bottom:2rem; }
-  .footer-row{
-    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1.2rem;
-  }
-  .copyright{ font-family:var(--sans); font-size:11px; letter-spacing:0.08em; color:var(--smoke); }
-  .social-row{ display:flex; gap:1.4rem; }
-  .social-row a{
+  .vault-arrow{
+    position:absolute; top:50%; transform:translateY(-50%);
+    width:52px; height:52px; border-radius:50%;
+    border:1px solid var(--line); background:rgba(8,8,13,0.55);
+    backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
     display:flex; align-items:center; justify-content:center;
-    width:34px; height:34px; border-radius:50%;
-    border:1px solid var(--line); color:var(--smoke);
-    transition:color .3s var(--ease), border-color .3s var(--ease);
+    color:var(--ivory); cursor:pointer; z-index:8;
+    transition:border-color .3s ease, background .3s ease, transform .3s ease;
   }
-  .social-row a:hover{ color:var(--gold); border-color:var(--gold-dim); }
-  .social-row svg{ width:16px; height:16px; }
+  .vault-arrow svg{ width:18px; height:18px; }
+  .vault-arrow:hover{ border-color:var(--cat-accent-dim); background:rgba(8,8,13,0.8); }
+  .vault-arrow:active{ transform:translateY(-50%) scale(0.94); }
+  .vault-arrow:focus-visible{ outline:1px solid var(--cat-accent); outline-offset:3px; }
+  .vault-arrow--prev{ left:0.5rem; }
+  .vault-arrow--next{ right:0.5rem; }
+  @media (max-width:760px){ .vault-arrow{ display:none; } }
 
-  /* ---------- Reveal-on-scroll ---------- */
-  .reveal{ opacity:0; transform:translateY(28px); transition:opacity .9s var(--ease), transform .9s var(--ease); }
-  .reveal.in{ opacity:1; transform:translateY(0); }
-  @media (prefers-reduced-motion:reduce){ .reveal{ opacity:1; transform:none; transition:none; } }
+  .vault-dots{ display:flex; gap:0.55rem; justify-content:center; margin-top:2.2rem; }
+  .vault-dot{
+    width:6px; height:6px; border-radius:50%; background:var(--line); border:none; cursor:pointer;
+    transition:background .3s ease, transform .3s ease, box-shadow .3s ease; padding:0;
+  }
+  .vault-dot.active{ background:var(--cat-accent); transform:scale(1.8); box-shadow:0 0 10px var(--cat-glow); }
 
-  /* ---------- Empty / no-signals state ---------- */
-  #emptyState{
-    display:none;
-    text-align:center; padding:8rem 1.4rem;
-    font-family:var(--serif); font-style:italic; font-size:1.4rem; color:var(--smoke);
+  .vault-count{
+    text-align:center; margin-top:1.4rem; font-family:var(--sans); font-size:10px;
+    letter-spacing:0.16em; text-transform:uppercase; color:var(--smoke);
   }
 
-  /* ---------- Responsive ---------- */
-  @media (max-width:900px){
-    .chamber{ grid-template-columns:1fr; text-align:center; }
-    .chamber:nth-child(even){ direction:ltr; }
-    .chamber-copy{ margin:0 auto; }
-    .chamber-meta{ justify-content:center; }
-    .chamber-controls{ justify-content:center; }
-    .chamber-frame{ max-width:380px; }
+  /* ---------- Mobile: stacked, scroll-snapped plates ---------- */
+  body.vault-stacked .vault-stage{
+    height:auto; perspective:none;
+    scroll-snap-type:y mandatory; overflow-y:visible;
   }
-  @media (max-width:520px){
-    .th-meta{ gap:1.4rem; flex-wrap:wrap; justify-content:center; }
-    .chamber{ padding:3.6rem 1.2rem; min-height:auto; }
-    #constellation{ height:110px; }
+  body.vault-stacked .vault-track{ display:flex; flex-direction:column; gap:3.2rem; padding:0.5rem 0; transform:none !important; }
+  body.vault-stacked .vault-plate{
+    position:relative; top:auto; left:auto; width:min(340px, 82vw); margin:0 auto;
+    opacity:1 !important; filter:none !important; transform:none !important;
+    scroll-snap-align:center;
   }
-  :focus-visible{ outline:2px solid var(--gold); outline-offset:3px; }
+  body.vault-stacked .vault-meta{ opacity:1; transform:none; pointer-events:auto; }
+  body.vault-stacked .vault-orbit{ opacity:0.8; }
+  body.vault-stacked .vault-cover{ border-color:var(--cat-accent-dim); }
+
+  /* ---------- Manifest ledger — a compact, information-dense
+     secondary view: quick scan, quick jump. Not the hero experience,
+     but a proper reference list for anyone who wants one. ---------- */
+  .ledger{ margin-top:5rem; border-top:1px solid var(--line); }
+  .ledger-row{
+    display:grid; grid-template-columns:3.2rem 1fr auto auto; align-items:center; gap:1.2rem;
+    padding:1rem 0.4rem; border-bottom:1px solid var(--line); cursor:pointer;
+    transition:background .3s ease;
+  }
+  .ledger-row:hover, .ledger-row.active{ background:color-mix(in srgb, var(--gold) 4%, transparent); }
+  .ledger-index{ font-family:var(--serif); font-size:1rem; color:var(--smoke); font-style:italic; }
+  .ledger-row.active .ledger-index{ color:var(--cat-accent); }
+  .ledger-title{ font-family:var(--sans); font-size:0.95rem; color:var(--ivory); letter-spacing:0.01em; }
+  .ledger-tag{ font-family:var(--sans); font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--smoke); display:none; }
+  @media (min-width:600px){ .ledger-tag{ display:block; } }
+  .ledger-duration{ font-family:var(--sans); font-size:11px; color:var(--smoke); }
+
+  /* ---------- Player dock (persistent, page-local) ---------- */
+  #playerDock{
+    position:fixed; left:2rem; bottom:1.6rem; z-index:110;
+    display:flex; align-items:center; gap:0.9rem;
+    padding:0.7rem 1.1rem 0.7rem 0.7rem; border-radius:999px;
+    border:1px solid var(--line); background:rgba(8,8,13,0.72);
+    backdrop-filter:blur(16px) saturate(140%); -webkit-backdrop-filter:blur(16px) saturate(140%);
+    opacity:0; transform:translateY(14px); pointer-events:none;
+    transition:opacity .5s var(--ease), transform .5s var(--ease), border-color .4s ease;
+    max-width:min(360px, calc(100vw - 2rem));
+  }
+  #playerDock.visible{ opacity:1; transform:translateY(0); pointer-events:auto; }
+  #playerDock.playing{ border-color:var(--cat-accent-dim); }
+  @media (max-width:700px){ #playerDock{ left:1rem; right:1rem; bottom:1rem; max-width:none; } }
+  .dock-art{ width:2.6rem; height:2.6rem; border-radius:50%; object-fit:cover; border:1px solid var(--line); flex-shrink:0; }
+  .dock-toggle{
+    width:2.4rem; height:2.4rem; border-radius:50%; border:1px solid var(--gold-dim); background:transparent;
+    color:var(--cat-accent); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
+    transition:border-color .3s ease, transform .2s ease;
+  }
+  #playerDock.playing .dock-toggle{ border-color:var(--cat-accent-dim); }
+  .dock-toggle:active{ transform:scale(0.92); }
+  .dock-toggle svg{ width:13px; height:13px; }
+  .dock-info{ display:flex; flex-direction:column; min-width:0; flex:1; }
+  .dock-eyebrow{ font-family:var(--sans); font-size:9px; letter-spacing:0.14em; text-transform:uppercase; color:var(--smoke); }
+  .dock-title{
+    font-family:var(--serif); font-size:0.95rem; color:var(--ivory);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:12rem;
+  }
+  .dock-bars{ display:flex; align-items:flex-end; gap:2px; height:0.9rem; flex-shrink:0; }
+  .dock-bars span{ width:3px; background:var(--cat-accent); opacity:0.5; height:15%; border-radius:1px; }
+
+  /* ---------- Footer ---------- */
+  footer{ border-top:1px solid var(--line); padding:4.5rem 0 3rem; text-align:center; }
+  .footer-tagline{ font-family:var(--serif); font-style:italic; color:var(--smoke); font-size:1rem; margin-bottom:2rem; }
+  .footer-return{
+    display:inline-flex; align-items:center; gap:0.5rem; font-family:var(--sans); font-size:11px;
+    letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); margin-bottom:2.2rem;
+    border-bottom:1px solid var(--gold-dim); padding-bottom:2px; transition:color .3s ease, border-color .3s ease;
+  }
+  .footer-return:hover{ color:var(--ivory); border-color:var(--ivory); }
+  .footer-row{ display:flex; align-items:center; justify-content:center; gap:1.6rem; flex-wrap:wrap; }
+  .copyright{ font-family:var(--sans); font-size:10px; letter-spacing:0.08em; color:var(--smoke); }
+  .social-row{ display:flex; gap:1rem; }
+  .social-row a{ color:var(--smoke); transition:color .3s ease; }
+  .social-row a:hover{ color:var(--gold); }
+  .social-row svg{ width:18px; height:18px; }
+
+  .sr-only{
+    position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
+    clip:rect(0,0,0,0); white-space:nowrap; border:0;
+  }
 </style>
 </head>
 <body>
 
-<canvas id="field" aria-hidden="true"></canvas>
-<div id="fieldWash" aria-hidden="true"></div>
+<div id="loadVeil">
+  <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M6 8 L20 32 L34 8" stroke-width="2" stroke-linecap="square"/>
+  </svg>
+</div>
+<div id="grain"></div>
+<div id="catalogWash" aria-hidden="true"></div>
+<canvas id="scene" aria-hidden="true"></canvas>
+<div class="glow-cursor" id="glowCursor"></div>
 
-<nav>
-  <a href="index.html" class="back-link">
-    <svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<nav id="mainNav">
+  <a href="index.html#top" class="nav-mark">
+    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 8 L20 32 L34 8" stroke-width="2" stroke-linecap="square"/>
+    </svg>
     VORNEAUX
   </a>
-  <span class="nav-title">The Complete <b>Archive</b></span>
+  <button class="nav-toggle" id="navToggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navLinks">
+    <span></span>
+  </button>
+  <div class="nav-links" id="navLinks">
+    <a href="index.html#top">Home</a>
+    <a href="index.html#ecosystem">Ecosystem</a>
+    <a href="index.html#editions">Editions</a>
+    <a href="catalog.html" class="current">Signals</a>
+    <a href="index.html#field-notes">Field Notes</a>
+    <a href="index.html#connect">Connect</a>
+  </div>
 </nav>
+<div class="nav-scrim" id="navScrim" aria-hidden="true"></div>
 
 <main>
 
-  <section id="threshold">
-    <span class="th-eyebrow th-fade-in" style="animation-delay:.1s">VORNEAUX · Sound Before the Moment</span>
-    <h1 class="th-title th-fade-in" style="animation-delay:.25s">SIGNAL<em>S</em></h1>
-    <p class="th-sub th-fade-in" style="animation-delay:.45s">Every transmission released so far, gathered in one place. Not a playlist — an archive built to be entered.</p>
-    <div class="th-meta th-fade-in" style="animation-delay:.6s">
-      <div><b id="metaCount">—</b>Signals</div>
-      <div><b id="metaRuntime">—</b>Total runtime</div>
-      <div><b id="metaLatest">—</b>Latest</div>
+  <section class="archive-hero" id="top">
+    <span class="eyebrow">VORNEAUX — The Signal Archive</span>
+    <h1>Every signal we've sent into the world.</h1>
+    <p class="sub">Original audio, released before the trend has a name — collected here, in order, still transmitting.</p>
+    <div class="archive-stat" id="archiveStat">
+      <div><b id="statCount">—</b><span>Signals archived</span></div>
+      <div><b id="statRuntime">—</b><span>Total runtime</span></div>
+      <div><b id="statLatest">—</b><span>Latest transmission</span></div>
     </div>
-    <div id="constellation" class="th-fade-in" style="animation-delay:.8s"><!-- nodes injected by JS --></div>
-    <div class="th-scroll-cue th-fade-in" style="animation-delay:1s"><span></span>Descend</div>
+    <div class="scroll-cue"><span>Explore the vault</span><span class="line"></span></div>
   </section>
 
-  <section id="gallery">
-    <!-- chambers injected by JS from data/signals.json -->
-  </section>
+  <section id="vault">
+    <div class="wrap">
+      <div class="vault-head reveal">
+        <span class="eyebrow">The Vault</span>
+        <h2>Step into the archive</h2>
+        <p>Each signal is its own atmosphere. Turn the vault, or press play, and the room changes with it.</p>
+      </div>
 
-  <p id="emptyState">The archive is being rebuilt. Come back in a moment.</p>
+      <div class="vault-stage" id="vaultStage">
+        <button class="vault-arrow vault-arrow--prev" id="vaultPrev" type="button" aria-label="Previous signal">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="vault-track" id="vaultTrack" role="list" aria-label="VORNEAUX Signals">
+          <!-- plates injected by JS -->
+        </div>
+        <button class="vault-arrow vault-arrow--next" id="vaultNext" type="button" aria-label="Next signal">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+      <div class="vault-dots" id="vaultDots"></div>
+      <p class="vault-count" id="vaultCount" aria-live="polite"></p>
+
+      <div class="ledger reveal" id="ledger">
+        <!-- rows injected by JS -->
+      </div>
+    </div>
+  </section>
 
 </main>
 
-<div id="rail"><!-- rail nodes injected by JS --></div>
-<div id="mobileDots"><!-- dots injected by JS --></div>
-
-<div id="miniDock" role="group" aria-label="VORNEAUX archive player">
-  <img id="mdArt" alt="" aria-hidden="true">
-  <span class="md-title" id="mdTitle">—</span>
-  <button id="mdToggle" aria-label="Play or pause">
-    <svg class="md-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7L8 5z"/></svg>
-    <svg class="md-pause" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
-  </button>
-</div>
-
-<footer>
+<footer id="connect">
   <div class="wrap">
+    <a href="index.html#top" class="footer-return">
+      <svg viewBox="0 0 24 24" fill="none" width="14" height="14"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Return to VORNEAUX
+    </a>
     <p class="footer-tagline">"Built before the moment has a name." — VORNEAUX</p>
     <div class="footer-row">
       <span class="copyright">© 2026 VORNEAUX. All rights reserved.</span>
@@ -441,490 +560,789 @@
   </div>
 </footer>
 
-<audio id="archiveAudio" preload="none" crossorigin="anonymous"></audio>
+<div id="playerDock" role="group" aria-label="VORNEAUX audio player">
+  <img class="dock-art" id="dockArt" alt="" aria-hidden="true">
+  <button class="dock-toggle" id="dockToggle" aria-label="Play">
+    <svg id="dockIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7L8 5z"/></svg>
+  </button>
+  <div class="dock-info">
+    <span class="dock-eyebrow" id="dockEyebrow">Now Playing</span>
+    <span class="dock-title" id="dockTitle">—</span>
+  </div>
+  <div class="dock-bars" id="dockBars"></div>
+</div>
+<audio id="playerAudio" preload="none" crossorigin="anonymous"></audio>
+<div class="sr-only" id="ariaLive" aria-live="polite"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 <script>
+/* =========================================================================
+   VORNEAUX — Signals Archive ("The Vault")
+   Single-file, framework-free, ES5-compatible. Mirrors the conventions
+   used across index.html: IIFEs, var declarations, data-driven rendering
+   from data/signals.json with an inline DEFAULT_SIGNALS fallback, and a
+   device-capability tier that scales fidelity rather than switching
+   features on/off in a binary way.
+   ========================================================================= */
 (function(){
   "use strict";
+
+  /* ---------- rAF-batched scroll dispatcher ---------- */
+  var scrollCallbacks = [];
+  function onScroll(fn){ scrollCallbacks.push(fn); }
+  (function(){
+    var ticking = false;
+    function flush(){
+      for(var i = 0; i < scrollCallbacks.length; i++){ scrollCallbacks[i](); }
+      ticking = false;
+    }
+    window.addEventListener('scroll', function(){
+      if(!ticking){ ticking = true; requestAnimationFrame(flush); }
+    }, {passive:true});
+  })();
+
+  /* ---------- Device capability tier ---------- */
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var isMobile = window.innerWidth < 720;
-  var lowPower = (navigator.hardwareConcurrency || 4) <= 2;
+  var coarsePointer = window.matchMedia('(pointer: coarse)').matches;
+  function computeTier(){
+    if(reduceMotion) return 'still';
+    var mem = navigator.deviceMemory || 4;
+    var cores = navigator.hardwareConcurrency || 4;
+    if(mem <= 2 || cores <= 2) return 'low';
+    if(coarsePointer || window.innerWidth < 900) return 'mid';
+    return 'high';
+  }
+  var TIER = computeTier();
+  if(TIER === 'high'){ document.body.classList.add('fx-reflect'); }
 
-  /* ---------- Tiny resilient loader (same pattern as the main site) ---------- */
-  function loadJSON(path, fallback){
-    return fetch(path, { cache:'no-cache' })
-      .then(function(res){ if(!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
-      .then(function(data){ return (Array.isArray(data) && data.length) ? data : fallback; })
-      .catch(function(){ return fallback; });
+  function isStackedLayout(){
+    return coarsePointer || window.innerWidth < 860;
   }
 
-  var DEFAULT_SIGNALS = [
-    { id:'shadow-mode', title:'Shadow Mode', tag:'Signal 003 · 2026', duration:'0:45', src:'assets/audio/tracks/shadow-mode.mp3', cover:'assets/audio/covers/shadow-mode.jpg' },
-    { id:'neon-rush', title:'Neon Rush', tag:'Signal 002 · 2026', duration:'1:03', src:'assets/audio/tracks/neon-rush.mp3', cover:'assets/audio/covers/neon-rush.jpg' },
-    { id:'lock-in-nightshift', title:'Lock In // Nightshift', tag:'Signal 001 · 2026', duration:'0:33', src:'assets/audio/tracks/lock-in-nightshift.mp3', cover:'assets/audio/covers/lock-in-nightshift.jpg' }
-  ];
-
-  /* =========================================================
-     Per-track color identity — same math as the homepage, kept
-     self-contained here so this page never depends on index.html
-     being loaded. Extracts each cover's real dominant color, then
-     de-collides the whole catalog so no two Signals ever read as
-     the same color. See index.html's resolveDistinctThemes for the
-     full rationale.
-  ========================================================= */
-  function rgbToHsl(r,g,b){
-    r/=255; g/=255; b/=255;
-    var mx=Math.max(r,g,b), mn=Math.min(r,g,b);
-    var h,s,l=(mx+mn)/2;
-    if(mx===mn){ h=s=0; }
-    else{
-      var d=mx-mn;
-      s = l>0.5 ? d/(2-mx-mn) : d/(mx+mn);
-      if(mx===r){ h=(g-b)/d+(g<b?6:0); }
-      else if(mx===g){ h=(b-r)/d+2; }
-      else{ h=(r-g)/d+4; }
-      h*=60;
-    }
-    return { h:h, s:s, l:l };
+  /* ---------- Nav ---------- */
+  var nav = document.getElementById('mainNav');
+  function onScrollNav(){
+    if(window.scrollY > 40){ nav.classList.add('scrolled'); }
+    else{ nav.classList.remove('scrolled'); }
   }
-  function extractCoverTheme(url, cb){
-    if(!url){ cb(null); return; }
-    var img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = function(){
-      try{
-        var w=32, h=32;
-        var c = document.createElement('canvas');
-        c.width=w; c.height=h;
-        var ctx = c.getContext('2d');
-        ctx.drawImage(img,0,0,w,h);
-        var data = ctx.getImageData(0,0,w,h).data;
-        var rS=0,gS=0,bS=0,wS=0;
-        for(var i=0;i<data.length;i+=4){
-          var r=data[i],g=data[i+1],b=data[i+2],a=data[i+3];
-          if(a<128) continue;
-          var mx=Math.max(r,g,b), mn=Math.min(r,g,b);
-          var sat=(mx-mn)/255, lum=(mx+mn)/2/255;
-          if(lum<0.06 || lum>0.94) continue;
-          var weight = 0.15 + sat*1.4;
-          rS+=r*weight; gS+=g*weight; bS+=b*weight; wS+=weight;
-        }
-        if(wS<1){ cb(null); return; }
-        cb(rgbToHsl(rS/wS, gS/wS, bS/wS));
-      }catch(err){ cb(null); }
+  onScroll(onScrollNav);
+  onScrollNav();
+
+  var navToggle = document.getElementById('navToggle');
+  var navLinks = document.getElementById('navLinks');
+  var navScrim = document.getElementById('navScrim');
+  if(navToggle && navLinks){
+    var syncNavHeight = function(){
+      document.documentElement.style.setProperty('--nav-h', nav.offsetHeight + 'px');
     };
-    img.onerror = function(){ cb(null); };
-    img.src = url;
-  }
-  function hashSeed(str){
-    var h = 2166136261;
-    for(var i=0;i<str.length;i++){ h ^= str.charCodeAt(i); h = (h*16777619)>>>0; }
-    return h>>>0;
-  }
-  function circDelta(a,b){ return ((b-a+540)%360)-180; }
-  function spreadHues(rawHues, minSep){
-    var n = rawHues.length;
-    if(n<2 || minSep<=0) return rawHues.slice();
-    var hues = rawHues.slice();
-    for(var iter=0; iter<60; iter++){
-      var moved=false;
-      for(var i=0;i<n;i++){
-        for(var j=i+1;j<n;j++){
-          var d = circDelta(hues[i], hues[j]);
-          var dist = Math.abs(d);
-          if(dist<minSep){
-            moved=true;
-            var push=(minSep-dist)/2;
-            var dir = d>=0 ? 1 : -1;
-            hues[j] = ((hues[j]+dir*push)%360+360)%360;
-            hues[i] = ((hues[i]-dir*push)%360+360)%360;
-          }
-        }
-      }
-      if(!moved) break;
-    }
-    return hues;
-  }
-  function resolveDistinctThemes(tracks){
-    var extractions = tracks.map(function(t){
-      return new Promise(function(resolve){ extractCoverTheme(t.cover, resolve); });
+    syncNavHeight();
+    window.addEventListener('resize', syncNavHeight);
+    onScroll(syncNavHeight);
+
+    var closeNav = function(){
+      document.body.classList.remove('nav-open');
+      navToggle.setAttribute('aria-expanded', 'false');
+    };
+    var openNav = function(){
+      syncNavHeight();
+      document.body.classList.add('nav-open');
+      navToggle.setAttribute('aria-expanded', 'true');
+    };
+    navToggle.addEventListener('click', function(){
+      if(document.body.classList.contains('nav-open')){ closeNav(); } else{ openNav(); }
     });
-    return Promise.all(extractions).then(function(samples){
-      var raw = tracks.map(function(t,i){
-        var hsl = samples[i];
-        if(hsl){
-          return { hue:hsl.h, sat:Math.min(0.72,Math.max(0.42,hsl.s)), light:Math.min(0.68,Math.max(0.5,hsl.l)) };
-        }
-        var seed = hashSeed(t.id || t.src || t.title || String(i));
-        return { hue: seed % 360, sat:0.52, light:0.6 };
-      });
-      var n = raw.length;
-      var minSep = n>1 ? Math.max(40, Math.min((360/n)*0.75, 100)) : 0;
-      var spread = spreadHues(raw.map(function(r){ return r.hue; }), minSep);
-      var cache = Object.create(null);
-      tracks.forEach(function(t,i){
-        cache[t.id] = { hue: spread[i], sat: raw[i].sat, light: raw[i].light };
-      });
-      return cache;
-    });
+    if(navScrim){ navScrim.addEventListener('click', closeNav); }
+    var navAnchors = navLinks.querySelectorAll('a');
+    for(var na = 0; na < navAnchors.length; na++){ navAnchors[na].addEventListener('click', closeNav); }
+    window.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ closeNav(); } });
+    window.addEventListener('resize', function(){ if(window.innerWidth > 860){ closeNav(); } });
   }
 
-  /* Poetic chromatic names — a small curated wheel, so each Signal's
-     color reads as something felt, not a hex value. */
-  var CHROMA_NAMES = [
-    'Crimson Pulse','Ember Drift','Amber Hour','Molten Gold','Citrine Flare','Sunfade',
-    'Verdant Static','Emerald Signal','Jade Undertow','Teal Horizon','Deep Current','Seafoam Drift',
-    'Glacier Line','Ice Static','Cobalt Hour','Twilight Frequency','Indigo Drift','Violet Static',
-    'Amethyst Pulse','Orchid Flare','Magenta Signal','Rose Frequency','Crimson Fade','Blush Static'
+  /* ---------- Cursor glow (desktop, fine pointer only) ---------- */
+  var glow = document.getElementById('glowCursor');
+  if(!coarsePointer && TIER !== 'low' && TIER !== 'still'){
+    window.addEventListener('mousemove', function(e){
+      glow.style.setProperty('--mx', e.clientX + 'px');
+      glow.style.setProperty('--my', e.clientY + 'px');
+    }, {passive:true});
+  } else {
+    glow.style.display = 'none';
+  }
+
+  /* ---------- Scroll reveal ---------- */
+  var revealEls = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){ entry.target.classList.add('in'); io.unobserve(entry.target); }
+      });
+    }, {threshold:0.12});
+    revealEls.forEach(function(el){ io.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('in'); });
+  }
+
+  /* ---------- Load veil ---------- */
+  var veil = document.getElementById('loadVeil');
+  function hideVeil(){ if(veil){ veil.classList.add('hidden'); } }
+  if(document.readyState === 'complete'){ setTimeout(hideVeil, 250); }
+  else{ window.addEventListener('load', function(){ setTimeout(hideVeil, 250); }); }
+
+  /* =======================================================================
+     DATA — same lazy-load-with-fallback pattern used across the site:
+     try data/signals.json, fall back to an inline default so the page
+     never renders empty even offline or if the fetch is blocked.
+     ======================================================================= */
+  var DEFAULT_SIGNALS = [
+    { id:'one-heart-una-vida', title:'One Heart // Una Vida', tag:'Signal 004 · 2026', duration:'3:14',
+      src:'assets/audio/tracks/one-heart-una-vida.mp3', cover:'assets/audio/covers/one-heart-una-vida.jpg',
+      mood:"Two languages, one pulse — a slow-burn promise written in bilingual harmony.", accent:'#C9536E' },
+    { id:'shadow-mode', title:'Shadow Mode', tag:'Signal 003 · 2026', duration:'0:45',
+      src:'assets/audio/tracks/shadow-mode.mp3', cover:'assets/audio/covers/shadow-mode.jpg',
+      mood:"Low light, lower profile — moving through the frame without ever entering it.", accent:'#6E5EC9' },
+    { id:'neon-rush', title:'Neon Rush', tag:'Signal 002 · 2026', duration:'1:03',
+      src:'assets/audio/tracks/neon-rush.mp3', cover:'assets/audio/covers/neon-rush.jpg',
+      mood:"Wet asphalt and sodium light — a city accelerating past its own limits.", accent:'#4ED2C9' },
+    { id:'lock-in-nightshift', title:'Lock In // Nightshift', tag:'Signal 001 · 2026', duration:'0:33',
+      src:'assets/audio/tracks/lock-in-nightshift.mp3', cover:'assets/audio/covers/lock-in-nightshift.jpg',
+      mood:"Fluorescent hallways, deadline heartbeat — the mind locked in after everyone else has gone home.", accent:'#C9934E' }
   ];
-  function chromaticName(hue){
-    var idx = Math.round(((hue%360)+360)%360 / 15) % 24;
-    return CHROMA_NAMES[idx];
+  var SIGNALS = DEFAULT_SIGNALS;
+
+  function durationToSeconds(str){
+    if(!str || str.indexOf(':') === -1) return 0;
+    var parts = str.split(':');
+    var m = parseInt(parts[0], 10) || 0, s = parseInt(parts[1], 10) || 0;
+    return m * 60 + s;
+  }
+  function secondsToDuration(total){
+    total = Math.round(total);
+    var m = Math.floor(total / 60), s = total % 60;
+    return m + ':' + (s < 10 ? '0' : '') + s;
   }
 
-  function hslCss(hue, sat, light, alphaPct){
-    var h = ((hue%360)+360)%360;
-    if(alphaPct == null){
-      return 'hsl(' + h.toFixed(1) + ',' + Math.round(sat*100) + '%,' + Math.round(light*100) + '%)';
-    }
-    return 'hsl(' + h.toFixed(1) + ',' + Math.round(sat*100) + '%,' + Math.round(light*100) + '%,' + (alphaPct/100) + ')';
+  /* ---------- Colour science (ported from the immersive engine on
+     index.html): sRGB → HSL, relative luminance, WCAG contrast ratio,
+     and a small search that nudges lightness up until a colour reads
+     clearly against the obsidian background. ---------- */
+  function hexToRgb(hex){
+    hex = hex.replace('#', '');
+    if(hex.length === 3){ hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2]; }
+    var num = parseInt(hex, 16);
+    return [(num >> 16) & 255, (num >> 8) & 255, num & 255];
   }
-
-  /* =========================================================
-     Ambient starfield — canvas2D, deliberately lightweight so it
-     runs smoothly on any device (no WebGL requirement). Particle
-     count scales down on mobile / low-core devices; motion is
-     disabled entirely under prefers-reduced-motion.
-  ========================================================= */
-  var fieldCanvas = document.getElementById('field');
-  var fctx = fieldCanvas.getContext && fieldCanvas.getContext('2d');
-  var stars = [];
-  var DPR = Math.min(window.devicePixelRatio || 1, 2);
-  var accentHue = 39, accentSat = 0.46, accentLight = 0.61; // live, lerps toward whichever chamber/track is active
-
-  function resizeField(){
-    fieldCanvas.width = window.innerWidth * DPR;
-    fieldCanvas.height = window.innerHeight * DPR;
-    fieldCanvas.style.width = window.innerWidth + 'px';
-    fieldCanvas.style.height = window.innerHeight + 'px';
-    var count = Math.round((window.innerWidth * window.innerHeight) / (isMobile || lowPower ? 9000 : 4200));
-    count = Math.min(count, isMobile ? 90 : 220);
-    stars = [];
-    for(var i=0;i<count;i++){
-      stars.push({
-        x: Math.random()*fieldCanvas.width,
-        y: Math.random()*fieldCanvas.height,
-        r: (Math.random()*1.4+0.3) * DPR,
-        drift: Math.random()*0.15+0.02,
-        phase: Math.random()*Math.PI*2,
-        gold: Math.random() < 0.16
-      });
-    }
-  }
-  window.addEventListener('resize', resizeField);
-  resizeField();
-
-  var t0 = performance.now();
-  function drawField(now){
-    if(!fctx) return;
-    var t = (now - t0) / 1000;
-    fctx.clearRect(0,0,fieldCanvas.width, fieldCanvas.height);
-    for(var i=0;i<stars.length;i++){
-      var s = stars[i];
-      var twinkle = reduceMotion ? 0.7 : (0.5 + 0.5*Math.sin(t*0.6 + s.phase));
-      var y = reduceMotion ? s.y : s.y + Math.sin(t*0.15 + s.phase)*6;
-      fctx.beginPath();
-      fctx.arc(s.x, y, s.r, 0, Math.PI*2);
-      if(s.gold){
-        fctx.fillStyle = hslCss(accentHue, Math.min(0.6,accentSat), Math.min(0.72,accentLight), 55*twinkle);
-      } else {
-        fctx.fillStyle = 'rgba(242,237,228,' + (0.5*twinkle) + ')';
+  function rgbToHsl(r, g, b){
+    r /= 255; g /= 255; b /= 255;
+    var max = Math.max(r,g,b), min = Math.min(r,g,b);
+    var h, s, l = (max + min) / 2;
+    if(max === min){ h = 0; s = 0; }
+    else{
+      var d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch(max){
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        default: h = (r - g) / d + 4;
       }
-      fctx.fill();
+      h /= 6;
     }
-    if(!reduceMotion){ requestAnimationFrame(drawField); }
+    return [h * 360, s, l];
   }
-  requestAnimationFrame(drawField);
-  if(reduceMotion){ drawField(0); } // paint one static frame
-
-  var fieldWash = document.getElementById('fieldWash');
-  function applyAccent(hue, sat, light, animated){
-    accentHue = hue; accentSat = sat; accentLight = light;
-    var root = document.documentElement.style;
-    var acc = hslCss(hue, sat, light);
-    root.setProperty('--acc', acc);
-    root.setProperty('--acc-dim', hslCss(hue, sat, light, 35));
-    if(!animated) return;
+  function relLuminance(r, g, b){
+    function chan(c){ c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); }
+    return 0.2126 * chan(r) + 0.7152 * chan(g) + 0.0722 * chan(b);
+  }
+  function contrastRatio(l1, l2){
+    var a = Math.max(l1, l2) + 0.05, b = Math.min(l1, l2) + 0.05;
+    return a / b;
+  }
+  var BG_LUMINANCE = relLuminance(5, 5, 9);
+  function hslToRgb(h, s, l){
+    h = ((h % 360) + 360) % 360 / 360;
+    var r, g, b;
+    if(s === 0){ r = g = b = l; }
+    else{
+      var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      var p = 2 * l - q;
+      function hue2rgb(p, q, t){
+        if(t < 0) t += 1; if(t > 1) t -= 1;
+        if(t < 1/6) return p + (q - p) * 6 * t;
+        if(t < 1/2) return q;
+        if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+        return p;
+      }
+      r = hue2rgb(p, q, h + 1/3); g = hue2rgb(p, q, h); b = hue2rgb(p, q, h - 1/3);
+    }
+    return [r*255, g*255, b*255];
+  }
+  function ensureReadableL(h, s, l, minRatio){
+    for(var i = 0; i < 14 && l < 0.97; i++){
+      var rgb = hslToRgb(h, s, l);
+      if(contrastRatio(relLuminance(rgb[0], rgb[1], rgb[2]), BG_LUMINANCE) >= minRatio) break;
+      l = Math.min(0.97, l + 0.045);
+    }
+    return l;
+  }
+  /* Builds a { accent, accentDim, glow } token set from any seed hex,
+     guaranteed to read clearly on the archive's near-black backdrop. */
+  function tokensFromHex(hex){
+    var rgb = hexToRgb(hex);
+    var hsl = rgbToHsl(rgb[0], rgb[1], rgb[2]);
+    var h = hsl[0], s = Math.max(0.4, Math.min(0.75, hsl[1]));
+    var l = ensureReadableL(h, s, Math.max(0.45, hsl[2]), 4.6);
+    var accent = 'hsl(' + h.toFixed(1) + ' ' + (s*100).toFixed(0) + '% ' + (l*100).toFixed(0) + '%)';
+    var accentDim = 'hsl(' + h.toFixed(1) + ' ' + (s*100).toFixed(0) + '% ' + (l*100).toFixed(0) + '% / 0.4)';
+    var glow = 'hsl(' + h.toFixed(1) + ' ' + (s*100).toFixed(0) + '% ' + (l*100).toFixed(0) + '% / 0.18)';
+    return { accent:accent, accentDim:accentDim, glow:glow };
+  }
+  /* Samples a cover image's dominant hue via a downscaled canvas read.
+     Falls back to the track's authored `accent` hex if canvas access
+     is ever blocked (very old browsers, restrictive file:// contexts). */
+  function extractCoverTokens(img, fallbackHex, cb){
+    try{
+      var c = document.createElement('canvas');
+      c.width = 24; c.height = 24;
+      var ctx = c.getContext('2d');
+      ctx.drawImage(img, 0, 0, 24, 24);
+      var data = ctx.getImageData(0, 0, 24, 24).data;
+      var r = 0, g = 0, b = 0, n = 0;
+      for(var i = 0; i < data.length; i += 4){
+        var a = data[i+3]; if(a < 40) continue;
+        r += data[i]; g += data[i+1]; b += data[i+2]; n++;
+      }
+      if(n === 0){ throw new Error('no opaque pixels'); }
+      r /= n; g /= n; b /= n;
+      var hsl = rgbToHsl(r, g, b);
+      // Boost saturation a little — averaged cover art tends to be
+      // desaturated by blending, and a flat grey accent looks broken.
+      var boostedHex = (function(){
+        var rgb2 = hslToRgb(hsl[0], Math.min(0.85, hsl[1] * 1.6 + 0.1), Math.max(0.4, hsl[2]));
+        var toHex = function(v){ var s = Math.round(v).toString(16); return s.length < 2 ? '0'+s : s; };
+        return '#' + toHex(rgb2[0]) + toHex(rgb2[1]) + toHex(rgb2[2]);
+      })();
+      cb(tokensFromHex(boostedHex));
+    } catch(err){
+      cb(tokensFromHex(fallbackHex || '#C9A96E'));
+    }
   }
 
-  /* =========================================================
-     Load the catalog, resolve identities, build the experience.
-  ========================================================= */
-  loadJSON('data/signals.json', DEFAULT_SIGNALS).then(function(signals){
-    if(!signals.length){
-      document.getElementById('emptyState').style.display = 'block';
+  /* =======================================================================
+     THE VAULT — rendering + navigation + audio
+     ======================================================================= */
+  var vaultStage  = document.getElementById('vaultStage');
+  var vaultTrack  = document.getElementById('vaultTrack');
+  var vaultDots   = document.getElementById('vaultDots');
+  var vaultCount  = document.getElementById('vaultCount');
+  var vaultPrev   = document.getElementById('vaultPrev');
+  var vaultNext   = document.getElementById('vaultNext');
+  var ledgerEl    = document.getElementById('ledger');
+  var ariaLive    = document.getElementById('ariaLive');
+  var statCount   = document.getElementById('statCount');
+  var statRuntime = document.getElementById('statRuntime');
+  var statLatest  = document.getElementById('statLatest');
+  var catalogWash = document.getElementById('catalogWash');
+
+  var plates = [];      // { el, cover, orbit, playBtn, bars, tokens }
+  var ledgerRows = [];
+  var currentIndex = 0;
+  var stacked = isStackedLayout();
+
+  function svgPlay(){ return '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7L8 5z"/></svg>'; }
+  function svgPause(){ return '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>'; }
+
+  function buildBars(container, count){
+    container.innerHTML = '';
+    for(var i = 0; i < count; i++){
+      var s = document.createElement('span');
+      container.appendChild(s);
+    }
+  }
+
+  function renderVault(){
+    vaultTrack.innerHTML = '';
+    ledgerEl.innerHTML = '';
+    plates = [];
+    ledgerRows = [];
+
+    for(var i = 0; i < SIGNALS.length; i++){
+      (function(sig, idx){
+        var plate = document.createElement('div');
+        plate.className = 'vault-plate';
+        plate.setAttribute('role', 'listitem');
+        plate.setAttribute('tabindex', '0');
+        plate.setAttribute('aria-label', sig.title + ', ' + sig.tag);
+        plate.innerHTML =
+          '<div class="vault-cover-wrap">' +
+            '<div class="vault-orbit" aria-hidden="true"><span></span><span></span></div>' +
+            '<div class="vault-cover">' +
+              '<img src="' + sig.cover + '" alt="Cover art for ' + sig.title + '" loading="lazy">' +
+            '</div>' +
+            '<div class="vault-reflect" aria-hidden="true"><img src="' + sig.cover + '" alt=""></div>' +
+          '</div>' +
+          '<div class="vault-meta">' +
+            '<div class="vault-tag">' + sig.tag + '</div>' +
+            '<div class="vault-title">' + sig.title + '</div>' +
+            '<div class="vault-mood">' + (sig.mood || '') + '</div>' +
+            '<div class="vault-controls">' +
+              '<button class="vault-play" type="button" aria-label="Play ' + sig.title + '">' + svgPlay() + '</button>' +
+              '<span class="vault-duration">' + sig.duration + '</span>' +
+              '<div class="vault-bars" aria-hidden="true"></div>' +
+            '</div>' +
+          '</div>';
+        vaultTrack.appendChild(plate);
+
+        var bars = plate.querySelector('.vault-bars');
+        buildBars(bars, 5);
+
+        var record = {
+          el: plate,
+          cover: plate.querySelector('.vault-cover img'),
+          orbit: plate.querySelector('.vault-orbit'),
+          playBtn: plate.querySelector('.vault-play'),
+          bars: bars,
+          tokens: null,
+          data: sig
+        };
+        plates.push(record);
+
+        record.playBtn.addEventListener('click', function(e){
+          e.stopPropagation();
+          if(currentIndex !== idx){ goTo(idx); }
+          togglePlay(idx);
+        });
+        plate.addEventListener('click', function(){
+          if(currentIndex !== idx){ goTo(idx); } else { togglePlay(idx); }
+        });
+        plate.addEventListener('keydown', function(e){
+          if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); if(currentIndex !== idx){ goTo(idx); } togglePlay(idx); }
+        });
+
+        /* Colour extraction — once the cover has decoded, resolve this
+           plate's own accent tokens and apply them as local CSS vars,
+           so every card carries its own atmosphere at all times, not
+           only when active. */
+        var applyTokens = function(){
+          extractCoverTokens(record.cover, sig.accent, function(tokens){
+            record.tokens = tokens;
+            plate.style.setProperty('--cat-accent', tokens.accent);
+            plate.style.setProperty('--cat-accent-dim', tokens.accentDim);
+            plate.style.setProperty('--cat-glow', tokens.glow);
+            if(idx === currentIndex){ applyActiveWash(tokens); }
+          });
+        };
+        if(record.cover.complete && record.cover.naturalWidth){ applyTokens(); }
+        else{ record.cover.addEventListener('load', applyTokens); record.cover.addEventListener('error', applyTokens); }
+
+        /* Dot */
+        var dot = document.createElement('button');
+        dot.className = 'vault-dot';
+        dot.type = 'button';
+        dot.setAttribute('aria-label', 'Go to ' + sig.title);
+        dot.addEventListener('click', function(){ goTo(idx); });
+        vaultDots.appendChild(dot);
+
+        /* Ledger row */
+        var row = document.createElement('div');
+        row.className = 'ledger-row';
+        row.setAttribute('role', 'button');
+        row.setAttribute('tabindex', '0');
+        row.innerHTML =
+          '<span class="ledger-index">' + (idx + 1 < 10 ? '0' + (idx+1) : (idx+1)) + '</span>' +
+          '<span class="ledger-title">' + sig.title + '</span>' +
+          '<span class="ledger-tag">' + sig.tag + '</span>' +
+          '<span class="ledger-duration">' + sig.duration + '</span>';
+        row.addEventListener('click', function(){ goTo(idx); scrollToVault(); });
+        row.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ goTo(idx); scrollToVault(); } });
+        ledgerEl.appendChild(row);
+        ledgerRows.push(row);
+      })(SIGNALS[i], i);
+    }
+
+    /* Stats — computed, not authored, so they stay true as the
+       catalog grows. */
+    var totalSeconds = 0;
+    for(var t = 0; t < SIGNALS.length; t++){ totalSeconds += durationToSeconds(SIGNALS[t].duration); }
+    statCount.textContent = SIGNALS.length < 10 ? '0' + SIGNALS.length : SIGNALS.length;
+    statRuntime.textContent = secondsToDuration(totalSeconds);
+    statLatest.textContent = SIGNALS.length ? (SIGNALS[0].tag.split('·')[0].replace('Signal', '').trim() || SIGNALS[0].tag) : '—';
+
+    layoutVault(true);
+  }
+
+  function scrollToVault(){
+    var target = document.getElementById('vault');
+    if(target){ target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block:'start' }); }
+  }
+
+  function applyActiveWash(tokens){
+    document.documentElement.style.setProperty('--cat-accent', tokens.accent);
+    document.documentElement.style.setProperty('--cat-accent-dim', tokens.accentDim);
+    document.documentElement.style.setProperty('--cat-glow', tokens.glow);
+  }
+
+  /* ---------- Coverflow geometry (desktop/tablet) ---------- */
+  function layoutVault(instant){
+    stacked = isStackedLayout();
+    document.body.classList.toggle('vault-stacked', stacked);
+    vaultDots.style.display = plates.length > 1 ? 'flex' : 'none';
+
+    if(stacked){
+      // Stacked mode: no inline transforms — CSS handles the flow.
+      for(var i = 0; i < plates.length; i++){
+        plates[i].el.style.transform = '';
+        plates[i].el.style.opacity = '';
+        plates[i].el.style.filter = '';
+        plates[i].el.style.zIndex = '';
+      }
       return;
     }
-    document.getElementById('metaCount').textContent = String(signals.length).padStart(3,'0');
-    document.getElementById('metaLatest').textContent = signals[0].title;
-    var totalSec = signals.reduce(function(sum, t){
-      var parts = String(t.duration||'0:00').split(':').map(Number);
-      return sum + (parts[0]*60 + (parts[1]||0));
-    }, 0);
-    var mm = Math.floor(totalSec/60), ss = totalSec%60;
-    document.getElementById('metaRuntime').textContent = mm + ':' + String(ss).padStart(2,'0');
 
-    var THEME_CACHE = {};
-    resolveDistinctThemes(signals).then(function(cache){ THEME_CACHE = cache; buildConstellation(); refreshChamberColors(); });
+    var n = plates.length;
+    for(var p = 0; p < n; p++){
+      var offset = p - currentIndex;
+      // Wrap to the shortest visual distance so the vault feels like
+      // a continuous ring rather than a hard-stopped shelf.
+      if(offset > n / 2) offset -= n;
+      if(offset < -n / 2) offset += n;
 
-    /* ---- Constellation nodes (threshold) ---- */
-    var constellation = document.getElementById('constellation');
-    function buildConstellation(){
-      constellation.innerHTML = '';
-      var n = signals.length;
-      signals.forEach(function(t, i){
-        var theme = THEME_CACHE[t.id] || { hue:39, sat:0.46, light:0.61 };
-        var node = document.createElement('button');
-        node.className = 'node';
-        node.type = 'button';
-        node.setAttribute('data-title', t.title);
-        node.setAttribute('aria-label', 'Go to ' + t.title);
-        var spread = n > 1 ? (i/(n-1) - 0.5) * Math.min(560, n*120) : 0;
-        var arc = n > 1 ? Math.pow((i/(n-1))-0.5, 2) * -70 : 0;
-        node.style.left = 'calc(50% + ' + spread + 'px)';
-        node.style.top = 'calc(50% + ' + arc + 'px)';
-        node.style.setProperty('--node-color', hslCss(theme.hue, theme.sat, theme.light));
-        node.style.animationDelay = (i*0.4) + 's';
-        node.addEventListener('click', function(){
-          var chamber = document.getElementById('chamber-' + t.id);
-          if(chamber) chamber.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block:'center' });
-        });
-        constellation.appendChild(node);
-      });
+      var abs = Math.abs(offset);
+      var xSpacing = Math.min(220, vaultStage.clientWidth * 0.26);
+      var x = offset * xSpacing;
+      var z = -abs * 160;
+      var rotY = offset * -32;
+      var scale = Math.max(0.62, 1 - abs * 0.16);
+      var opacity = abs > 3 ? 0 : Math.max(0, 1 - abs * 0.32);
+      var blur = Math.min(6, abs * 2.2);
+
+      var el = plates[p].el;
+      if(instant){ el.style.transition = 'none'; }
+      el.style.transform =
+        'translate(-50%,-50%) translateX(' + x.toFixed(1) + 'px) translateZ(' + z.toFixed(1) + 'px) rotateY(' + rotY.toFixed(1) + 'deg) scale(' + scale.toFixed(3) + ')';
+      el.style.opacity = opacity.toFixed(2);
+      el.style.filter = TIER === 'low' ? 'none' : 'blur(' + blur.toFixed(1) + 'px)';
+      el.style.zIndex = String(100 - abs);
+      el.classList.toggle('is-active', offset === 0);
+      if(instant){
+        /* force reflow then restore transition so future moves animate */
+        void el.offsetHeight;
+        el.style.transition = '';
+      }
     }
+  }
 
-    /* ---- Gallery chambers ---- */
-    var gallery = document.getElementById('gallery');
-    signals.forEach(function(t, i){
-      var chamber = document.createElement('section');
-      chamber.className = 'chamber reveal';
-      chamber.id = 'chamber-' + t.id;
-      chamber.setAttribute('data-index', i);
-      chamber.innerHTML =
-        '<div class="chamber-frame" data-tilt>' +
-          '<div class="chamber-glow"></div>' +
-          '<div class="chamber-plate"><img src="' + t.cover + '" alt="Cover art for ' + t.title + '" loading="lazy"></div>' +
-        '</div>' +
-        '<div class="chamber-copy">' +
-          '<span class="chamber-tag">' + t.tag + '</span>' +
-          '<h2 class="chamber-title">' + t.title + '</h2>' +
-          '<div class="chamber-meta">' +
-            '<span>' + t.duration + '</span>' +
-            '<span class="dot"></span>' +
-            '<span class="chamber-wavelength" id="wavelength-' + t.id + '">—</span>' +
-          '</div>' +
-          '<div class="chamber-controls">' +
-            '<button class="chamber-play" aria-label="Play ' + t.title + '">' +
-              '<svg class="ic-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7L8 5z"/></svg>' +
-              '<svg class="ic-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>' +
-            '</button>' +
-            '<div class="chamber-bars"><span></span><span></span><span></span><span></span></div>' +
-            '<span class="chamber-index">№ ' + String(signals.length - i).padStart(2,'0') + '</span>' +
-          '</div>' +
-        '</div>';
-      gallery.appendChild(chamber);
-      chamber.querySelector('.chamber-play').addEventListener('click', function(){ toggleTrack(i); });
-    });
+  function goTo(idx, opts){
+    opts = opts || {};
+    var n = plates.length;
+    if(n === 0) return;
+    idx = ((idx % n) + n) % n;
+    var changed = idx !== currentIndex;
+    currentIndex = idx;
 
-    function refreshChamberColors(){
-      signals.forEach(function(t){
-        var theme = THEME_CACHE[t.id];
-        if(!theme) return;
-        var color = hslCss(theme.hue, theme.sat, theme.light);
-        var chamber = document.getElementById('chamber-' + t.id);
-        if(chamber) chamber.style.setProperty('--node-color', color);
-        var wl = document.getElementById('wavelength-' + t.id);
-        if(wl) wl.textContent = chromaticName(theme.hue);
-        var railNode = document.querySelector('.rail-node[data-id="' + t.id + '"]');
-        if(railNode) railNode.style.setProperty('--rail-color', color);
-        var mdot = document.querySelector('.mdot[data-id="' + t.id + '"]');
-        if(mdot) mdot.style.setProperty('--rail-color', color);
-      });
-    }
+    for(var i = 0; i < plates.length; i++){ plates[i].el.classList.toggle('is-active', i === idx); }
+    var dotEls = vaultDots.querySelectorAll('.vault-dot');
+    for(var d = 0; d < dotEls.length; d++){ dotEls[d].classList.toggle('active', d === idx); }
+    for(var r = 0; r < ledgerRows.length; r++){ ledgerRows[r].classList.toggle('active', r === idx); }
 
-    /* ---- Rail + mobile dots ---- */
-    var rail = document.getElementById('rail');
-    var mobileDots = document.getElementById('mobileDots');
-    signals.forEach(function(t){
-      var rn = document.createElement('button');
-      rn.className = 'rail-node'; rn.type = 'button';
-      rn.setAttribute('data-id', t.id);
-      rn.setAttribute('aria-label', 'Jump to ' + t.title);
-      rn.addEventListener('click', function(){
-        document.getElementById('chamber-' + t.id).scrollIntoView({ behavior: reduceMotion?'auto':'smooth', block:'center' });
-      });
-      rail.appendChild(rn);
-      var md = document.createElement('button');
-      md.className = 'mdot'; md.type = 'button';
-      md.setAttribute('data-id', t.id);
-      md.setAttribute('aria-label', 'Jump to ' + t.title);
-      md.addEventListener('click', function(){
-        document.getElementById('chamber-' + t.id).scrollIntoView({ behavior: reduceMotion?'auto':'smooth', block:'center' });
-      });
-      mobileDots.appendChild(md);
-    });
+    vaultCount.textContent = (idx + 1) + ' / ' + n;
 
-    /* ---- Reveal + active-chamber tracking via one shared observer ---- */
-    var activeId = null;
-    if('IntersectionObserver' in window){
-      var io = new IntersectionObserver(function(entries){
-        entries.forEach(function(entry){
-          if(entry.isIntersecting){ entry.target.classList.add('in'); }
-        });
-        // Pick whichever intersecting chamber is closest to viewport center.
-        var best = null, bestDist = Infinity;
-        entries.forEach(function(entry){
-          if(!entry.isIntersecting) return;
-          var r = entry.target.getBoundingClientRect();
-          var center = r.top + r.height/2;
-          var dist = Math.abs(center - window.innerHeight/2);
-          if(dist < bestDist){ bestDist = dist; best = entry.target; }
-        });
-        if(best){
-          var id = best.id.replace('chamber-','');
-          if(id !== activeId && !isPlaying){
-            activeId = id;
-            var theme = THEME_CACHE[id];
-            if(theme) applyAccent(theme.hue, theme.sat, theme.light, true);
-            updateRailActive(id);
-          }
-        }
-      }, { threshold:[0, 0.5, 1], rootMargin:'-10% 0px -10% 0px' });
-      document.querySelectorAll('.chamber').forEach(function(c){ io.observe(c); });
-    } else {
-      // No IntersectionObserver (very old browser): skip scroll-tied
-      // color/rail tracking, but make sure every chamber is still
-      // visible and usable — the archive still works, just without
-      // that particular flourish.
-      document.querySelectorAll('.chamber').forEach(function(c){ c.classList.add('in'); });
-    }
-
-    function updateRailActive(id){
-      document.querySelectorAll('.rail-node').forEach(function(n){ n.classList.toggle('active', n.getAttribute('data-id')===id); });
-      document.querySelectorAll('.mdot').forEach(function(n){ n.classList.toggle('active', n.getAttribute('data-id')===id); });
-    }
-
-    /* ---- Gentle tilt on the cover plates (desktop / mouse only) ---- */
-    if(!isMobile && !reduceMotion){
-      document.querySelectorAll('[data-tilt]').forEach(function(el){
-        el.addEventListener('mousemove', function(e){
-          var r = el.getBoundingClientRect();
-          var mx = (e.clientX - r.left)/r.width - 0.5;
-          var my = (e.clientY - r.top)/r.height - 0.5;
-          var plate = el.querySelector('.chamber-plate');
-          if(plate) plate.style.transform = 'rotateX(' + (my*-8) + 'deg) rotateY(' + (mx*10) + 'deg)';
-        });
-        el.addEventListener('mouseleave', function(){
-          var plate = el.querySelector('.chamber-plate');
-          if(plate) plate.style.transform = '';
-        });
-      });
-    }
-
-    /* =========================================================
-       Playback — a single shared <audio>, a light level analyser
-       for the equalizer bars, and auto-advance to the next Signal
-       so listening through the archive feels like one continuous
-       session rather than isolated previews.
-    ========================================================= */
-    var audioEl = document.getElementById('archiveAudio');
-    var isPlaying = false;
-    var currentIndex = -1;
-    var audioCtx = null, analyser = null, dataArr = null, srcNode = null;
-
-    function ensureAnalyser(){
-      if(audioCtx) return;
-      try{
-        var AC = window.AudioContext || window.webkitAudioContext;
-        audioCtx = new AC();
-        srcNode = audioCtx.createMediaElementSource(audioEl);
-        analyser = audioCtx.createAnalyser();
-        analyser.fftSize = 64;
-        dataArr = new Uint8Array(analyser.frequencyBinCount);
-        srcNode.connect(analyser);
-        analyser.connect(audioCtx.destination);
-      }catch(err){ analyser = null; }
-    }
-
-    var miniDock = document.getElementById('miniDock');
-    var mdArt = document.getElementById('mdArt');
-    var mdTitle = document.getElementById('mdTitle');
-    document.getElementById('mdToggle').addEventListener('click', function(){ toggleTrack(currentIndex >= 0 ? currentIndex : 0); });
-
-    function setChamberPlaying(index, playing){
-      document.querySelectorAll('.chamber').forEach(function(c){ c.classList.remove('is-playing'); });
-      if(index >= 0){
-        var t = signals[index];
-        var chamber = document.getElementById('chamber-' + t.id);
-        if(chamber) chamber.classList.toggle('is-playing', playing);
+    if(!stacked){
+      layoutVault(false);
+      if(changed){
+        plates[idx].el.classList.remove('sweep');
+        void plates[idx].el.offsetHeight;
+        plates[idx].el.classList.add('sweep');
       }
     }
 
-    function playTrack(index){
-      var t = signals[index];
-      if(!t) return;
-      currentIndex = index;
-      audioEl.src = t.src;
-      audioEl.currentTime = 0;
-      var playPromise = audioEl.play();
-      if(playPromise && typeof playPromise.catch === 'function'){ playPromise.catch(function(){}); }
-      ensureAnalyser();
-      if(audioCtx && audioCtx.state === 'suspended'){ audioCtx.resume(); }
-      isPlaying = true;
-      setChamberPlaying(index, true);
-      mdArt.src = t.cover;
-      mdTitle.textContent = t.title;
-      miniDock.classList.add('visible', 'is-playing');
-      var theme = THEME_CACHE[t.id];
-      if(theme) applyAccent(theme.hue, theme.sat, theme.light, true);
-      updateRailActive(t.id);
-      activeId = t.id;
-    }
-    function stopTrack(){
-      audioEl.pause();
-      isPlaying = false;
-      setChamberPlaying(currentIndex, false);
-      miniDock.classList.remove('is-playing');
-      // Hand the ambient accent back to whichever chamber is centered
-      // in the viewport right now, exactly like it would be if nothing
-      // had ever played — no residual color left behind.
-      activeId = null;
-    }
-    function toggleTrack(index){
-      if(isPlaying && currentIndex === index){ stopTrack(); }
-      else{ playTrack(index); }
-    }
-    audioEl.addEventListener('ended', function(){
-      var next = (currentIndex + 1) % signals.length;
-      playTrack(next);
-    });
+    var tokens = plates[idx].tokens;
+    if(tokens){ applyActiveWash(tokens); }
 
-    /* Equalizer bars + a subtle glow-pulse tied to live level */
-    (function levelLoop(){
-      if(analyser && isPlaying){
-        analyser.getByteFrequencyData(dataArr);
-        var sum = 0;
-        for(var i=0;i<dataArr.length;i++){ sum += dataArr[i]; }
-        var level = Math.min(1, (sum/dataArr.length)/110);
-        var bars = document.querySelectorAll('.chamber.is-playing .chamber-bars span');
-        bars.forEach(function(b, i){
-          var h = 20 + level*70 * (0.5 + 0.5*Math.sin(performance.now()/200 + i));
-          b.style.height = Math.max(14, h) + '%';
-        });
-      }
-      requestAnimationFrame(levelLoop);
-    })();
+    if(changed && ariaLive){
+      ariaLive.textContent = 'Now viewing ' + plates[idx].data.title + ', ' + plates[idx].data.tag;
+    }
+    if(changed && !opts.silent){
+      // Switching plates changes the "room" — if something else is
+      // playing, let it keep playing in the background; the dock
+      // still reflects whatever is actually on air.
+    }
+  }
+
+  vaultPrev.addEventListener('click', function(){ goTo(currentIndex - 1); });
+  vaultNext.addEventListener('click', function(){ goTo(currentIndex + 1); });
+
+  vaultStage.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowLeft'){ goTo(currentIndex - 1); }
+    else if(e.key === 'ArrowRight'){ goTo(currentIndex + 1); }
   });
+
+  /* ---------- Drag / swipe (coverflow mode) ---------- */
+  (function(){
+    var dragging = false, startX = 0, startY = 0, moved = false;
+    vaultStage.addEventListener('pointerdown', function(e){
+      if(stacked) return;
+      dragging = true; moved = false; startX = e.clientX; startY = e.clientY;
+    });
+    window.addEventListener('pointermove', function(e){
+      if(!dragging || stacked) return;
+      var dx = e.clientX - startX, dy = e.clientY - startY;
+      if(Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy)){ moved = true; }
+    });
+    window.addEventListener('pointerup', function(e){
+      if(!dragging || stacked){ dragging = false; return; }
+      dragging = false;
+      if(!moved) return;
+      var dx = e.clientX - startX;
+      if(dx < -40){ goTo(currentIndex + 1); }
+      else if(dx > 40){ goTo(currentIndex - 1); }
+    });
+  })();
+
+  /* ---------- Stacked mode: track which plate is centred on screen ---------- */
+  var stackObserver = null;
+  function setupStackObserver(){
+    if(stackObserver){ stackObserver.disconnect(); }
+    if(!('IntersectionObserver' in window)) return;
+    stackObserver = new IntersectionObserver(function(entries){
+      var best = null, bestRatio = 0;
+      entries.forEach(function(entry){
+        if(entry.intersectionRatio > bestRatio){ bestRatio = entry.intersectionRatio; best = entry.target; }
+      });
+      if(best){
+        var idx = -1;
+        for(var pi = 0; pi < plates.length; pi++){ if(plates[pi].el === best){ idx = pi; break; } }
+        if(idx !== -1 && idx !== currentIndex){ goTo(idx, {silent:true}); }
+      }
+    }, {threshold:[0.3, 0.5, 0.7, 0.9]});
+    plates.forEach(function(p){ stackObserver.observe(p.el); });
+  }
+
+  window.addEventListener('resize', function(){
+    var wasStacked = stacked;
+    layoutVault(true);
+    if(isStackedLayout() !== wasStacked){ setupStackObserver(); }
+  });
+
+  /* =======================================================================
+     AUDIO ENGINE — one shared <audio> element for the whole page.
+     A lightweight analyser drives both the active plate's waveform
+     and the persistent dock; there's no beat-detection/immersive
+     take-over here (that's the home page's job) — just an honest,
+     responsive equalizer tied to what's actually playing.
+     ======================================================================= */
+  var audioEl   = document.getElementById('playerAudio');
+  var dock      = document.getElementById('playerDock');
+  var dockArt   = document.getElementById('dockArt');
+  var dockToggle= document.getElementById('dockToggle');
+  var dockIcon  = document.getElementById('dockIcon');
+  var dockTitle = document.getElementById('dockTitle');
+  var dockBars  = document.getElementById('dockBars');
+  buildBars(dockBars, 5);
+
+  var audioCtx = null, analyser = null, freqData = null, srcNode = null;
+  var playingIndex = -1;
+  var rafId = null;
+
+  function ensureAudioGraph(){
+    if(audioCtx) return true;
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return false;
+    try{
+      audioCtx = new AC();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 128;
+      analyser.smoothingTimeConstant = 0.75;
+      freqData = new Uint8Array(analyser.frequencyBinCount);
+      srcNode = audioCtx.createMediaElementSource(audioEl);
+      srcNode.connect(analyser);
+      analyser.connect(audioCtx.destination);
+      return true;
+    } catch(err){ return false; }
+  }
+
+  function setIcon(el, playing){ el.innerHTML = playing ? svgPause() : svgPlay(); }
+
+  function updateDock(){
+    if(playingIndex === -1){ dock.classList.remove('visible'); return; }
+    var sig = SIGNALS[playingIndex];
+    dock.classList.add('visible');
+    dockArt.src = sig.cover;
+    dockArt.alt = 'Cover art for ' + sig.title;
+    dockTitle.textContent = sig.title;
+  }
+
+  function stopVisualLoop(){
+    if(rafId){ cancelAnimationFrame(rafId); rafId = null; }
+    setBarsIdle();
+  }
+  function setBarsIdle(){
+    for(var i = 0; i < plates.length; i++){ setBarHeights(plates[i].bars, [20,20,20,20,20]); }
+    setBarHeights(dockBars, [15,15,15,15,15]);
+  }
+  function setBarHeights(container, heights){
+    var spans = container.children;
+    for(var i = 0; i < spans.length && i < heights.length; i++){
+      spans[i].style.height = heights[i] + '%';
+    }
+  }
+  function visualLoop(){
+    rafId = requestAnimationFrame(visualLoop);
+    var heights = [22,22,22,22,22];
+    if(analyser && freqData){
+      analyser.getByteFrequencyData(freqData);
+      var bands = 5, step = Math.floor(freqData.length / bands) || 1;
+      for(var b = 0; b < bands; b++){
+        var sum = 0, count = 0;
+        for(var j = b*step; j < (b+1)*step && j < freqData.length; j++){ sum += freqData[j]; count++; }
+        var avg = count ? sum / count : 0;
+        heights[b] = Math.max(14, Math.min(100, (avg / 255) * 100));
+      }
+    } else {
+      // No Web Audio available (very old browser, or autoplay-gated
+      // before first gesture) — a gentle idle animation still reads
+      // as "alive" rather than a dead, static bar.
+      var t = Date.now() / 300;
+      for(var k = 0; k < 5; k++){ heights[k] = 30 + Math.sin(t + k) * 18; }
+    }
+    if(playingIndex !== -1 && plates[playingIndex]){ setBarHeights(plates[playingIndex].bars, heights); }
+    setBarHeights(dockBars, heights);
+  }
+
+  function playIndex(idx){
+    var sig = SIGNALS[idx];
+    if(!sig) return;
+    if(playingIndex !== -1 && plates[playingIndex]){
+      plates[playingIndex].el.classList.remove('is-playing');
+      setIcon(plates[playingIndex].playBtn, false);
+    }
+    playingIndex = idx;
+    if(audioEl.getAttribute('data-src') !== sig.src){
+      audioEl.src = sig.src;
+      audioEl.setAttribute('data-src', sig.src);
+    }
+    ensureAudioGraph();
+    if(audioCtx && audioCtx.state === 'suspended'){ audioCtx.resume(); }
+    var p = audioEl.play();
+    if(p && p.catch){ p.catch(function(){ /* autoplay blocked; user can retry via tap */ }); }
+  }
+
+  function togglePlay(idx){
+    if(playingIndex === idx && !audioEl.paused){ audioEl.pause(); return; }
+    playIndex(idx);
+  }
+
+  audioEl.addEventListener('play', function(){
+    if(playingIndex === -1) return;
+    plates[playingIndex].el.classList.add('is-playing');
+    setIcon(plates[playingIndex].playBtn, true);
+    dock.classList.add('playing');
+    dockToggle.innerHTML = svgPause();
+    updateDock();
+    if(!rafId){ visualLoop(); }
+  });
+  audioEl.addEventListener('pause', function(){
+    if(playingIndex !== -1 && plates[playingIndex]){
+      plates[playingIndex].el.classList.remove('is-playing');
+      setIcon(plates[playingIndex].playBtn, false);
+    }
+    dock.classList.remove('playing');
+    dockToggle.innerHTML = svgPlay();
+  });
+  audioEl.addEventListener('ended', function(){
+    // Keep the archive "alive" — advance to the next signal, looping
+    // back to the start, so exploring never dead-ends in silence.
+    if(SIGNALS.length > 1){
+      var next = (playingIndex + 1) % SIGNALS.length;
+      goTo(next);
+      playIndex(next);
+    }
+  });
+
+  dockToggle.addEventListener('click', function(){
+    if(playingIndex === -1){ playIndex(currentIndex); }
+    else{ togglePlay(playingIndex); }
+  });
+
+  setBarsIdle();
+
+  /* =======================================================================
+     LOAD DATA, then render. Mirrors the site-wide "fetch with inline
+     fallback" pattern — the page is fully usable even if this fetch
+     is blocked (offline, opened via file://, etc).
+     ======================================================================= */
+  function boot(){
+    setupStackObserver();
+    if(plates.length){ goTo(0, {silent:true}); }
+  }
+  fetch('data/signals.json').then(function(res){
+    if(!res.ok) throw new Error('bad response');
+    return res.json();
+  }).then(function(json){
+    if(Array.isArray(json) && json.length){ SIGNALS = json; }
+    renderVault();
+    boot();
+  }).catch(function(){
+    SIGNALS = DEFAULT_SIGNALS;
+    renderVault();
+    boot();
+  });
+
+  /* =======================================================================
+     AMBIENT STARFIELD — a trimmed sibling of the one on index.html:
+     same materials (gold + ivory points, additive drift), scaled down
+     for a secondary page and gated hard by device tier. Rendering is
+     paused whenever the tab isn't visible.
+     ======================================================================= */
+  (function(){
+    if(TIER === 'still' || typeof THREE === 'undefined') return;
+    var canvas = document.getElementById('scene');
+    if(!canvas || !window.WebGLRenderingContext) return;
+
+    var renderer;
+    try{ renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha:true, antialias: TIER === 'high' }); }
+    catch(err){ return; }
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, TIER === 'high' ? 2 : 1));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.z = 6;
+
+    var starCount = TIER === 'high' ? 900 : (TIER === 'mid' ? 450 : 200);
+    var starGeo = new THREE.BufferGeometry();
+    var starPos = new Float32Array(starCount * 3);
+    for(var i = 0; i < starCount; i++){
+      starPos[i*3]   = (Math.random() - 0.5) * 24;
+      starPos[i*3+1] = (Math.random() - 0.5) * 24;
+      starPos[i*3+2] = (Math.random() - 0.5) * 24;
+    }
+    starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+    var starMat = new THREE.PointsMaterial({ color:0xF2EDE4, size:0.045, transparent:true, opacity:0.32, depthWrite:false });
+    var stars = new THREE.Points(starGeo, starMat);
+    scene.add(stars);
+
+    var clock = new THREE.Clock();
+    var raf2 = null;
+    function animate(){
+      raf2 = requestAnimationFrame(animate);
+      var t = clock.getElapsedTime();
+      stars.rotation.y = t * 0.015;
+      stars.rotation.x = t * 0.006;
+      renderer.render(scene, camera);
+    }
+    function start(){ if(!raf2){ animate(); } }
+    function stop(){ if(raf2){ cancelAnimationFrame(raf2); raf2 = null; } }
+    document.addEventListener('visibilitychange', function(){
+      if(document.hidden){ stop(); } else { start(); }
+    });
+    window.addEventListener('resize', function(){
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+    });
+    start();
+  })();
+
 })();
 </script>
 </body>
