@@ -1,11 +1,43 @@
 [
-    {
-    "id": "one-heart-una-vida",
-    "title": "One Heart // Una Vida",
+  {
+    "id": "skyline",
+    "title": "Skyline",
+    "tag": "Signal 008 · 2026",
+    "duration": "3:25",
+    "src": "assets/audio/tracks/skyline.mp3",
+    "cover": "assets/audio/covers/skyline.jpg"
+  },
+  {
+    "id": "no-gloss-just-glow",
+    "title": "No Gloss, Just Glow",
+    "tag": "Signal 007 · 2026",
+    "duration": "2:47",
+    "src": "assets/audio/tracks/no-gloss-just-glow.mp3",
+    "cover": "assets/audio/covers/no-gloss-just-glow.jpg"
+  },
+  {
+    "id": "midnight-pulse",
+    "title": "Midnight Pulse",
+    "tag": "Signal 006 · 2026",
+    "duration": "3:20",
+    "src": "assets/audio/tracks/midnight-pulse.mp3",
+    "cover": "assets/audio/covers/midnight-pulse.jpg"
+  },
+  {
+    "id": "fantasma",
+    "title": "Fantasma",
+    "tag": "Signal 005 · 2026",
+    "duration": "2:09",
+    "src": "assets/audio/tracks/fantasma.mp3",
+    "cover": "assets/audio/covers/fantasma.jpg"
+  },
+  {
+    "id": "one-more-star",
+    "title": "One More Star",
     "tag": "Signal 004 · 2026",
-    "duration": "3:14",
-    "src": "assets/audio/tracks/one-heart-una-vida.mp3",
-    "cover": "assets/audio/covers/one-heart-una-vida.jpg"
+    "duration": "3:23",
+    "src": "assets/audio/tracks/one-more-star.mp3",
+    "cover": "assets/audio/covers/one-more-star.jpg"
   },
   {
     "id": "shadow-mode",
