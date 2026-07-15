@@ -1137,6 +1137,91 @@
     font-style:italic;
   }
 
+  /* ---------- Signals carousel (only when the catalog exceeds 4 tracks) ----------
+     Below the threshold, .signal-page--flat renders exactly like the old
+     flat list — nothing changes. Above it, rows are split into pages of
+     4 and staged in 3D space inside a perspective viewport: the active
+     page sits flush, the neighbouring pages are pushed back and tilted
+     away like adjacent panels of a single cinematic wall, and switching
+     pages swings them through that depth rather than sliding flatly. */
+  .signal-list--paginated{ border-top:none; }
+  .signal-viewport{
+    position:relative;
+    border-top:1px solid var(--line);
+    perspective:1800px;
+    overflow:hidden;
+  }
+  .signal-track{ position:relative; width:100%; }
+  .signal-page{
+    position:absolute;
+    inset:0;
+    width:100%;
+    transform-origin:50% 50%;
+    backface-visibility:hidden;
+    opacity:0;
+    filter:blur(14px);
+    pointer-events:none;
+    transition:transform .95s var(--ease), opacity .6s var(--ease), filter .75s var(--ease);
+    will-change:transform, opacity, filter;
+  }
+  .signal-page.is-active{
+    position:relative;
+    opacity:1;
+    filter:blur(0);
+    transform:translate3d(0,0,0) rotateY(0deg) scale(1);
+    pointer-events:auto;
+  }
+  .signal-page.is-prev{ transform:translate3d(-4%,0,-220px) rotateY(20deg) scale(.92); }
+  .signal-page.is-next{ transform:translate3d(4%,0,-220px) rotateY(-20deg) scale(.92); }
+  .signal-page.is-far-prev{ opacity:0; transform:translate3d(-2%,0,-420px) rotateY(28deg) scale(.85); }
+  .signal-page.is-far-next{ opacity:0; transform:translate3d(2%,0,-420px) rotateY(-28deg) scale(.85); }
+  @media (prefers-reduced-motion:reduce){
+    .signal-page{ transition:opacity .3s ease; filter:none; }
+    .signal-page.is-prev, .signal-page.is-next, .signal-page.is-far-prev, .signal-page.is-far-next{
+      transform:none; opacity:0;
+    }
+  }
+  .signal-nav{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:1.6rem;
+    margin-top:1.8rem;
+  }
+  .signal-nav-btn{
+    width:2.9rem;height:2.9rem;
+    flex-shrink:0;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background:transparent;
+    color:var(--gold);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition:border-color .4s var(--ease), transform .35s var(--ease), background .4s var(--ease), opacity .3s ease;
+  }
+  .signal-nav-btn svg{ width:16px; height:16px; }
+  .signal-nav-btn:hover:not(:disabled){
+    border-color:var(--gold-dim);
+    background:color-mix(in srgb, var(--gold) 6%, transparent);
+    transform:scale(1.06);
+  }
+  .signal-nav-btn:active:not(:disabled){ transform:scale(0.94); }
+  .signal-nav-btn:disabled{ opacity:0.28; cursor:default; }
+  .signal-nav-dots{ display:flex; align-items:center; gap:0.5rem; }
+  .signal-dot{
+    width:6px;height:6px;
+    border-radius:50%;
+    border:none;
+    padding:0;
+    background:var(--line);
+    cursor:pointer;
+    transition:background .4s var(--ease), transform .4s var(--ease), width .4s var(--ease);
+  }
+  .signal-dot:hover{ background:var(--gold-dim); }
+  .signal-dot.active{ width:20px; border-radius:3px; background:var(--gold); }
+
   /* ---------- Archive Portal — appears once the catalog reaches
      critical mass (4+ Signals). Not a button: a lit threshold into
      the full track archive, built from the same tile/tilt language
@@ -2980,28 +3065,112 @@ window.VX_SCROLL_ACTIVE = false;
 
   /* ---------- Render the Signals list (also (re)wires row click handlers) ---------- */
   var listEl = document.getElementById('signalList');
+  var SIGNAL_PAGE_SIZE = 4;
+  var signalPage = 0;          // current page index, only meaningful when paginated
+  var signalPageEls = [];      // live .signal-page elements, refreshed each render
+  var signalPrevBtn = null, signalNextBtn = null, signalDotEls = [];
+  var signalViewportEl = null;
+
+  function buildSignalRow(track, globalIndex){
+    var row = document.createElement('div');
+    row.className = 'signal-row';
+    row.setAttribute('data-index', globalIndex);
+    row.innerHTML =
+      '<button class="signal-play" aria-label="Play ' + track.title + '">' +
+        '<svg class="ic-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7L8 5z"/></svg>' +
+        '<svg class="ic-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>' +
+      '</button>' +
+      (track.cover
+        ? '<img class="signal-art" src="' + track.cover + '" alt="" loading="lazy">'
+        : '<div class="signal-art" aria-hidden="true"></div>') +
+      '<div class="signal-main">' +
+        '<div class="signal-title">' + track.title + '</div>' +
+        '<div class="signal-tag">' + track.tag + '</div>' +
+      '</div>' +
+      '<div class="signal-duration">' + track.duration + '</div>' +
+      '<div class="signal-bars"><span></span><span></span><span></span><span></span></div>';
+    return row;
+  }
+
   function renderSignals(){
     listEl.innerHTML = '';
-    SIGNALS.forEach(function(track, i){
-      var row = document.createElement('div');
-      row.className = 'signal-row';
-      row.setAttribute('data-index', i);
-      row.innerHTML =
-        '<button class="signal-play" aria-label="Play ' + track.title + '">' +
-          '<svg class="ic-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7L8 5z"/></svg>' +
-          '<svg class="ic-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>' +
+    signalPageEls = [];
+    signalPrevBtn = null; signalNextBtn = null; signalDotEls = [];
+
+    var paginated = SIGNALS.length > SIGNAL_PAGE_SIZE;
+    listEl.classList.toggle('signal-list--paginated', paginated);
+
+    if(!paginated){
+      // 4 tracks or fewer: unchanged flat list, no carousel machinery at all.
+      signalViewportEl = null;
+      var flatPage = document.createElement('div');
+      flatPage.className = 'signal-page is-active';
+      SIGNALS.forEach(function(track, i){ flatPage.appendChild(buildSignalRow(track, i)); });
+      listEl.appendChild(flatPage);
+    } else {
+      var pageCount = Math.ceil(SIGNALS.length / SIGNAL_PAGE_SIZE);
+      signalPage = Math.max(0, Math.min(signalPage, pageCount - 1));
+
+      var viewport = document.createElement('div');
+      viewport.className = 'signal-viewport';
+      signalViewportEl = viewport;
+      var trackEl = document.createElement('div');
+      trackEl.className = 'signal-track';
+
+      for(var p = 0; p < pageCount; p++){
+        var pageEl = document.createElement('div');
+        pageEl.className = 'signal-page';
+        pageEl.setAttribute('data-page', p);
+        var slice = SIGNALS.slice(p * SIGNAL_PAGE_SIZE, p * SIGNAL_PAGE_SIZE + SIGNAL_PAGE_SIZE);
+        slice.forEach(function(track, iInSlice){
+          pageEl.appendChild(buildSignalRow(track, p * SIGNAL_PAGE_SIZE + iInSlice));
+        });
+        trackEl.appendChild(pageEl);
+        signalPageEls.push(pageEl);
+      }
+      viewport.appendChild(trackEl);
+      listEl.appendChild(viewport);
+
+      var nav = document.createElement('div');
+      nav.className = 'signal-nav';
+      nav.innerHTML =
+        '<button class="signal-nav-btn signal-nav-prev" aria-label="Signal precedenti">' +
+          '<svg viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
         '</button>' +
-        (track.cover
-          ? '<img class="signal-art" src="' + track.cover + '" alt="" loading="lazy">'
-          : '<div class="signal-art" aria-hidden="true"></div>') +
-        '<div class="signal-main">' +
-          '<div class="signal-title">' + track.title + '</div>' +
-          '<div class="signal-tag">' + track.tag + '</div>' +
-        '</div>' +
-        '<div class="signal-duration">' + track.duration + '</div>' +
-        '<div class="signal-bars"><span></span><span></span><span></span><span></span></div>';
-      listEl.appendChild(row);
-    });
+        '<div class="signal-nav-dots"></div>' +
+        '<button class="signal-nav-btn signal-nav-next" aria-label="Signal successivi">' +
+          '<svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+        '</button>';
+      listEl.appendChild(nav);
+
+      signalPrevBtn = nav.querySelector('.signal-nav-prev');
+      signalNextBtn = nav.querySelector('.signal-nav-next');
+      var dotsHost = nav.querySelector('.signal-nav-dots');
+      for(var d = 0; d < pageCount; d++){
+        var dot = document.createElement('button');
+        dot.className = 'signal-dot';
+        dot.setAttribute('data-page', d);
+        dot.setAttribute('aria-label', 'Vai al gruppo ' + (d + 1) + ' di ' + pageCount);
+        (function(pageIndex){
+          dot.addEventListener('click', function(){ goToSignalPage(pageIndex); });
+        })(d);
+        dotsHost.appendChild(dot);
+        signalDotEls.push(dot);
+      }
+
+      signalPrevBtn.addEventListener('click', function(){ goToSignalPage(signalPage - 1); });
+      signalNextBtn.addEventListener('click', function(){ goToSignalPage(signalPage + 1); });
+
+      // Fix the viewport's height to the first (always-full) page so
+      // switching pages never causes the section to jump, even if the
+      // last page has fewer than 4 rows.
+      viewport.style.height = signalPageEls[0].scrollHeight + 'px';
+
+      updateSignalCarousel(true);
+      wireSignalSwipe(viewport);
+      wireSignalKeys(listEl);
+    }
+
     listEl.querySelectorAll('.signal-row').forEach(function(row){
       row.querySelector('.signal-play').addEventListener('click', function(){
         togglePlay(parseInt(row.getAttribute('data-index'), 10));
@@ -3009,6 +3178,99 @@ window.VX_SCROLL_ACTIVE = false;
     });
     renderArchivePortal();
   }
+
+  /* ---------- Signals carousel engine ----------
+     Only ever engaged when SIGNALS.length > SIGNAL_PAGE_SIZE (see
+     renderSignals). Pages are staged in 3D via CSS classes; this just
+     decides, for the current signalPage, which class each page gets. */
+  function updateSignalCarousel(instant){
+    signalPageEls.forEach(function(pageEl){
+      var p = parseInt(pageEl.getAttribute('data-page'), 10);
+      if(instant){ pageEl.style.transition = 'none'; }
+      pageEl.classList.remove('is-active', 'is-prev', 'is-next', 'is-far-prev', 'is-far-next');
+      if(p === signalPage){ pageEl.classList.add('is-active'); }
+      else if(p === signalPage - 1){ pageEl.classList.add('is-prev'); }
+      else if(p === signalPage + 1){ pageEl.classList.add('is-next'); }
+      else if(p < signalPage){ pageEl.classList.add('is-far-prev'); }
+      else { pageEl.classList.add('is-far-next'); }
+      if(instant){
+        // Force layout so the browser commits the transition:none state
+        // before we hand transitions back — otherwise the very first
+        // real page change could inherit "no transition" and just snap.
+        void pageEl.offsetWidth;
+        pageEl.style.transition = '';
+      }
+    });
+    signalDotEls.forEach(function(dot){
+      var p = parseInt(dot.getAttribute('data-page'), 10);
+      dot.classList.toggle('active', p === signalPage);
+    });
+    if(signalPrevBtn){ signalPrevBtn.disabled = signalPage <= 0; }
+    if(signalNextBtn){ signalNextBtn.disabled = signalPage >= signalPageEls.length - 1; }
+  }
+
+  function goToSignalPage(target){
+    if(!signalPageEls.length) return;
+    target = Math.max(0, Math.min(signalPageEls.length - 1, target));
+    if(target === signalPage) return;
+    signalPage = target;
+    updateSignalCarousel(false);
+  }
+
+  /* Horizontal swipe on touch devices moves one page per gesture,
+     matching the arrows rather than a 1:1 drag — kept deliberately
+     simple so it can't fight the 3D transition mid-swing. */
+  function wireSignalSwipe(viewport){
+    var startX = null, startY = null, tracking = false;
+    viewport.addEventListener('touchstart', function(e){
+      if(e.touches.length !== 1) return;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      tracking = true;
+    }, { passive: true });
+    viewport.addEventListener('touchmove', function(e){
+      if(!tracking || startX === null) return;
+      var dx = e.touches[0].clientX - startX;
+      var dy = e.touches[0].clientY - startY;
+      if(Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10){ e.preventDefault(); }
+    }, { passive: false });
+    viewport.addEventListener('touchend', function(e){
+      if(!tracking || startX === null){ tracking = false; return; }
+      var endX = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientX : startX;
+      var dx = endX - startX;
+      tracking = false;
+      startX = null; startY = null;
+      var SWIPE_THRESHOLD = 40;
+      if(dx <= -SWIPE_THRESHOLD){ goToSignalPage(signalPage + 1); }
+      else if(dx >= SWIPE_THRESHOLD){ goToSignalPage(signalPage - 1); }
+    });
+  }
+
+  /* Left/Right arrow keys move a page when focus is inside the Signals
+     list (e.g. the person just tabbed to the nav buttons or a row). */
+  function wireSignalKeys(container){
+    container.addEventListener('keydown', function(e){
+      if(e.key === 'ArrowRight'){ goToSignalPage(signalPage + 1); }
+      else if(e.key === 'ArrowLeft'){ goToSignalPage(signalPage - 1); }
+      else { return; }
+      e.preventDefault();
+    });
+  }
+
+  // Keeps the carousel's fixed height honest across breakpoints (row
+  // height changes with font/line-wrap at narrow widths). rAF-throttled
+  // so a drag-resize doesn't force layout on every intermediate frame.
+  var signalResizeQueued = false;
+  window.addEventListener('resize', function(){
+    if(signalResizeQueued || !signalViewportEl || !signalPageEls.length) return;
+    signalResizeQueued = true;
+    requestAnimationFrame(function(){
+      signalResizeQueued = false;
+      if(signalViewportEl && signalPageEls.length){
+        signalViewportEl.style.height = signalPageEls[0].scrollHeight + 'px';
+      }
+    });
+  });
 
   /* ---------- Archive Portal ----------
      Appears only once the catalog reaches critical mass (4+ Signals),
@@ -3098,6 +3360,10 @@ window.VX_SCROLL_ACTIVE = false;
   var synthNodes = null;
   var currentIndex = -1;
   var isPlaying = false;
+  // Guards the ambient-pad fallback watchdog (see playTrack): only one
+  // load attempt should ever be able to trigger it, so switching tracks
+  // quickly always cancels whatever watchdog belonged to the previous one.
+  var loadWatchdog = null;
 
   /* Log-spaced band map: built once the analyser exists. Bass frequencies
      get much finer resolution than treble, matching how music is actually
@@ -3323,27 +3589,76 @@ window.VX_SCROLL_ACTIVE = false;
       });
     }
 
+    // Cancel whatever watchdog belonged to the previous load attempt —
+    // otherwise a fast track switch could let a stale timer fire the
+    // ambient fallback on top of a track that's already playing fine.
+    if(loadWatchdog){ clearInterval(loadWatchdog); loadWatchdog = null; }
+
     var handled = false;
+    function cleanupProgressListeners(){
+      audioEl.removeEventListener('loadstart', markProgress);
+      audioEl.removeEventListener('progress', markProgress);
+      audioEl.removeEventListener('suspend', markProgress);
+      audioEl.removeEventListener('loadedmetadata', markProgress);
+      audioEl.removeEventListener('loadeddata', markProgress);
+    }
     function fallback(){
       if(handled) return;
       handled = true;
+      if(loadWatchdog){ clearInterval(loadWatchdog); loadWatchdog = null; }
+      cleanupProgressListeners();
       startSynthFallback();
     }
     audioEl.pause();
     audioEl.oncanplay = function(){
       if(handled) return;
       handled = true;
+      if(loadWatchdog){ clearInterval(loadWatchdog); loadWatchdog = null; }
+      cleanupProgressListeners();
       stopSynthFallback();
       var p = audioEl.play();
       if(p && p['catch']){ p['catch'](fallback); }
     };
     audioEl.onerror = fallback;
+
+    // The old version fell back to the ambient pad after a single fixed
+    // 1100ms timeout. That's fine for a warm cache, but a track's very
+    // first request (cold CDN connection, DNS, no browser cache yet) can
+    // easily take longer than that on a perfectly healthy file — which is
+    // exactly the reported bug: the first click on a given Signal played
+    // the ambient pad, and only the second click (now warm) played the
+    // real track. Instead of one guess at a deadline, this watches for
+    // actual load progress and only gives up once nothing at all has
+    // happened for a while, with a generous absolute ceiling as a last
+    // resort for genuinely missing/broken files.
+    var loadStartedAt = Date.now();
+    var lastProgressAt = loadStartedAt;
+    function markProgress(){ lastProgressAt = Date.now(); }
+    audioEl.addEventListener('loadstart', markProgress);
+    audioEl.addEventListener('progress', markProgress);
+    audioEl.addEventListener('suspend', markProgress);
+    audioEl.addEventListener('loadedmetadata', markProgress);
+    audioEl.addEventListener('loadeddata', markProgress);
+
     try{
       audioEl.src = track.src;
       audioEl.load();
     }catch(e){ fallback(); }
-    // if the browser stays silent about the missing file, fall back anyway
-    setTimeout(function(){ if(!handled) fallback(); }, 1100);
+
+    var STALL_LIMIT = 4000;   // no progress at all for this long -> assume it's stuck
+    var HARD_CEILING = 9000;  // absolute worst case, even if progress events keep trickling in
+    loadWatchdog = setInterval(function(){
+      if(handled){ clearInterval(loadWatchdog); loadWatchdog = null; return; }
+      var now = Date.now();
+      var stalled = (now - lastProgressAt) > STALL_LIMIT && audioEl.readyState < 2;
+      var timedOut = (now - loadStartedAt) > HARD_CEILING;
+      if(stalled || timedOut){
+        clearInterval(loadWatchdog);
+        loadWatchdog = null;
+        cleanupProgressListeners();
+        fallback();
+      }
+    }, 350);
   }
 
   function stopPlayback(){
