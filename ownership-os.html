@@ -984,7 +984,7 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
      surface an honest "not connected yet" state rather than telling a
      real visitor they're on the list when they are not. */
   var WAITLIST_CONFIG = {
-    endpoint: 'https://script.google.com/macros/s/AKfycbz23vQZbcrq3MpRPvdItdnKDlNtG7CUK2iTW_-CgrdDcqB6tapv0sS2GlVue1GvMWowqw/exec'
+    endpoint: null /* e.g. 'https://script.google.com/macros/s/AKfycb.../exec' — set this after deploying the Apps Script Web App */
   };
 
   function submitWaitlist(email, attributionData, validationData){
@@ -1171,6 +1171,105 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
     });
   }
 
+  /* ---------------- Riconoscimento locale del dispositivo (privacy-friendly) ----------------
+     Obiettivo: dopo un'iscrizione riuscita, un ritorno dallo STESSO
+     browser/dispositivo deve saltare direttamente la schermata post-
+     iscrizione, senza rivedere il form email. NON è fingerprinting: si
+     salva solo un identificatore casuale generato localmente (nessuna
+     caratteristica hardware/software raccolta o combinata), quindi non
+     identifica la persona, solo "questo browser ha già completato
+     un'iscrizione".
+
+     Persistenza a doppio binario — localStorage come fonte primaria,
+     cookie di lunga durata (730 giorni) come rete di sicurezza:
+       - Sopravvive a chiusura pagina/browser, refresh, ritorni a distanza
+         di giorni (entrambi i meccanismi sono persistenti per natura).
+       - Sopravvive alla rimozione dei soli cookie (richiesta esplicita):
+         se l'utente cancella i cookie ma non i dati dei siti, localStorage
+         resta intatto ed è la fonte che viene letta per prima.
+       - Se invece è localStorage ad essere stato svuotato (es. "cancella
+         dati di navigazione" completo) ma il cookie sopravvive ancora,
+         viene letto il cookie e localStorage viene "riparato" per le
+         letture successive.
+     LIMITE ONESTO da sapere: nessuna soluzione client-side non invasiva è
+     a prova di ogni scenario. Una cancellazione completa dei dati di
+     navigazione (cookie + storage insieme), la modalità privata/in
+     incognito, o l'uso di un browser/dispositivo diverso azzerano il
+     riconoscimento: a quel punto il sistema si comporta correttamente
+     come "nuovo utente" e, se l'email è già in lista, sarà comunque il
+     backend a mostrare "That email is already on the list." — quindi non
+     si rischiano MAI doppie iscrizioni, solo, in questi casi limite, di
+     rivedere il form una volta in più. Un riconoscimento a prova di reset
+     completo richiederebbe un vero fingerprinting del dispositivo, che è
+     stato scartato di proposito per motivi di privacy. */
+  var WAITLIST_STORAGE_KEY = 'vx_ownership_os_waitlist_status';
+  var WAITLIST_COOKIE_NAME = 'vx_ownership_os_waitlist';
+  var WAITLIST_COOKIE_MAX_AGE_DAYS = 730;
+
+  function generateDeviceId(){
+    if (window.crypto && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c){
+      var r = Math.random() * 16 | 0;
+      var v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
+  function readLocalWaitlistStatus(){
+    try {
+      var raw = localStorage.getItem(WAITLIST_STORAGE_KEY);
+      if (!raw) return null;
+      var parsed = JSON.parse(raw);
+      return (parsed && parsed.joined === true) ? parsed : null;
+    } catch (e){ return null; }
+  }
+
+  function readCookieWaitlistStatus(){
+    try {
+      var match = document.cookie.match(new RegExp('(?:^|; )' + WAITLIST_COOKIE_NAME + '=([^;]*)'));
+      if (!match) return null;
+      var parsed = JSON.parse(decodeURIComponent(match[1]));
+      return (parsed && parsed.joined === true) ? parsed : null;
+    } catch (e){ return null; }
+  }
+
+  function writeLocalWaitlistStatus(data){
+    try { localStorage.setItem(WAITLIST_STORAGE_KEY, JSON.stringify(data)); } catch (e){ /* storage non disponibile: degradazione silenziosa */ }
+  }
+
+  function writeCookieWaitlistStatus(data){
+    try {
+      var maxAgeSeconds = WAITLIST_COOKIE_MAX_AGE_DAYS * 24 * 60 * 60;
+      document.cookie = WAITLIST_COOKIE_NAME + '=' + encodeURIComponent(JSON.stringify(data)) +
+        '; max-age=' + maxAgeSeconds + '; path=/; SameSite=Lax';
+    } catch (e){ /* cookie non disponibile: degradazione silenziosa, resta localStorage */ }
+  }
+
+  function getWaitlistStatus(){
+    var local = readLocalWaitlistStatus();
+    if (local) return local;
+    var cookie = readCookieWaitlistStatus();
+    if (cookie){
+      writeLocalWaitlistStatus(cookie); // ripara localStorage se solo i cookie sono sopravvissuti
+      return cookie;
+    }
+    return null;
+  }
+
+  // IMPORTANTE: va chiamata SOLO dopo una risposta positiva del backend,
+  // mai in modo ottimistico prima dell'invio — un errore di rete o un
+  // fallimento non devono mai far risultare l'utente come già iscritto.
+  function markWaitlistJoined(){
+    var existing = getWaitlistStatus();
+    var data = {
+      deviceId: (existing && existing.deviceId) || generateDeviceId(),
+      joined: true,
+      joinedAt: new Date().toISOString()
+    };
+    writeLocalWaitlistStatus(data);
+    writeCookieWaitlistStatus(data);
+  }
+
   /* ---------------- Waitlist form ---------------- */
   var form = document.getElementById('waitlist-form');
   var emailInput = document.getElementById('email-input');
@@ -1180,6 +1279,17 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
   var formStage = document.getElementById('form-stage');
   var successStage = document.getElementById('success-stage');
   var formStarted = false;
+
+  // Ritorno dallo stesso dispositivo dopo un'iscrizione riuscita: salta
+  // direttamente la schermata post-iscrizione, nessun form email.
+  (function applyStoredWaitlistState(){
+    var status = getWaitlistStatus();
+    if (status && status.joined){
+      formStage.style.display = 'none';
+      successStage.classList.add('active');
+      Analytics.track('waitlist_returning_device_recognized', {});
+    }
+  })();
 
   function isValidEmail(v){
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
@@ -1217,6 +1327,7 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
     Analytics.track('waitlist_signup', { email_domain: value.split('@')[1] || '', attribution: attribution });
 
     submitWaitlist(value, attribution).then(function(){
+      markWaitlistJoined(); // solo dopo conferma positiva del backend, mai prima
       submitBtn.textContent = "You're in ✓";
       submitBtn.disabled = true;
       emailInput.disabled = true;
