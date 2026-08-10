@@ -1349,6 +1349,8 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
         errorEl.textContent = "Too many attempts — please wait a moment and try again.";
       } else if (reason === 'validation_error'){
         errorEl.textContent = (err && err.serverMessage) || "Please double-check your email address.";
+      } else if (reason === 'email_not_allowed'){
+        errorEl.textContent = "Please use a valid business or supported email address.";
       } else {
         errorEl.textContent = "Something didn't work — please try again.";
       }
