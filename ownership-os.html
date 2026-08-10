@@ -1093,6 +1093,20 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
     });
   }
 
+  /* ---------------- Check registration (riconciliazione stato locale) ----------------
+     GET, nessun body: chiamata leggera fatta al caricamento della pagina
+     solo quando lo stato locale dice "già registrato", per confermarlo
+     ancora vero lato foglio. Fallisce in modo silenzioso (Promise
+     risolta con null) — un errore di rete qui non deve mai far perdere
+     lo stato "Registrato" a un utente che lo è ancora davvero. */
+  function submitCheckRegistration(email){
+    if (!WAITLIST_CONFIG.endpoint || !email) return Promise.resolve(null);
+    var url = WAITLIST_CONFIG.endpoint + '?action=check_registration&email=' + encodeURIComponent(email);
+    return fetch(url, { method: 'GET' }).then(function(res){
+      return res.json();
+    }).catch(function(){ return null; });
+  }
+
   /* ---------------- UTM / attribution capture ---------------- */
   function getAttribution(){
     var params = new URLSearchParams(location.search);
@@ -1375,6 +1389,25 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
       formStage.style.display = 'none';
       successStage.classList.add('active');
       Analytics.track('waitlist_returning_device_recognized', {});
+
+      // Riconciliazione col backend: localStorage/cookie sopravvivono a
+      // una rimozione manuale della riga sul foglio o a una disiscrizione
+      // fatta da un altro dispositivo — senza questo controllo il
+      // dispositivo continuerebbe a risultare "Registrato" per sempre,
+      // anche quando l'email non è più nel foglio. Se manca l'email nello
+      // stato salvato (dati scritti prima di questa versione) il
+      // controllo viene saltato: non c'è nulla da verificare lato server.
+      if (currentWaitlistEmail){
+        submitCheckRegistration(currentWaitlistEmail).then(function(json){
+          if (json && json.ok && json.registered === false){
+            clearWaitlistStatus();
+            currentWaitlistEmail = '';
+            successStage.classList.remove('active');
+            formStage.style.display = '';
+            Analytics.track('waitlist_stale_local_state_cleared', {});
+          }
+        });
+      }
     }
   })();
 
