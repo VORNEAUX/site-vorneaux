@@ -454,6 +454,23 @@ section{ position:relative; }
 .status-row.done .status-dot{ background: var(--gold); border-color: var(--gold); }
 .status-row.done{ color: var(--off-white); }
 
+/* unsubscribe */
+.unsub-row{ margin-top:28px; text-align:center; }
+.unsub-link{ font-family: var(--mono); font-size:11.5px; letter-spacing:.03em; color: var(--muted-2); background:none; border:none; text-decoration:underline; text-underline-offset:3px; cursor:pointer; }
+.unsub-link:hover{ color: var(--muted); }
+.unsub-confirm{ display:none; margin-top:14px; }
+.unsub-confirm.active{ display:block; }
+.unsub-confirm p{ font-size:13px; color: var(--muted); margin-bottom:12px; }
+.unsub-confirm-actions{ display:flex; gap:10px; justify-content:center; }
+.btn-unsub-yes{ font-family: var(--mono); font-size:11.5px; letter-spacing:.03em; color: var(--danger); background:none; border:1px solid var(--danger); border-radius:2px; padding:9px 16px; cursor:pointer; transition: all .25s var(--ease); }
+.btn-unsub-yes:hover{ background: var(--danger); color: var(--obsidian); }
+.btn-unsub-yes:disabled{ opacity:.6; cursor:default; }
+.btn-unsub-cancel{ font-family: var(--mono); font-size:11.5px; letter-spacing:.03em; color: var(--muted-2); background:none; border:1px solid var(--line-strong); border-radius:2px; padding:9px 16px; cursor:pointer; }
+.unsub-error{ margin-top:10px; font-size:12px; color: var(--danger); min-height:14px; }
+.unsub-done-wrap{ display:none; text-align:center; }
+.unsub-done-wrap.active{ display:block; }
+.unsub-done-wrap .s-mark{ font-family: var(--serif); font-style:italic; font-size:15px; color: var(--gold); }
+
 /* ============================= FAQ ============================= */
 .faq-list{ margin-top: 20px; border-top:1px solid var(--line); }
 .faq-item{ border-bottom:1px solid var(--line); }
@@ -838,6 +855,24 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
         <div class="status-row"><span class="status-dot"></span> Beta access</div>
         <div class="status-row"><span class="status-dot"></span> Product launch</div>
       </div>
+
+      <div class="unsub-row">
+        <button type="button" class="unsub-link" id="unsub-open-btn">Unsubscribe</button>
+        <div class="unsub-confirm" id="unsub-confirm">
+          <p>Remove your email from the Ownership OS early access list?</p>
+          <div class="unsub-confirm-actions">
+            <button type="button" class="btn-unsub-yes" id="unsub-confirm-btn">Confirm unsubscribe</button>
+            <button type="button" class="btn-unsub-cancel" id="unsub-cancel-btn">Cancel</button>
+          </div>
+          <p class="unsub-error" id="unsub-error" role="alert"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="unsub-done-wrap" id="unsub-done-stage">
+      <span class="s-mark">Ownership OS</span>
+      <h2>You've been unsubscribed.</h2>
+      <p class="lede">Your email has been removed from the early access list — no further communications will be sent. A confirmation has also been sent to your inbox.</p>
     </div>
 
   </div>
@@ -1007,6 +1042,40 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' } /* avoids CORS preflight, see note above */,
       body: JSON.stringify(payload),
+      signal: controller ? controller.signal : undefined
+    }).then(function(res){
+      return res.json().catch(function(){ return null; }).then(function(json){
+        if (json && json.ok){ return json; }
+        var code = (json && json.error && json.error.code) || 'server_error';
+        var err = new Error(code);
+        err.serverMessage = json && json.error && json.error.message;
+        throw err;
+      });
+    }).catch(function(err){
+      if (err && err.name === 'AbortError'){ throw new Error('timeout'); }
+      throw err;
+    }).finally(function(){
+      if (timeoutId) clearTimeout(timeoutId);
+    });
+  }
+
+  /* ---------------- Unsubscribe ----------------
+     Stesso endpoint della waitlist, con ?action=unsubscribe in query
+     string (il backend lo instrada prima di provare a leggere il body
+     come iscrizione — vedi doPost in Code.gs). Nessun token qui: è la
+     chiamata "dal sito", il token serve solo ai link dentro le email. */
+  function submitUnsubscribe(email){
+    if (!WAITLIST_CONFIG.endpoint){
+      return Promise.reject(new Error('waitlist_not_configured'));
+    }
+
+    var controller = ('AbortController' in window) ? new AbortController() : null;
+    var timeoutId = controller ? setTimeout(function(){ controller.abort(); }, 10000) : null;
+
+    return fetch(WAITLIST_CONFIG.endpoint + '?action=unsubscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ email: email }),
       signal: controller ? controller.signal : undefined
     }).then(function(res){
       return res.json().catch(function(){ return null; }).then(function(json){
@@ -1259,15 +1328,26 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
   // IMPORTANTE: va chiamata SOLO dopo una risposta positiva del backend,
   // mai in modo ottimistico prima dell'invio — un errore di rete o un
   // fallimento non devono mai far risultare l'utente come già iscritto.
-  function markWaitlistJoined(){
+  // L'email viene salvata insieme al deviceId (oltre che per il
+  // riconoscimento del dispositivo) perché il pulsante "Disiscriviti"
+  // mostrato al ritorno deve poter chiamare il backend senza chiedere di
+  // nuovo l'indirizzo: è lo stesso indirizzo che l'utente ha già digitato
+  // per iscriversi, non un dato aggiuntivo raccolto.
+  function markWaitlistJoined(email){
     var existing = getWaitlistStatus();
     var data = {
       deviceId: (existing && existing.deviceId) || generateDeviceId(),
       joined: true,
-      joinedAt: new Date().toISOString()
+      joinedAt: new Date().toISOString(),
+      email: email || (existing && existing.email) || ''
     };
     writeLocalWaitlistStatus(data);
     writeCookieWaitlistStatus(data);
+  }
+
+  function clearWaitlistStatus(){
+    try { localStorage.removeItem(WAITLIST_STORAGE_KEY); } catch (e){ /* storage non disponibile: degradazione silenziosa */ }
+    try { document.cookie = WAITLIST_COOKIE_NAME + '=; max-age=0; path=/; SameSite=Lax'; } catch (e){ /* cookie non disponibile: degradazione silenziosa */ }
   }
 
   /* ---------------- Waitlist form ---------------- */
@@ -1279,12 +1359,19 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
   var formStage = document.getElementById('form-stage');
   var successStage = document.getElementById('success-stage');
   var formStarted = false;
+  // Email dell'utente attualmente riconosciuto come iscritto su questo
+  // dispositivo — alimentata sia al submit riuscito del form sia dallo
+  // stato salvato al ritorno; è quella che il pulsante "Disiscriviti" usa.
+  var currentWaitlistEmail = '';
 
-  // Ritorno dallo stesso dispositivo dopo un'iscrizione riuscita: salta
-  // direttamente la schermata post-iscrizione, nessun form email.
+  // Ritorno dallo stesso dispositivo dopo un'iscrizione riuscita (Fase 2):
+  // salta direttamente la schermata post-iscrizione, nessun form email —
+  // ed è qui che compare anche il pulsante "Disiscriviti", visto che
+  // questo stato coincide con "Registrato".
   (function applyStoredWaitlistState(){
     var status = getWaitlistStatus();
     if (status && status.joined){
+      currentWaitlistEmail = status.email || '';
       formStage.style.display = 'none';
       successStage.classList.add('active');
       Analytics.track('waitlist_returning_device_recognized', {});
@@ -1327,7 +1414,8 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
     Analytics.track('waitlist_signup', { email_domain: value.split('@')[1] || '', attribution: attribution });
 
     submitWaitlist(value, attribution).then(function(){
-      markWaitlistJoined(); // solo dopo conferma positiva del backend, mai prima
+      markWaitlistJoined(value); // solo dopo conferma positiva del backend, mai prima
+      currentWaitlistEmail = value;
       submitBtn.textContent = "You're in ✓";
       submitBtn.disabled = true;
       emailInput.disabled = true;
@@ -1393,6 +1481,60 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
     formStage.style.display = 'none';
     successStage.classList.add('active');
     Analytics.track('post_demo_cta_click', { flow: 'waitlist_complete' });
+  }
+
+  /* ---------------- Unsubscribe UI ---------------- */
+  var unsubOpenBtn = document.getElementById('unsub-open-btn');
+  var unsubConfirmBox = document.getElementById('unsub-confirm');
+  var unsubConfirmBtn = document.getElementById('unsub-confirm-btn');
+  var unsubCancelBtn = document.getElementById('unsub-cancel-btn');
+  var unsubErrorEl = document.getElementById('unsub-error');
+  var unsubDoneStage = document.getElementById('unsub-done-stage');
+
+  if (unsubOpenBtn){
+    unsubOpenBtn.addEventListener('click', function(){
+      unsubConfirmBox.classList.add('active');
+      unsubOpenBtn.style.display = 'none';
+      Analytics.track('unsubscribe_prompt_opened', {});
+    });
+  }
+  if (unsubCancelBtn){
+    unsubCancelBtn.addEventListener('click', function(){
+      unsubConfirmBox.classList.remove('active');
+      unsubOpenBtn.style.display = '';
+      unsubErrorEl.textContent = '';
+    });
+  }
+  if (unsubConfirmBtn){
+    unsubConfirmBtn.addEventListener('click', function(){
+      if (!currentWaitlistEmail){
+        unsubErrorEl.textContent = "We couldn't find your email on this device — please contact us to unsubscribe.";
+        return;
+      }
+      unsubErrorEl.textContent = '';
+      unsubConfirmBtn.disabled = true;
+      unsubConfirmBtn.textContent = 'Unsubscribing...';
+      Analytics.track('unsubscribe_requested', {});
+
+      submitUnsubscribe(currentWaitlistEmail).then(function(){
+        clearWaitlistStatus();
+        successStage.classList.remove('active');
+        unsubDoneStage.classList.add('active');
+        Analytics.track('unsubscribe_success', {});
+      }).catch(function(err){
+        unsubConfirmBtn.disabled = false;
+        unsubConfirmBtn.textContent = 'Confirm unsubscribe';
+        var reason = err && err.message;
+        if (reason === 'timeout'){
+          unsubErrorEl.textContent = "That took too long — please check your connection and try again.";
+        } else if (reason === 'rate_limited'){
+          unsubErrorEl.textContent = "Too many attempts — please wait a moment and try again.";
+        } else {
+          unsubErrorEl.textContent = "Something didn't work — please try again.";
+        }
+        Analytics.track('unsubscribe_error', { reason: reason || 'unknown' });
+      });
+    });
   }
 
   /* ---------------- FAQ accordion ---------------- */
