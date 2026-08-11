@@ -878,19 +878,22 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
     <!-- Schermata mostrata quando si arriva dal link "Unsubscribe" nel
          corpo dell'email (?email=...&token=... in query string). Resta
          sempre su vorneaux.com: nessuna navigazione verso Apps Script.
-         Il GET su questa pagina non disiscrive nulla da solo — serve
+         Il caricamento della pagina non disiscrive nulla da solo — serve
          comunque un clic esplicito su "Confirm unsubscribe", che è ciò
-         che innesca la fetch() verso il backend — così un prefetch o uno
-         scanner automatico del link non disiscrive nessuno per errore. -->
+         che innesca la fetch() verso il backend — così il solo aprire il
+         link (anche da un prefetch/scanner automatico del client email)
+         non disiscrive mai nessuno per errore: cliccare "Unsubscribe"
+         nell'email è trattato come una RICHIESTA, non come l'azione
+         stessa. -->
     <div class="success-wrap" id="email-unsub-stage">
       <span class="s-mark">Ownership OS</span>
-      <h2>Unsubscribe</h2>
-      <p class="lede">Remove <strong id="email-unsub-email"></strong> from the Ownership OS early access list?</p>
+      <h2>Confirm unsubscribe</h2>
+      <p class="lede">You're about to remove <strong id="email-unsub-email"></strong> from the Ownership&nbsp;OS early access list. This can't be undone — you'd need to sign up again to rejoin.</p>
       <div class="unsub-row">
         <div class="unsub-confirm active" id="email-unsub-confirm">
           <div class="unsub-confirm-actions">
             <button type="button" class="btn-unsub-yes" id="email-unsub-confirm-btn">Confirm unsubscribe</button>
-            <a class="btn-unsub-cancel" href="./" id="email-unsub-cancel-btn" style="text-decoration:none; display:inline-block;">Cancel</a>
+            <button type="button" class="btn-unsub-cancel" id="email-unsub-cancel-btn">Keep my subscription</button>
           </div>
           <p class="unsub-error" id="email-unsub-error" role="alert"></p>
         </div>
@@ -1384,13 +1387,21 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
   // mostrato al ritorno deve poter chiamare il backend senza chiedere di
   // nuovo l'indirizzo: è lo stesso indirizzo che l'utente ha già digitato
   // per iscriversi, non un dato aggiuntivo raccolto.
-  function markWaitlistJoined(email){
+  //
+  // unsubToken viene salvato allo stesso modo: è quello restituito dal
+  // backend nella risposta di iscrizione (mai richiedibile a parte in un
+  // secondo momento — vedi commento su submitToWaitlist in Code.gs), ed è
+  // ciò che autentica il pulsante "Disiscriviti" sul sito esattamente
+  // come il link ricevuto via email. Senza, il backend rifiuta la
+  // richiesta (token ora sempre obbligatorio).
+  function markWaitlistJoined(email, unsubToken){
     var existing = getWaitlistStatus();
     var data = {
       deviceId: (existing && existing.deviceId) || generateDeviceId(),
       joined: true,
       joinedAt: new Date().toISOString(),
-      email: email || (existing && existing.email) || ''
+      email: email || (existing && existing.email) || '',
+      unsubToken: unsubToken || (existing && existing.unsubToken) || ''
     };
     writeLocalWaitlistStatus(data);
     writeCookieWaitlistStatus(data);
@@ -1414,6 +1425,14 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
   // dispositivo — alimentata sia al submit riuscito del form sia dallo
   // stato salvato al ritorno; è quella che il pulsante "Disiscriviti" usa.
   var currentWaitlistEmail = '';
+  // Token di disiscrizione per currentWaitlistEmail — obbligatorio lato
+  // backend per completare una disiscrizione (vedi handleUnsubscribeRequest
+  // in Code.gs). Assente per gli stati salvati PRIMA di questa modifica
+  // (utenti iscritti con una versione precedente del sito): in quel caso
+  // il pulsante "Disiscriviti" sul sito non può completare l'operazione
+  // da solo e reindirizza l'utente al link presente nell'email di
+  // conferma già ricevuta, che resta sempre valido.
+  var currentWaitlistToken = '';
 
   // Ritorno dallo stesso dispositivo dopo un'iscrizione riuscita (Fase 2):
   // salta direttamente la schermata post-iscrizione, nessun form email —
@@ -1423,6 +1442,7 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
     var status = getWaitlistStatus();
     if (status && status.joined){
       currentWaitlistEmail = status.email || '';
+      currentWaitlistToken = status.unsubToken || '';
       formStage.style.display = 'none';
       successStage.classList.add('active');
       Analytics.track('waitlist_returning_device_recognized', {});
@@ -1439,6 +1459,7 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
           if (json && json.ok && json.registered === false){
             clearWaitlistStatus();
             currentWaitlistEmail = '';
+            currentWaitlistToken = '';
             successStage.classList.remove('active');
             formStage.style.display = '';
             Analytics.track('waitlist_stale_local_state_cleared', {});
@@ -1486,6 +1507,29 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
     emailUnsubStage.classList.add('active');
     Analytics.track('email_unsubscribe_link_opened', {});
 
+    // Scroll automatico, fluido, fino alla sezione Waiting List — lo
+    // stesso pattern già usato per i CTA "Get Early Access" (vedi sotto
+    // "CTA -> scroll to waitlist"), così il comportamento resta coerente
+    // col resto del sito. Aspetta il "load" completo della pagina (non
+    // solo il DOM) prima di calcolare la posizione di destinazione: se
+    // ci sono immagini sopra la piega ancora in caricamento, la pagina
+    // può "spostarsi" sotto di esse e far atterrare lo scroll nel punto
+    // sbagliato. Rispetta prefers-reduced-motion: chi ha disattivato le
+    // animazioni nel sistema operativo ottiene uno scroll istantaneo, non
+    // "smooth".
+    var waitlistSection = document.getElementById('waitlist');
+    if (waitlistSection){
+      var scrollToWaitlist = function(){
+        var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        waitlistSection.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+      };
+      if (document.readyState === 'complete'){
+        setTimeout(scrollToWaitlist, 30);
+      } else {
+        window.addEventListener('load', function(){ setTimeout(scrollToWaitlist, 30); }, { once: true });
+      }
+    }
+
     if (!linkToken || !isValidEmail(linkEmail)){
       // Link malformato lato client (nessun token, o email palesemente
       // non valida): non ha senso nemmeno provare la richiesta — il
@@ -1498,6 +1542,32 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
     }
 
     emailUnsubEmailEl.textContent = linkEmail;
+
+    // Rimuove email/token dalla barra indirizzi non appena la richiesta
+    // è stata "presa in carico" da questa schermata: un refresh accidentale
+    // della pagina a questo punto non deve ripresentare il prompt né,
+    // soprattutto, ritentare automaticamente nulla — l'azione resta
+    // sempre e solo quella scelta esplicitamente dall'utente qui sotto.
+    if (window.history && window.history.replaceState){
+      window.history.replaceState(null, '', location.pathname + location.hash);
+    }
+
+    // "Lascia tutto invariato": nessuna chiamata al backend, nessuna
+    // modifica di stato. Riporta semplicemente la pagina a come si
+    // presenterebbe normalmente — form di iscrizione, oppure la schermata
+    // "Sei in lista" se questo stesso dispositivo risultava già
+    // registrato con la stessa email — senza un reload completo.
+    if (emailUnsubCancelBtn){
+      emailUnsubCancelBtn.addEventListener('click', function(){
+        Analytics.track('email_unsubscribe_cancelled', {});
+        emailUnsubStage.classList.remove('active');
+        if (currentWaitlistEmail && currentWaitlistEmail.toLowerCase() === linkEmail.toLowerCase()){
+          successStage.classList.add('active');
+        } else {
+          formStage.style.display = '';
+        }
+      });
+    }
 
     if (emailUnsubConfirmBtn){
       emailUnsubConfirmBtn.addEventListener('click', function(){
@@ -1514,6 +1584,8 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
           // tornando sul sito, apparirebbe ancora come iscritto.
           if (currentWaitlistEmail && currentWaitlistEmail.toLowerCase() === linkEmail.toLowerCase()){
             clearWaitlistStatus();
+            currentWaitlistEmail = '';
+            currentWaitlistToken = '';
           }
           Analytics.track('email_unsubscribe_success', {});
         }).catch(function(err){
@@ -1571,9 +1643,10 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
     submitBtn.disabled = true;
     Analytics.track('waitlist_signup', { email_domain: value.split('@')[1] || '', attribution: attribution });
 
-    submitWaitlist(value, attribution).then(function(){
-      markWaitlistJoined(value); // solo dopo conferma positiva del backend, mai prima
+    submitWaitlist(value, attribution).then(function(json){
+      markWaitlistJoined(value, json && json.unsubToken); // solo dopo conferma positiva del backend, mai prima
       currentWaitlistEmail = value;
+      currentWaitlistToken = (json && json.unsubToken) || '';
       submitBtn.textContent = "You're in ✓";
       submitBtn.disabled = true;
       emailInput.disabled = true;
@@ -1669,13 +1742,26 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
         unsubErrorEl.textContent = "We couldn't find your email on this device — please contact us to unsubscribe.";
         return;
       }
+      // Stato salvato prima dell'introduzione del token obbligatorio (o
+      // storage manomesso/parziale): il backend non accetterebbe comunque
+      // la richiesta senza token, quindi non proviamo nemmeno — indirizza
+      // invece al percorso che funziona sempre, il link nell'ultima email
+      // ricevuta da VORNEAUX, che porta a questa stessa pagina già con il
+      // token corretto precompilato.
+      if (!currentWaitlistToken){
+        unsubErrorEl.textContent = "For security, please use the \u201cUnsubscribe\u201d link from your latest VORNEAUX email to complete this — it'll bring you right back here.";
+        Analytics.track('unsubscribe_missing_local_token', {});
+        return;
+      }
       unsubErrorEl.textContent = '';
       unsubConfirmBtn.disabled = true;
       unsubConfirmBtn.textContent = 'Unsubscribing...';
       Analytics.track('unsubscribe_requested', {});
 
-      submitUnsubscribe(currentWaitlistEmail).then(function(){
+      submitUnsubscribe(currentWaitlistEmail, currentWaitlistToken).then(function(){
         clearWaitlistStatus();
+        currentWaitlistEmail = '';
+        currentWaitlistToken = '';
         successStage.classList.remove('active');
         unsubDoneStage.classList.add('active');
         Analytics.track('unsubscribe_success', {});
