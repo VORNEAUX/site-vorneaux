@@ -875,6 +875,29 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
       <p class="lede">Your email has been removed from the early access list — no further communications will be sent. A confirmation has also been sent to your inbox.</p>
     </div>
 
+    <!-- Schermata mostrata quando si arriva dal link "Unsubscribe" nel
+         corpo dell'email (?email=...&token=... in query string). Resta
+         sempre su vorneaux.com: nessuna navigazione verso Apps Script.
+         Il GET su questa pagina non disiscrive nulla da solo — serve
+         comunque un clic esplicito su "Confirm unsubscribe", che è ciò
+         che innesca la fetch() verso il backend — così un prefetch o uno
+         scanner automatico del link non disiscrive nessuno per errore. -->
+    <div class="success-wrap" id="email-unsub-stage">
+      <span class="s-mark">Ownership OS</span>
+      <h2>Unsubscribe</h2>
+      <p class="lede">Remove <strong id="email-unsub-email"></strong> from the Ownership OS early access list?</p>
+      <div class="unsub-row">
+        <div class="unsub-confirm active" id="email-unsub-confirm">
+          <div class="unsub-confirm-actions">
+            <button type="button" class="btn-unsub-yes" id="email-unsub-confirm-btn">Confirm unsubscribe</button>
+            <a class="btn-unsub-cancel" href="./" id="email-unsub-cancel-btn" style="text-decoration:none; display:inline-block;">Cancel</a>
+          </div>
+          <p class="unsub-error" id="email-unsub-error" role="alert"></p>
+        </div>
+        <p class="unsub-error" id="email-unsub-invalid" role="alert" style="display:none;">This unsubscribe link is invalid or has expired. If you still want to unsubscribe, please contact us.</p>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -1062,9 +1085,18 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
   /* ---------------- Unsubscribe ----------------
      Stesso endpoint della waitlist, con ?action=unsubscribe in query
      string (il backend lo instrada prima di provare a leggere il body
-     come iscrizione — vedi doPost in Code.gs). Nessun token qui: è la
-     chiamata "dal sito", il token serve solo ai link dentro le email. */
-  function submitUnsubscribe(email){
+     come iscrizione — vedi doPost in Code.gs).
+
+     token è opzionale: assente per la chiamata "dal sito" (pulsante
+     Disiscriviti visto da un dispositivo già riconosciuto come
+     "Registrato" — vedi applyStoredWaitlistState), presente quando la
+     chiamata arriva dal flusso "link nell'email" (vedi
+     handleEmailUnsubscribeLink più sotto), dove email e token arrivano
+     dalla query string del link e vengono qui ri-inoltrati al backend
+     SEMPRE tramite una fetch() in background: la barra indirizzi del
+     browser resta sempre su questo dominio, non viene mai fatta una
+     navigazione diretta verso l'URL di Apps Script. */
+  function submitUnsubscribe(email, token){
     if (!WAITLIST_CONFIG.endpoint){
       return Promise.reject(new Error('waitlist_not_configured'));
     }
@@ -1072,7 +1104,12 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
     var controller = ('AbortController' in window) ? new AbortController() : null;
     var timeoutId = controller ? setTimeout(function(){ controller.abort(); }, 10000) : null;
 
-    return fetch(WAITLIST_CONFIG.endpoint + '?action=unsubscribe', {
+    var url = WAITLIST_CONFIG.endpoint + '?action=unsubscribe';
+    if (token){
+      url += '&email=' + encodeURIComponent(email) + '&token=' + encodeURIComponent(token);
+    }
+
+    return fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({ email: email }),
@@ -1408,6 +1445,94 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
           }
         });
       }
+    }
+  })();
+
+  /* ---------------- Unsubscribe dal link nell'email ----------------
+     Il link "Unsubscribe" nel corpo dell'email (e la pagina di destinazione
+     dell'header List-Unsubscribe per i client che non fanno il one-click)
+     puntano a questo stesso dominio con ?email=...&token=... in query
+     string — MAI a script.google.com. Questa funzione intercetta quei
+     parametri al caricamento della pagina, mostra una schermata di
+     conferma dedicata e, solo al clic su "Confirm unsubscribe", invia la
+     richiesta al backend Apps Script tramite fetch() in background: la
+     barra indirizzi resta sempre su vorneaux.com, l'utente non vede mai
+     Apps Script né il suo redirect interno su script.googleusercontent.com.
+     Ha priorità sullo stato "dispositivo già registrato": un link
+     ricevuto via email arriva quasi sempre su un contesto/dispositivo
+     diverso da quello con cui si era fatta l'iscrizione. */
+  var emailUnsubStage = document.getElementById('email-unsub-stage');
+  var emailUnsubEmailEl = document.getElementById('email-unsub-email');
+  var emailUnsubConfirmBox = document.getElementById('email-unsub-confirm');
+  var emailUnsubInvalidEl = document.getElementById('email-unsub-invalid');
+  var emailUnsubConfirmBtn = document.getElementById('email-unsub-confirm-btn');
+  var emailUnsubCancelBtn = document.getElementById('email-unsub-cancel-btn');
+  var emailUnsubErrorEl = document.getElementById('email-unsub-error');
+  // Presa direttamente via getElementById (non tramite la variabile
+  // unsubDoneStage, dichiarata più sotto nel file): questa IIFE gira
+  // subito, prima che quella riga venga eseguita.
+  var unsubDoneStageEl = document.getElementById('unsub-done-stage');
+
+  (function handleEmailUnsubscribeLink(){
+    var params = new URLSearchParams(location.search);
+    var linkEmail = (params.get('email') || '').trim();
+    var linkToken = (params.get('token') || '').trim();
+
+    if (!linkEmail) return; // nessun parametro di disiscrizione: pagina normale
+
+    formStage.style.display = 'none';
+    successStage.classList.remove('active');
+    unsubDoneStageEl.classList.remove('active');
+    emailUnsubStage.classList.add('active');
+    Analytics.track('email_unsubscribe_link_opened', {});
+
+    if (!linkToken || !isValidEmail(linkEmail)){
+      // Link malformato lato client (nessun token, o email palesemente
+      // non valida): non ha senso nemmeno provare la richiesta — il
+      // token viene comunque rivalidato lato server ad ogni chiamata,
+      // questo è solo per non mostrare un pulsante "Confirm" fuorviante
+      // su un link chiaramente rotto.
+      emailUnsubConfirmBox.classList.remove('active');
+      emailUnsubInvalidEl.style.display = '';
+      return;
+    }
+
+    emailUnsubEmailEl.textContent = linkEmail;
+
+    if (emailUnsubConfirmBtn){
+      emailUnsubConfirmBtn.addEventListener('click', function(){
+        emailUnsubErrorEl.textContent = '';
+        emailUnsubConfirmBtn.disabled = true;
+        emailUnsubConfirmBtn.textContent = 'Unsubscribing...';
+        Analytics.track('email_unsubscribe_requested', {});
+
+        submitUnsubscribe(linkEmail, linkToken).then(function(){
+          emailUnsubStage.classList.remove('active');
+          unsubDoneStageEl.classList.add('active');
+          // Se questo stesso dispositivo risultava "Registrato" con la
+          // stessa email, ripulisce anche lo stato locale — altrimenti,
+          // tornando sul sito, apparirebbe ancora come iscritto.
+          if (currentWaitlistEmail && currentWaitlistEmail.toLowerCase() === linkEmail.toLowerCase()){
+            clearWaitlistStatus();
+          }
+          Analytics.track('email_unsubscribe_success', {});
+        }).catch(function(err){
+          emailUnsubConfirmBtn.disabled = false;
+          emailUnsubConfirmBtn.textContent = 'Confirm unsubscribe';
+          var reason = err && err.message;
+          if (reason === 'unauthorized'){
+            emailUnsubConfirmBox.classList.remove('active');
+            emailUnsubInvalidEl.style.display = '';
+          } else if (reason === 'timeout'){
+            emailUnsubErrorEl.textContent = "That took too long — please check your connection and try again.";
+          } else if (reason === 'rate_limited'){
+            emailUnsubErrorEl.textContent = "Too many attempts — please wait a moment and try again.";
+          } else {
+            emailUnsubErrorEl.textContent = "Something didn't work — please try again.";
+          }
+          Analytics.track('email_unsubscribe_error', { reason: reason || 'unknown' });
+        });
+      });
     }
   })();
 
