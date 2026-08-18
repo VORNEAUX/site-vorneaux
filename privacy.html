@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Privacy Policy | Ownership OS by VORNEAUX</title>
+<meta name="description" content="How VORNEAUX collects, uses, stores and protects your data on the Ownership OS waiting list and, upon launch, the Ownership OS app.">
+<link rel="canonical" href="https://vorneaux.com/privacy">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/brand/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="assets/brand/favicon-48x48.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/brand/favicon-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/brand/apple-touch-icon.png">
+<link rel="shortcut icon" href="favicon.ico">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VORNEAUX">
+<meta property="og:title" content="Privacy Policy — Ownership OS by VORNEAUX">
+<meta property="og:description" content="How VORNEAUX collects, uses, stores and protects your data on the Ownership OS waiting list and app.">
+<meta property="og:url" content="https://vorneaux.com/privacy">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Privacy Policy — Ownership OS by VORNEAUX">
+<meta name="twitter:description" content="How VORNEAUX collects, uses, stores and protects your data on the Ownership OS waiting list and app.">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#050509">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Privacy Policy",
+  "isPartOf": { "@type": "WebSite", "name": "VORNEAUX", "url": "https://vorneaux.com" },
+  "about": { "@type": "SoftwareApplication", "name": "Ownership OS" }
+}
+</script>
+
+<style>
+/* ============================= TOKENS ============================= */
+:root{
+  --obsidian:#050509;
+  --charcoal:#0b0b10;
+  --surface:#101014;
+  --surface-2:#0d0d12;
+  --line: rgba(201,169,110,.15);
+  --line-strong: rgba(201,169,110,.32);
+  --gold:#c9a96e;
+  --gold-bright:#ddc38f;
+  --gold-dim: rgba(201,169,110,.55);
+  --off-white:#f3f1ec;
+  --muted:#8e8c96;
+  --muted-2:#75737e;
+  --danger:#c97a6e;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --ease: cubic-bezier(.16,.8,.24,1);
+  --container: 1180px;
+}
+
+*{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior: auto; }
+  *{ animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+}
+body{
+  margin:0;
+  background: var(--obsidian);
+  color: var(--off-white);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+img{ max-width:100%; display:block; }
+a{ color:inherit; }
+button{ font-family: inherit; cursor:pointer; }
+h1,h2,h3,p{ margin:0; }
+
+.wrap{ max-width: var(--container); margin:0 auto; padding-inline: 28px; }
+@media (max-width: 640px){ .wrap{ padding-inline: 20px; } }
+
+.eyebrow{
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  display:inline-flex; align-items:center; gap:10px;
+}
+.eyebrow::before{
+  content:''; width:22px; height:1px; background: var(--gold-dim);
+}
+
+:focus-visible{
+  outline: 1.5px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.sr-only{
+  position:absolute; width:1px;height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+.sr-only:focus{
+  position:fixed; top:12px; left:12px; width:auto; height:auto; margin:0;
+  padding:12px 18px; clip:auto; overflow:visible; white-space:normal;
+  background: var(--gold); color: var(--obsidian); z-index:200;
+  font-family: var(--sans); font-size:13px; font-weight:600; border-radius:2px;
+}
+
+/* ============================= HEADER ============================= */
+header{
+  position: fixed; top:0; left:0; right:0; z-index: 100;
+  padding: 22px 0;
+  transition: all .5s var(--ease);
+  border-bottom: 1px solid transparent;
+}
+header.scrolled{
+  padding: 13px 0;
+  background: rgba(5,5,9,.82);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+.header-inner{ display:flex; align-items:center; justify-content:space-between; }
+.logo{
+  font-family: var(--serif); font-weight:500; font-size: 19px;
+  letter-spacing:.14em; text-transform: uppercase; text-decoration:none; color: var(--off-white);
+}
+.logo span{ color: var(--gold); }
+nav.main-nav{ display:flex; align-items:center; gap: 40px; }
+nav.main-nav a{
+  font-size: 13.5px; letter-spacing:.02em; text-decoration:none; color: var(--muted);
+  transition: color .3s var(--ease);
+  position:relative;
+}
+nav.main-nav a:hover{ color: var(--off-white); }
+.nav-links{ display:flex; gap: 36px; }
+
+.menu-toggle{
+  display:none; width:30px; height:20px; position:relative; background:none; border:none;
+}
+.menu-toggle span{
+  position:absolute; left:0; right:0; height:1px; background: var(--off-white);
+  transition: transform .3s var(--ease), opacity .3s var(--ease);
+}
+.menu-toggle span:nth-child(1){ top:0; }
+.menu-toggle span:nth-child(2){ top:9px; }
+.menu-toggle span:nth-child(3){ top:18px; }
+.menu-toggle.open span:nth-child(1){ transform: translateY(9px) rotate(45deg); }
+.menu-toggle.open span:nth-child(2){ opacity:0; }
+.menu-toggle.open span:nth-child(3){ transform: translateY(-9px) rotate(-45deg); }
+
+@media (max-width: 880px){
+  .nav-links{
+    position: fixed; top:0; right:0; height:100vh; width:78vw; max-width:340px;
+    background: var(--charcoal); border-left:1px solid var(--line);
+    flex-direction:column; justify-content:center; gap:30px; padding: 0 42px;
+    transform: translateX(100%); transition: transform .45s var(--ease);
+    z-index: 90;
+  }
+  .nav-links.open{ transform: translateX(0); }
+  .nav-links a{ font-size:16px; }
+  .menu-toggle{ display:block; z-index:110; }
+  .desktop-cta{ display:none; }
+  .nav-scrim{
+    position:fixed; inset:0; background: rgba(5,5,9,.6); opacity:0; pointer-events:none;
+    transition: opacity .35s var(--ease); z-index:80;
+  }
+  .nav-scrim.open{ opacity:1; pointer-events:auto; }
+}
+
+.btn{
+  font-family: var(--sans); font-size: 13.5px; font-weight:500;
+  letter-spacing:.02em; padding: 12px 22px;
+  border-radius: 2px; border: 1px solid var(--gold-dim);
+  background: transparent; color: var(--off-white);
+  transition: all .35s var(--ease); white-space:nowrap;
+  display:inline-flex; align-items:center; gap:8px;
+}
+.btn:hover{ background: var(--gold); border-color: var(--gold); color: var(--obsidian); }
+.btn-solid{ background: var(--gold); color: var(--obsidian); border-color:var(--gold); }
+.btn-solid:hover{ background: var(--gold-bright); border-color: var(--gold-bright); }
+.btn-solid:disabled{ opacity:.6; cursor:default; }
+nav.main-nav a.btn-solid, nav.main-nav a.btn-solid:hover{ color: var(--obsidian); }
+
+/* ============================= SECTION SHELL ============================= */
+section{ position:relative; }
+.section-pad{ padding: 130px 0; }
+@media (max-width: 780px){ .section-pad{ padding: 88px 0; } }
+
+.section-head{ max-width: 640px; margin-bottom: 64px; }
+.section-head h2{
+  font-family: var(--serif); font-weight:500; font-size: clamp(32px, 4.4vw, 52px);
+  line-height: 1.1; letter-spacing: -.01em; margin-top:18px;
+}
+.section-head p{
+  margin-top: 20px; font-size: 17px; line-height:1.65; color: var(--muted);
+  max-width: 520px;
+}
+
+/* ============================= PAGE HERO (legal/contact) ============================= */
+.page-hero{
+  padding-top: 156px; padding-bottom: 64px;
+  background:
+    radial-gradient(ellipse 900px 500px at 82% 0%, rgba(201,169,110,.07), transparent 60%),
+    var(--obsidian);
+  border-bottom: 1px solid var(--line);
+}
+.page-hero .eyebrow{ margin-bottom: 2px; }
+.page-hero h1{
+  font-family: var(--serif); font-weight:500;
+  font-size: clamp(34px, 4.6vw, 56px);
+  line-height: 1.08; letter-spacing:-.015em;
+  margin-top: 18px; max-width: 780px;
+}
+.page-hero .page-sub{
+  margin-top: 18px; font-size: 16.5px; line-height:1.6; color: var(--muted);
+  max-width: 620px;
+}
+.page-hero .page-meta{
+  margin-top: 26px; font-family: var(--mono); font-size: 11.5px;
+  color: var(--muted-2); letter-spacing:.04em; display:flex; gap:22px; flex-wrap:wrap;
+}
+
+/* ============================= LEGAL LAYOUT ============================= */
+.legal-shell{ padding: 76px 0 130px; }
+.legal-grid{ display:grid; grid-template-columns: 240px 1fr; gap: 72px; align-items:start; }
+@media (max-width: 900px){ .legal-grid{ grid-template-columns: 1fr; gap: 40px; } }
+
+.legal-toc{ position:sticky; top: 110px; }
+@media (max-width: 900px){ .legal-toc{ position:static; } }
+.legal-toc-label{ font-family: var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color: var(--muted-2); margin-bottom:16px; }
+.legal-toc ol{ list-style:none; margin:0; padding:0; counter-reset: toc; border-left: 1px solid var(--line); }
+.legal-toc li{ counter-increment: toc; }
+.legal-toc a{
+  display:block; padding: 9px 0 9px 18px; margin-left:-1px; border-left: 1px solid transparent;
+  font-size: 13.5px; color: var(--muted); text-decoration:none; line-height:1.4;
+  transition: color .25s var(--ease), border-color .25s var(--ease);
+}
+.legal-toc a::before{ content: counter(toc) "  "; color: var(--gold-dim); font-family: var(--mono); font-size:11.5px; }
+.legal-toc a:hover{ color: var(--off-white); }
+.legal-toc a.active{ color: var(--off-white); border-left-color: var(--gold); }
+
+.prose{ max-width: 720px; }
+.prose > section{ margin-bottom: 54px; scroll-margin-top: 110px; }
+.prose h2{
+  font-family: var(--serif); font-weight:500; font-size: clamp(23px,2.6vw,28px);
+  color: var(--off-white); padding-bottom:16px; margin-bottom: 18px;
+  border-bottom: 1px solid var(--line); display:flex; align-items:baseline; gap:12px;
+}
+.prose h2 .num{ font-family: var(--mono); font-size:13px; color: var(--gold-dim); font-weight:400; }
+.prose h3{ font-family: var(--sans); font-weight:600; font-size:15px; color: var(--off-white); margin: 26px 0 10px; letter-spacing:.01em; }
+.prose p{ color: var(--muted); font-size:15px; line-height:1.8; margin-bottom:14px; }
+.prose p:last-child{ margin-bottom:0; }
+.prose ul, .prose ol.plain{ margin: 14px 0; padding-left: 22px; color: var(--muted); font-size:15px; line-height:1.75; }
+.prose li{ margin-bottom:8px; }
+.prose li:last-child{ margin-bottom:0; }
+.prose strong{ color: var(--off-white); font-weight:600; }
+.prose a{ color: var(--gold); text-decoration: underline; text-underline-offset:3px; text-decoration-color: var(--gold-dim); }
+.prose a:hover{ text-decoration-color: var(--gold); }
+.prose table{ width:100%; border-collapse:collapse; margin:18px 0; font-size:14px; }
+.prose table th, .prose table td{ text-align:left; padding:12px 14px; border:1px solid var(--line); vertical-align:top; }
+.prose table th{ font-family: var(--sans); font-weight:600; color: var(--off-white); background: var(--surface-2); font-size:12.5px; letter-spacing:.02em; text-transform:uppercase; }
+.prose table td{ color: var(--muted); line-height:1.55; }
+
+.callout{
+  border-left: 2px solid var(--gold-dim); background: var(--surface-2);
+  padding: 18px 22px; margin: 20px 0; font-size:14px; line-height:1.7; color: var(--muted);
+}
+.callout strong{ color: var(--off-white); }
+
+.legal-footer-nav{
+  margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--line);
+  display:flex; gap:28px; flex-wrap:wrap; font-size:13.5px;
+}
+.legal-footer-nav a{ color: var(--muted); text-decoration:none; transition: color .25s var(--ease); }
+.legal-footer-nav a:hover{ color: var(--gold); }
+
+/* ============================= CONTACT ============================= */
+.contact-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--line); border:1px solid var(--line); margin-top: 8px; }
+@media (max-width: 900px){ .contact-grid{ grid-template-columns: 1fr; } }
+.contact-card{ background: var(--obsidian); padding: 34px 28px; }
+.contact-card .cc-label{ font-family: var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color: var(--gold-dim); }
+.contact-card h3{ font-family: var(--serif); font-weight:500; font-size:21px; margin-top:12px; color: var(--off-white); }
+.contact-card p{ margin-top:12px; font-size:14px; line-height:1.65; color: var(--muted); }
+.contact-card .cc-link{ margin-top:18px; display:inline-flex; align-items:center; gap:8px; font-size:13.5px; color: var(--off-white); text-decoration:none; border-bottom:1px solid var(--gold-dim); padding-bottom:2px; transition: border-color .25s var(--ease), color .25s var(--ease); }
+.contact-card .cc-link:hover{ color: var(--gold); border-color: var(--gold); }
+
+.contact-primary{
+  margin-top: 56px; padding: 44px; background: var(--charcoal); border:1px solid var(--line);
+  display:flex; align-items:center; justify-content:space-between; gap:28px; flex-wrap:wrap;
+}
+.contact-primary h2{ font-family: var(--serif); font-weight:500; font-size: clamp(22px,2.6vw,28px); }
+.contact-primary p{ margin-top:10px; color: var(--muted); font-size:14.5px; max-width:440px; }
+
+.contact-note{ margin-top: 44px; font-size:13.5px; color: var(--muted-2); line-height:1.7; max-width:680px; }
+
+/* ============================= NAV CURRENT STATE ============================= */
+nav.main-nav a.current{ color: var(--gold); }
+/* ============================= FAQ ============================= */
+.faq-list{ margin-top: 20px; border-top:1px solid var(--line); }
+.faq-item{ border-bottom:1px solid var(--line); }
+.faq-q-heading{ margin:0; font-size:inherit; font-weight:inherit; }
+.faq-q{
+  width:100%; text-align:left; background:none; border:none; color: var(--off-white);
+  padding: 24px 0; display:flex; justify-content:space-between; align-items:center;
+  font-family: var(--serif); font-size: 19px;
+}
+.faq-q .plus{ font-family: var(--mono); color: var(--gold-dim); transition: transform .35s var(--ease); font-size:16px; }
+.faq-item.open .faq-q .plus{ transform: rotate(45deg); }
+.faq-a{ max-height:0; overflow:hidden; transition: max-height .4s var(--ease); }
+.faq-a-inner{ padding-bottom: 22px; color: var(--muted); font-size:14.5px; line-height:1.65; max-width:640px; }
+.faq-item.open .faq-a{ max-height: 300px; }
+
+/* ============================= FINAL CTA ============================= */
+.final-cta{ text-align:center; padding: 150px 0; }
+.final-cta h2{ font-family: var(--serif); font-weight:500; font-size: clamp(34px,5vw,58px); line-height:1.1; }
+.final-cta p{ margin-top:18px; color: var(--muted); font-size:16.5px; }
+.final-cta .btn{ margin-top:36px; padding: 16px 34px; font-size:14.5px; }
+
+/* ============================= FOOTER ============================= */
+footer{ border-top:1px solid var(--line); padding: 44px 0; }
+.footer-inner{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px; }
+.footer-inner .f-logo{ font-family: var(--serif); font-size:15px; letter-spacing:.1em; color: var(--muted); }
+.footer-links{ display:flex; gap: 26px; font-size:13px; color: var(--muted-2); }
+.footer-links a{ text-decoration:none; transition: color .3s var(--ease); }
+.footer-links a:hover{ color: var(--gold); }
+/* ============================= SCROLL REVEAL ============================= */
+.reveal{ opacity:0; transform: translateY(24px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+.reveal.in-view{ opacity:1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<a class="sr-only" href="#top">Skip to content</a>
+<header id="site-header">
+  <div class="wrap header-inner">
+    <a href="index.html" class="logo">VORNEAUX<span>.</span></a>
+    <nav class="main-nav">
+      <div class="nav-links" id="nav-links">
+        <a href="ownership-os.html" data-nav-link>Ownership OS</a>
+        <a href="privacy.html" data-nav-link class="current" aria-current="page">Privacy</a>
+        <a href="terms.html" data-nav-link>Terms</a>
+        <a href="contact.html" data-nav-link>Contact</a>
+      </div>
+      <a class="btn btn-solid desktop-cta" href="ownership-os.html#waitlist">Get Early Access</a>
+      <button class="menu-toggle" id="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </div>
+</header>
+<div class="nav-scrim" id="nav-scrim"></div>
+
+<main id="top">
+<!-- ============================= PAGE HERO ============================= -->
+<section class="page-hero">
+  <div class="wrap reveal">
+    <span class="eyebrow">OWNERSHIP OS · BY VORNEAUX</span>
+    <h1>Privacy Policy</h1>
+    <p class="page-sub">This policy explains what information VORNEAUX collects through the Ownership OS waiting list and, once the app is available, through the Ownership OS product itself — and how that information is used, stored and protected.</p>
+    <div class="page-meta">
+      <span>Effective: 11 August 2026</span>
+      <span>Applies to: vorneaux.com/ownership-os &amp; the Ownership OS app</span>
+      <span>Contact: <a href="mailto:contact@vorneaux.com" style="color:var(--gold-dim)">contact@vorneaux.com</a></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= LEGAL BODY ============================= -->
+<section class="legal-shell">
+  <div class="wrap legal-grid">
+
+    <nav class="legal-toc reveal" aria-label="Table of contents">
+      <div class="legal-toc-label">On this page</div>
+      <ol>
+        <li><a href="#who-we-are">Who we are</a></li>
+        <li><a href="#scope">Scope of this policy</a></li>
+        <li><a href="#data-we-collect">Data we collect</a></li>
+        <li><a href="#how-we-use-it">How we use your data</a></li>
+        <li><a href="#legal-basis">Legal basis for processing</a></li>
+        <li><a href="#sharing">Sharing &amp; third parties</a></li>
+        <li><a href="#storage">Where your data is stored</a></li>
+        <li><a href="#retention">Retention &amp; deletion</a></li>
+        <li><a href="#your-rights">Your rights</a></li>
+        <li><a href="#security">Security</a></li>
+        <li><a href="#children">Children's privacy</a></li>
+        <li><a href="#changes">Changes to this policy</a></li>
+        <li><a href="#contact-privacy">Contact us</a></li>
+      </ol>
+    </nav>
+
+    <div class="prose reveal">
+
+      <section id="who-we-are">
+        <h2><span class="num">01</span> Who we are</h2>
+        <p>Ownership OS is a product by <strong>VORNEAUX</strong>, an independent studio building a small ecosystem of AI-assisted tools. VORNEAUX is the data controller responsible for the personal data described in this policy. You can reach us at any time at <a href="mailto:contact@vorneaux.com">contact@vorneaux.com</a> or through our <a href="contact.html">Contact page</a>.</p>
+      </section>
+
+      <section id="scope">
+        <h2><span class="num">02</span> Scope of this policy</h2>
+        <p>This policy covers two stages of Ownership OS:</p>
+        <ul>
+          <li><strong>The early-access waiting list</strong> — the current public page where you can leave your email to be notified about beta access.</li>
+          <li><strong>The Ownership OS app itself</strong>, once it becomes available — where you will be able to upload receipts and related purchase documents so the product can surface return deadlines, warranty coverage and price opportunities on your behalf.</li>
+        </ul>
+        <p>Where a section applies only to one of these stages, that is stated explicitly.</p>
+      </section>
+
+      <section id="data-we-collect">
+        <h2><span class="num">03</span> Data we collect</h2>
+        <h3>From the waiting list</h3>
+        <ul>
+          <li><strong>Email address</strong> — required to join the list and to send you a confirmation email and, later, beta invitations.</li>
+          <li><strong>Signup timestamp</strong> — recorded in the date the entry was created.</li>
+          <li><strong>A short device/browser label</strong> (for example, "Chrome Mobile") — used only to understand at a glance which devices people are signing up from; we do not store your full technical user-agent string.</li>
+          <li><strong>Campaign attribution parameters</strong> (such as <code>utm_source</code>, <code>utm_medium</code> or <code>utm_campaign</code>), if present in the link you followed — used to understand which channel brought you here.</li>
+          <li><strong>A local, non-fingerprinting recognition token</strong> stored in your browser — this lets the page recognize that you have already joined the waitlist on a return visit, so you are not asked to submit your email again. It is not used to track you across other websites and does not rely on device fingerprinting.</li>
+        </ul>
+        <h3>From the Ownership OS app (once available)</h3>
+        <ul>
+          <li><strong>Receipts and purchase documents</strong> you choose to upload — photos of paper receipts, PDF invoices, or forwarded order-confirmation emails.</li>
+          <li><strong>Information extracted from those documents</strong> by our AI processing — such as merchant name, purchase date, item description, price, and any stated return or warranty terms.</li>
+          <li><strong>Basic account information</strong> needed to operate the app, such as your email address and preferences for how you'd like to be notified.</li>
+        </ul>
+        <div class="callout">Ownership OS is currently in a pre-launch, waiting-list phase. The app-level data practices described above reflect how the product is designed to work; this section will be updated with any material change before the app becomes generally available.</div>
+      </section>
+
+      <section id="how-we-use-it">
+        <h2><span class="num">04</span> How we use your data</h2>
+        <ul>
+          <li>To operate the waiting list, confirm your signup, and prevent duplicate entries.</li>
+          <li>To send you transactional emails — a signup confirmation, and later, beta access and important product updates. These are sent from <strong>hello@vorneaux.com</strong> through our own Google Workspace mailbox; we do not use third-party bulk-email or marketing platforms for this.</li>
+          <li>To understand, in aggregate, how people find and use the waiting list page, so we can improve it.</li>
+          <li>Once the app is available: to read your uploaded receipts and identify return windows, warranty coverage and potential price opportunities — the core function of Ownership OS.</li>
+          <li>To respond to support requests you send us directly.</li>
+        </ul>
+        <p>We do not use your data to build advertising profiles, and we do not sell your personal data to anyone.</p>
+      </section>
+
+      <section id="legal-basis">
+        <h2><span class="num">05</span> Legal basis for processing</h2>
+        <p>Where applicable data protection law requires a legal basis, we rely on:</p>
+        <ul>
+          <li><strong>Your consent</strong> — when you voluntarily submit your email to join the waiting list, or upload a document to the app.</li>
+          <li><strong>Performance of a contract</strong> — to provide the waiting-list confirmation and, later, the Ownership OS service you sign up for.</li>
+          <li><strong>Legitimate interest</strong> — for basic security, fraud prevention, and understanding aggregate usage of the site, balanced against your rights and expectations.</li>
+        </ul>
+        <p>You can withdraw consent at any time using the methods described in <a href="#retention">Retention &amp; deletion</a> below.</p>
+      </section>
+
+      <section id="sharing">
+        <h2><span class="num">06</span> Sharing &amp; third parties</h2>
+        <p>We keep the list of parties who can access your data as short as possible:</p>
+        <ul>
+          <li><strong>Google Workspace</strong> — used to run the waiting-list backend (as a private Google Sheet accessed through a Google Apps Script Web App) and to send confirmation emails from our own mailbox.</li>
+          <li><strong>Hosting and infrastructure providers</strong> — used to serve this website; they process data only as necessary to deliver the page to your browser.</li>
+        </ul>
+        <p>We do not sell, rent, or trade your personal data to advertisers or data brokers. We only disclose data if required to comply with a legal obligation, or to protect the rights, property or safety of VORNEAUX, our users, or the public.</p>
+      </section>
+
+      <section id="storage">
+        <h2><span class="num">07</span> Where your data is stored</h2>
+        <p>Waiting-list entries are currently stored in a private Google Sheet, accessed exclusively through a Google Apps Script Web App under our Google Workspace account. As Ownership OS grows, we plan to migrate this data to a dedicated, access-controlled database (such as PostgreSQL or Supabase). Regardless of where data is stored, it remains subject to the protections described in this policy, and any migration will not expand how your data is used without notice.</p>
+      </section>
+
+      <section id="retention">
+        <h2><span class="num">08</span> Retention &amp; deletion</h2>
+        <p>We keep waiting-list data for as long as the waiting list is active, or until you ask us to remove it. You can remove yourself from the list at any time using the unsubscribe link included in every email we send, or by writing to <a href="mailto:contact@vorneaux.com">contact@vorneaux.com</a>. Once the app is available, you will be able to delete uploaded receipts and your account data directly from within the product, or by contacting us.</p>
+        <p>We aim to action deletion requests promptly, and in any case within a reasonable time from your request.</p>
+      </section>
+
+      <section id="your-rights">
+        <h2><span class="num">09</span> Your rights</h2>
+        <p>Depending on where you live, you may have the right to:</p>
+        <ul>
+          <li>Access the personal data we hold about you.</li>
+          <li>Correct inaccurate or incomplete data.</li>
+          <li>Request deletion of your data ("right to be forgotten").</li>
+          <li>Object to, or ask us to restrict, certain processing.</li>
+          <li>Request a portable copy of your data.</li>
+          <li>Withdraw consent at any time, without affecting the lawfulness of processing carried out before that withdrawal.</li>
+        </ul>
+        <p>To exercise any of these rights, contact <a href="mailto:contact@vorneaux.com">contact@vorneaux.com</a>. We will respond as quickly as we reasonably can.</p>
+      </section>
+
+      <section id="security">
+        <h2><span class="num">10</span> Security</h2>
+        <p>We apply reasonable technical and organizational measures to protect your data, including restricting access to the systems that store it and relying on established providers (Google Workspace, and our hosting provider) for infrastructure-level security. No method of transmission or storage is completely secure, and we cannot guarantee absolute security, but we work to keep the data we hold to the minimum necessary and to protect it appropriately.</p>
+      </section>
+
+      <section id="children">
+        <h2><span class="num">11</span> Children's privacy</h2>
+        <p>Ownership OS is not directed at, and is not knowingly used to collect data from, children under the age of 16. If you believe a child has provided us with personal data, please contact us and we will delete it.</p>
+      </section>
+
+      <section id="changes">
+        <h2><span class="num">12</span> Changes to this policy</h2>
+        <p>We may update this policy as Ownership OS evolves — most notably as the product moves from waiting list to a live app. When we make a material change, we will update the "Effective" date at the top of this page, and where appropriate, notify waiting-list members by email.</p>
+      </section>
+
+      <section id="contact-privacy">
+        <h2><span class="num">13</span> Contact us</h2>
+        <p>Questions about this policy or how your data is handled can be sent to <a href="mailto:contact@vorneaux.com">contact@vorneaux.com</a>, or through our <a href="contact.html">Contact page</a>.</p>
+      </section>
+
+      <div class="legal-footer-nav">
+        <a href="terms.html">Terms &amp; Conditions →</a>
+        <a href="contact.html">Contact us →</a>
+        <a href="ownership-os.html">← Back to Ownership OS</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap footer-inner">
+    <span class="f-logo">VORNEAUX — Ownership OS</span>
+    <div class="footer-links">
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- Header scroll state ---------------- */
+  var header = document.getElementById('site-header');
+  var onScroll = function(){
+    if (window.scrollY > 30) header.classList.add('scrolled');
+    else header.classList.remove('scrolled');
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* ---------------- Mobile navigation drawer ---------------- */
+  var menuToggle = document.getElementById('menu-toggle');
+  var navLinks = document.getElementById('nav-links');
+  var navScrim = document.getElementById('nav-scrim');
+  function closeMenu(){
+    menuToggle.classList.remove('open');
+    menuToggle.setAttribute('aria-expanded', 'false');
+    menuToggle.setAttribute('aria-label', 'Open menu');
+    navLinks.classList.remove('open');
+    navScrim.classList.remove('open');
+  }
+  function openMenu(){
+    menuToggle.classList.add('open');
+    menuToggle.setAttribute('aria-expanded', 'true');
+    menuToggle.setAttribute('aria-label', 'Close menu');
+    navLinks.classList.add('open');
+    navScrim.classList.add('open');
+  }
+  menuToggle.addEventListener('click', function(){
+    if (navLinks.classList.contains('open')) closeMenu(); else openMenu();
+  });
+  navScrim.addEventListener('click', closeMenu);
+  document.querySelectorAll('[data-nav-link]').forEach(function(a){
+    a.addEventListener('click', closeMenu);
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') closeMenu();
+  });
+
+  /* ---------------- Scroll reveal ---------------- */
+  var revealEls = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){ e.target.classList.add('in-view'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(function(el){ io.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('in-view'); });
+  }
+
+  /* ---------------- TOC scrollspy (legal pages) ---------------- */
+  var tocLinks = document.querySelectorAll('.legal-toc a');
+  if (tocLinks.length){
+    var sections = Array.prototype.map.call(tocLinks, function(a){
+      return document.querySelector(a.getAttribute('href'));
+    }).filter(Boolean);
+    var setActive = function(){
+      var pos = window.scrollY + 140;
+      var current = sections[0];
+      sections.forEach(function(sec){ if (sec.offsetTop <= pos) current = sec; });
+      tocLinks.forEach(function(a){
+        a.classList.toggle('active', current && a.getAttribute('href') === '#' + current.id);
+      });
+    };
+    window.addEventListener('scroll', setActive, { passive: true });
+    setActive();
+  }
+})();
+</script>
+</body>
+</html>
