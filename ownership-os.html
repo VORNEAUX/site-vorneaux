@@ -12,6 +12,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="assets/brand/favicon-192x192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="assets/brand/apple-touch-icon.png">
 <link rel="shortcut icon" href="favicon.ico">
+
+
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="VORNEAUX">
 <meta property="og:title" content="Ownership OS — Your purchases deserve an AI assistant.">
@@ -23,7 +25,9 @@
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#050509">
 
-<link rel="stylesheet" href="assets/fonts/fonts.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <script type="application/ld+json">
 {
@@ -37,30 +41,506 @@
 }
 </script>
 
-<!-- Meta Pixel Code (deferred: loads on first interaction, or after 2.5s idle, whichever comes first) -->
+<!-- Meta Pixel Code -->
 <script>
-(function(){
-  var loaded=false;
-  function loadPixel(){
-    if(loaded)return;loaded=true;
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init','1704845827407892');
-    fbq('track','PageView');
-    events.forEach(function(ev){window.removeEventListener(ev,loadPixel,{passive:true});});
-    clearTimeout(fallback);
-  }
-  var events=['scroll','mousemove','touchstart','keydown','click'];
-  events.forEach(function(ev){window.addEventListener(ev,loadPixel,{passive:true,once:true});});
-  var fallback=setTimeout(loadPixel,2500);
-})();
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1704845827407892');
+fbq('track', 'PageView');
 </script>
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=1704845827407892&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
 
-<style>:root{--obsidian:#050509;--charcoal:#0b0b10;--surface:#101014;--surface-2:#0d0d12;--line:rgba(201,169,110,.15);--line-strong:rgba(201,169,110,.32);--gold:#c9a96e;--gold-bright:#ddc38f;--gold-dim:rgba(201,169,110,.55);--off-white:#f3f1ec;--muted:#8e8c96;--muted-2:#75737e;--danger:#c97a6e;--serif:'Cormorant Garamond',Georgia,serif;--sans:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;--mono:'IBM Plex Mono',ui-monospace,monospace;--ease:cubic-bezier(.16,.8,.24,1);--container:1180px}*{box-sizing:border-box}html{scroll-behavior:smooth}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}}body{margin:0;background:var(--obsidian);color:var(--off-white);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}img{max-width:100%;display:block}a{color:inherit}button{font-family:inherit;cursor:pointer}h1,h2,h3,p{margin:0}.wrap{max-width:var(--container);margin:0 auto;padding-inline:28px}@media(max-width:640px){.wrap{padding-inline:20px}}.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);display:inline-flex;align-items:center;gap:10px}.eyebrow::before{content:'';width:22px;height:1px;background:var(--gold-dim)}:focus-visible{outline:1.5px solid var(--gold);outline-offset:3px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.sr-only:focus{position:fixed;top:12px;left:12px;width:auto;height:auto;margin:0;padding:12px 18px;clip:auto;overflow:visible;white-space:normal;background:var(--gold);color:var(--obsidian);z-index:200;font-family:var(--sans);font-size:13px;font-weight:600;border-radius:2px}header{position:fixed;top:0;left:0;right:0;z-index:100;padding:22px 0;transition:all .5s var(--ease);border-bottom:1px solid transparent}header.scrolled{padding:13px 0;background:rgba(5,5,9,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}.header-inner{display:flex;align-items:center;justify-content:space-between}.logo{font-family:var(--serif);font-weight:500;font-size:19px;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:var(--off-white)}.logo span{color:var(--gold)}nav.main-nav{display:flex;align-items:center;gap:40px}nav.main-nav a{font-size:13.5px;letter-spacing:.02em;text-decoration:none;color:var(--muted);transition:color .3s var(--ease);position:relative}nav.main-nav a:hover{color:var(--off-white)}.nav-links{display:flex;gap:36px}.menu-toggle{display:none;width:30px;height:20px;position:relative;background:0;border:0}.menu-toggle span{position:absolute;left:0;right:0;height:1px;background:var(--off-white);transition:transform .3s var(--ease),opacity .3s var(--ease)}.menu-toggle span:nth-child(1){top:0}.menu-toggle span:nth-child(2){top:9px}.menu-toggle span:nth-child(3){top:18px}.menu-toggle.open span:nth-child(1){transform:translateY(9px) rotate(45deg)}.menu-toggle.open span:nth-child(2){opacity:0}.menu-toggle.open span:nth-child(3){transform:translateY(-9px) rotate(-45deg)}@media(max-width:880px){.nav-links{position:fixed;top:0;right:0;height:100vh;width:78vw;max-width:340px;background:var(--charcoal);border-left:1px solid var(--line);flex-direction:column;justify-content:center;gap:30px;padding:0 42px;transform:translateX(100%);transition:transform .45s var(--ease);z-index:90}.nav-links.open{transform:translateX(0)}.nav-links a{font-size:16px}.menu-toggle{display:block;z-index:110}.desktop-cta{display:none}.nav-scrim{position:fixed;inset:0;background:rgba(5,5,9,.6);opacity:0;pointer-events:none;transition:opacity .35s var(--ease);z-index:80}.nav-scrim.open{opacity:1;pointer-events:auto}}.btn{font-family:var(--sans);font-size:13.5px;font-weight:500;letter-spacing:.02em;padding:12px 22px;border-radius:2px;border:1px solid var(--gold-dim);background:transparent;color:var(--off-white);transition:all .35s var(--ease);white-space:nowrap;display:inline-flex;align-items:center;gap:8px}.btn:hover{background:var(--gold);border-color:var(--gold);color:var(--obsidian)}.btn-solid{background:var(--gold);color:var(--obsidian);border-color:var(--gold)}.btn-solid:hover{background:var(--gold-bright);border-color:var(--gold-bright)}.btn-solid:disabled{opacity:.6;cursor:default}section{position:relative}.section-pad{padding:130px 0}@media(max-width:780px){.section-pad{padding:88px 0}}.section-head{max-width:640px;margin-bottom:64px}.section-head h2{font-family:var(--serif);font-weight:500;font-size:clamp(32px,4.4vw,52px);line-height:1.1;letter-spacing:-.01em;margin-top:18px}.section-head p{margin-top:20px;font-size:17px;line-height:1.65;color:var(--muted);max-width:520px}.hero{min-height:100vh;display:flex;align-items:center;padding-top:140px;padding-bottom:80px;background:radial-gradient(ellipse 900px 600px at 82% 8%,rgba(201,169,110,.07),transparent 60%),radial-gradient(ellipse 700px 500px at 10% 100%,rgba(201,169,110,.05),transparent 60%),var(--obsidian);position:relative}.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;align-items:center}@media(max-width:980px){.hero-grid{grid-template-columns:1fr;gap:56px}}.hero-copy h1{font-family:var(--serif);font-weight:500;font-size:clamp(38px,5.2vw,66px);line-height:1.05;letter-spacing:-.015em;margin-top:22px}.hero-copy h1 em{font-style:italic;color:var(--gold)}.hero-copy .sub{margin-top:26px;font-size:18px;line-height:1.65;color:var(--muted);max-width:460px}.hero-cta-row{display:flex;align-items:center;gap:20px;margin-top:38px;flex-wrap:wrap}.hero-micro{font-family:var(--mono);font-size:12px;color:var(--muted-2);letter-spacing:.03em}.visual-stage{position:relative;min-height:460px;display:flex;align-items:center;justify-content:center}.doc{width:300px;max-width:88vw;background:var(--surface-2);border:1px solid var(--line-strong);padding:26px 24px 30px;font-family:var(--mono);font-size:12.5px;color:var(--muted);position:relative;z-index:2;box-shadow:0 40px 90px -30px rgba(0,0,0,.7);transition:opacity .6s var(--ease),transform .6s var(--ease),filter .6s var(--ease)}.doc::before,.doc::after{content:'';position:absolute;left:0;right:0;height:9px;background:repeating-linear-gradient(90deg,transparent 0 6px,var(--obsidian) 6px 12px)}.doc::before{top:-1px}.doc::after{bottom:-1px}.doc-row{display:flex;justify-content:space-between;padding:5px 0}.doc-title{color:var(--off-white);font-size:13px;letter-spacing:.04em;text-transform:uppercase;margin-bottom:14px;padding-bottom:12px;border-bottom:1px dashed var(--line-strong)}.doc-total{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line-strong);color:var(--off-white);font-weight:500}.stage-inner{position:relative;width:100%;display:flex;align-items:center;justify-content:center;min-height:460px}.scanline{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;z-index:3;filter:drop-shadow(0 0 8px var(--gold-dim))}.analysis-log{position:absolute;z-index:4;left:50%;top:50%;transform:translate(-50%,-50%);width:260px;text-align:center;font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-dim);opacity:0;pointer-events:none}.card{position:absolute;z-index:2;width:300px;max-width:88vw;background:linear-gradient(160deg,var(--surface) 0,var(--surface-2) 100%);border:1px solid var(--line-strong);padding:26px 24px;opacity:0;transform:translateY(14px) scale(.98);transition:opacity .7s var(--ease),transform .7s var(--ease)}.card .eyebrow{margin-bottom:8px}.card h3{font-family:var(--serif);font-size:24px;font-weight:500;color:var(--off-white)}.card .price-line{display:flex;justify-content:space-between;align-items:baseline;margin-top:6px;font-family:var(--mono);font-size:13px;color:var(--muted)}.card .price-line b{color:var(--off-white);font-size:16px}.finding-list{margin-top:20px;display:flex;flex-direction:column;gap:0}.finding{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:1px solid var(--line);font-size:13px}.finding:last-child{border-bottom:1px solid var(--line)}.finding .f-label{color:var(--muted);display:flex;align-items:center;gap:8px}.finding .f-label::before{content:'';width:5px;height:5px;background:var(--gold);border-radius:50%;flex:none}.finding .f-value{color:var(--off-white);font-family:var(--mono);font-size:12.5px;text-align:right}.value-strip{margin-top:20px;padding-top:18px;border-top:1px solid var(--line-strong);display:flex;align-items:baseline;justify-content:space-between}.value-strip .vs-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.value-strip .vs-amount{font-family:var(--serif);font-style:italic;font-size:30px;color:var(--gold)}.card-cta{margin-top:18px;width:100%;text-align:center;font-size:13px;color:var(--gold);padding:12px 0;border:1px solid var(--gold-dim);background:transparent;transition:all .3s var(--ease)}.card-cta:hover{background:var(--gold);color:var(--obsidian)}.replay-btn{position:absolute;bottom:-46px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:11px;color:var(--muted-2);letter-spacing:.08em;text-transform:uppercase;background:0;border:0;display:flex;gap:8px;align-items:center}.replay-btn:hover{color:var(--gold)}@media(max-width:980px){.visual-stage{min-height:400px}.stage-inner{min-height:400px}}.problem{background:var(--charcoal);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.frag-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:10px}@media(max-width:780px){.frag-grid{grid-template-columns:repeat(2,1fr)}}.frag-item{background:var(--surface-2);padding:30px 22px;min-height:150px;display:flex;flex-direction:column;justify-content:space-between;opacity:.55;transition:opacity .5s var(--ease),transform .5s var(--ease)}.frag-item.in-view{opacity:1}.frag-item .frag-tag{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2)}.frag-item .frag-name{font-size:15px;color:var(--muted);margin-top:auto;padding-top:16px}.converge-line{text-align:center;margin-top:60px}.converge-line p{font-family:var(--serif);font-style:italic;font-size:clamp(22px,3vw,30px);color:var(--off-white)}.transform-row{display:grid;grid-template-columns:1fr auto 1.15fr;gap:40px;align-items:center;margin-top:20px}@media(max-width:900px){.transform-row{grid-template-columns:1fr}}.mini-tags{display:flex;flex-wrap:wrap;gap:10px}.mini-tag{font-family:var(--mono);font-size:11.5px;padding:9px 13px;border:1px solid var(--line-strong);color:var(--muted);background:var(--surface-2)}.arrow-col{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--gold-dim)}.arrow-col span{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase}.record-card{border:1px solid var(--line-strong);background:var(--surface-2);padding:30px 28px}.record-card .rc-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px dashed var(--line-strong);padding-bottom:16px;margin-bottom:16px}.record-card .rc-head h3{font-family:var(--serif);font-size:22px}.record-card .rc-head b{font-family:var(--mono);color:var(--gold);font-size:15px;font-weight:400}.record-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px 24px;font-size:13px}.record-grid .rg-item .rg-label{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted-2)}.record-grid .rg-item .rg-val{margin-top:4px;color:var(--off-white)}.record-grid .rg-item .rg-val.gold{color:var(--gold)}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:10px}@media(max-width:900px){.steps{grid-template-columns:repeat(2,1fr)}}.step{background:var(--obsidian);padding:38px 26px;min-height:220px;display:flex;flex-direction:column;justify-content:space-between}.step .step-no{font-family:var(--mono);font-size:12px;color:var(--gold-dim)}.step h3{font-family:var(--serif);font-size:21px;margin-top:24px;font-weight:500}.step p{font-size:13.5px;color:var(--muted);margin-top:10px;line-height:1.55}.money-panel{border:1px solid var(--line-strong);background:var(--surface-2);margin-top:30px;padding:40px;display:grid;grid-template-columns:1fr 1fr;gap:40px}@media(max-width:780px){.money-panel{grid-template-columns:1fr;padding:28px;gap:30px}}.money-col .m-label{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}.money-col .m-amount{font-family:var(--serif);font-size:clamp(38px,5vw,54px);margin-top:12px;color:var(--off-white)}.money-col .m-amount.gold{color:var(--gold)}.breakdown{margin-top:20px;display:flex;flex-direction:column;gap:0}.b-row{display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}.b-row:last-child{border-bottom:1px solid var(--line)}.b-row b{color:var(--off-white);font-family:var(--mono);font-weight:400}.illustrative-tag{font-family:var(--mono);font-size:10.5px;color:var(--muted-2);letter-spacing:.06em;text-transform:uppercase;margin-top:16px;display:block}.diff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:50px}@media(max-width:780px){.diff-grid{grid-template-columns:1fr;gap:36px}}.diff-item .di-word{font-family:var(--serif);font-style:italic;font-size:26px;color:var(--gold)}.diff-item p{margin-top:14px;font-size:14.5px;color:var(--muted);line-height:1.6}.diff-item{border-top:1px solid var(--line-strong);padding-top:24px}.future{background:var(--charcoal);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.graph-wrap{position:relative;margin-top:50px;min-height:340px;display:flex;align-items:center;justify-content:center}.graph-svg{width:100%;max-width:720px}.graph-node{font-family:var(--mono);font-size:10.5px;fill:var(--muted);text-transform:uppercase;letter-spacing:.05em}.graph-line{stroke:var(--line-strong);stroke-width:1}.graph-dot{fill:var(--gold-dim)}.graph-dot.center{fill:var(--gold)}.trust-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:20px}@media(max-width:900px){.trust-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:520px){.trust-grid{grid-template-columns:1fr}}.trust-item{background:var(--obsidian);padding:28px 22px;font-size:13.5px;color:var(--muted);line-height:1.5}.trust-item b{display:block;color:var(--off-white);font-size:14.5px;margin-bottom:8px;font-weight:500}.waitlist{position:relative;background:var(--charcoal);border-top:1px solid var(--line)}.waitlist-inner{max-width:620px;margin:0 auto;text-align:center}.waitlist h2{font-family:var(--serif);font-weight:500;font-size:clamp(32px,4.6vw,52px);margin-top:18px}.lede{margin-top:18px;color:var(--muted);font-size:16.5px;max-width:460px;margin-inline:auto}.wl-form{margin-top:42px}.email-row{display:flex;gap:12px;max-width:460px;margin:0 auto}@media(max-width:520px){.email-row{flex-direction:column}}.email-input{flex:1;background:var(--surface-2);border:1px solid var(--line-strong);color:var(--off-white);font-family:var(--sans);font-size:15px;padding:15px 18px;border-radius:2px;transition:border-color .3s var(--ease)}.email-input::placeholder{color:var(--muted-2)}.email-input:focus{outline:0;border-color:var(--gold)}.email-input.error{border-color:var(--danger)}.email-input:disabled{opacity:.65;border-color:var(--line-strong);color:var(--gold-dim);-webkit-text-fill-color:var(--gold-dim)}.wl-error{margin-top:10px;font-size:12.5px;color:var(--danger);text-align:center;min-height:16px}.wl-micro{margin-top:18px;font-family:var(--mono);font-size:11.5px;color:var(--muted-2);letter-spacing:.03em}.vq-wrap{margin-top:56px;text-align:left;border-top:1px solid var(--line);padding-top:40px;display:none}.vq-wrap.active{display:block}.vq-block{margin-bottom:34px}.vq-block .vq-q{font-family:var(--serif);font-size:19px;margin-bottom:16px}.vq-options{display:flex;flex-wrap:wrap;gap:10px}.vq-opt{font-size:13px;padding:11px 16px;border:1px solid var(--line-strong);background:var(--surface-2);color:var(--muted);transition:all .25s var(--ease);border-radius:2px}.vq-opt:hover{border-color:var(--gold-dim);color:var(--off-white)}.vq-opt.selected{border-color:var(--gold);color:var(--obsidian);background:var(--gold)}.vq-skip{font-family:var(--mono);font-size:11.5px;color:var(--muted-2);background:0;border:0;text-decoration:underline;text-underline-offset:3px;margin-top:6px}.success-wrap{display:none;text-align:center}.success-wrap.active{display:block}.success-wrap .s-mark{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--gold)}.status-track{margin-top:34px;display:flex;flex-direction:column;gap:14px;max-width:280px;margin-inline:auto;text-align:left}.status-row{display:flex;align-items:center;gap:12px;font-size:13.5px;color:var(--muted)}.status-dot{width:8px;height:8px;border-radius:50%;border:1px solid var(--gold-dim);flex:none}.status-row.done .status-dot{background:var(--gold);border-color:var(--gold)}.status-row.done{color:var(--off-white)}.unsub-row{margin-top:28px;text-align:center}.unsub-link{font-family:var(--mono);font-size:11.5px;letter-spacing:.03em;color:var(--muted-2);background:0;border:0;text-decoration:underline;text-underline-offset:3px;cursor:pointer}.unsub-link:hover{color:var(--muted)}.unsub-confirm{display:none;margin-top:14px}.unsub-confirm.active{display:block}.unsub-confirm p{font-size:13px;color:var(--muted);margin-bottom:12px}.unsub-confirm-actions{display:flex;gap:10px;justify-content:center}.btn-unsub-yes{font-family:var(--mono);font-size:11.5px;letter-spacing:.03em;color:var(--danger);background:0;border:1px solid var(--danger);border-radius:2px;padding:9px 16px;cursor:pointer;transition:all .25s var(--ease)}.btn-unsub-yes:hover{background:var(--danger);color:var(--obsidian)}.btn-unsub-yes:disabled{opacity:.6;cursor:default}.btn-unsub-cancel{font-family:var(--mono);font-size:11.5px;letter-spacing:.03em;color:var(--muted-2);background:0;border:1px solid var(--line-strong);border-radius:2px;padding:9px 16px;cursor:pointer}.unsub-error{margin-top:10px;font-size:12px;color:var(--danger);min-height:14px}.unsub-done-wrap{display:none;text-align:center}.unsub-done-wrap.active{display:block}.unsub-done-wrap .s-mark{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--gold)}.faq-list{margin-top:20px;border-top:1px solid var(--line)}.faq-item{border-bottom:1px solid var(--line)}.faq-q-heading{margin:0;font-size:inherit;font-weight:inherit}.faq-q{width:100%;text-align:left;background:0;border:0;color:var(--off-white);padding:24px 0;display:flex;justify-content:space-between;align-items:center;font-family:var(--serif);font-size:19px}.faq-q .plus{font-family:var(--mono);color:var(--gold-dim);transition:transform .35s var(--ease);font-size:16px}.faq-item.open .faq-q .plus{transform:rotate(45deg)}.faq-a{max-height:0;overflow:hidden;transition:max-height .4s var(--ease)}.faq-a-inner{padding-bottom:22px;color:var(--muted);font-size:14.5px;line-height:1.65;max-width:640px}.faq-item.open .faq-a{max-height:300px}.final-cta{text-align:center;padding:150px 0}.final-cta h2{font-family:var(--serif);font-weight:500;font-size:clamp(34px,5vw,58px);line-height:1.1}.final-cta p{margin-top:18px;color:var(--muted);font-size:16.5px}.final-cta .btn{margin-top:36px;padding:16px 34px;font-size:14.5px}footer{border-top:1px solid var(--line);padding:44px 0}.footer-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}.footer-inner .f-logo{font-family:var(--serif);font-size:15px;letter-spacing:.1em;color:var(--muted)}.footer-links{display:flex;gap:26px;font-size:13px;color:var(--muted-2)}.footer-links a{text-decoration:none;transition:color .3s var(--ease)}.footer-links a:hover{color:var(--gold)}.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s var(--ease),transform .8s var(--ease)}.reveal.in-view{opacity:1;transform:translateY(0)}</style>
+<style>
+/* ============================= TOKENS ============================= */
+:root{
+  --obsidian:#050509;
+  --charcoal:#0b0b10;
+  --surface:#101014;
+  --surface-2:#0d0d12;
+  --line: rgba(201,169,110,.15);
+  --line-strong: rgba(201,169,110,.32);
+  --gold:#c9a96e;
+  --gold-bright:#ddc38f;
+  --gold-dim: rgba(201,169,110,.55);
+  --off-white:#f3f1ec;
+  --muted:#8e8c96;
+  --muted-2:#75737e;
+  --danger:#c97a6e;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --ease: cubic-bezier(.16,.8,.24,1);
+  --container: 1180px;
+}
+
+*{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior: auto; }
+  *{ animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+}
+body{
+  margin:0;
+  background: var(--obsidian);
+  color: var(--off-white);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+img{ max-width:100%; display:block; }
+a{ color:inherit; }
+button{ font-family: inherit; cursor:pointer; }
+h1,h2,h3,p{ margin:0; }
+
+.wrap{ max-width: var(--container); margin:0 auto; padding-inline: 28px; }
+@media (max-width: 640px){ .wrap{ padding-inline: 20px; } }
+
+.eyebrow{
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  display:inline-flex; align-items:center; gap:10px;
+}
+.eyebrow::before{
+  content:''; width:22px; height:1px; background: var(--gold-dim);
+}
+
+:focus-visible{
+  outline: 1.5px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.sr-only{
+  position:absolute; width:1px;height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+.sr-only:focus{
+  position:fixed; top:12px; left:12px; width:auto; height:auto; margin:0;
+  padding:12px 18px; clip:auto; overflow:visible; white-space:normal;
+  background: var(--gold); color: var(--obsidian); z-index:200;
+  font-family: var(--sans); font-size:13px; font-weight:600; border-radius:2px;
+}
+
+/* ============================= HEADER ============================= */
+header{
+  position: fixed; top:0; left:0; right:0; z-index: 100;
+  padding: 22px 0;
+  transition: all .5s var(--ease);
+  border-bottom: 1px solid transparent;
+}
+header.scrolled{
+  padding: 13px 0;
+  background: rgba(5,5,9,.82);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+.header-inner{ display:flex; align-items:center; justify-content:space-between; }
+.logo{
+  font-family: var(--serif); font-weight:500; font-size: 19px;
+  letter-spacing:.14em; text-transform: uppercase; text-decoration:none; color: var(--off-white);
+}
+.logo span{ color: var(--gold); }
+nav.main-nav{ display:flex; align-items:center; gap: 40px; }
+nav.main-nav a{
+  font-size: 13.5px; letter-spacing:.02em; text-decoration:none; color: var(--muted);
+  transition: color .3s var(--ease);
+  position:relative;
+}
+nav.main-nav a:hover{ color: var(--off-white); }
+.nav-links{ display:flex; gap: 36px; }
+
+.menu-toggle{
+  display:none; width:30px; height:20px; position:relative; background:none; border:none;
+}
+.lang-toggle{
+  font-family: var(--mono); font-size: 11px; letter-spacing:.05em; color: var(--gold);
+  background:none; border:1px solid var(--line-strong); border-radius:20px;
+  padding:6px 14px; cursor:pointer; transition: border-color .25s var(--ease), color .25s var(--ease);
+}
+.lang-toggle:hover{ border-color: var(--gold); color: var(--off-white); }
+.menu-toggle span{
+  position:absolute; left:0; right:0; height:1px; background: var(--off-white);
+  transition: transform .3s var(--ease), opacity .3s var(--ease);
+}
+.menu-toggle span:nth-child(1){ top:0; }
+.menu-toggle span:nth-child(2){ top:9px; }
+.menu-toggle span:nth-child(3){ top:18px; }
+.menu-toggle.open span:nth-child(1){ transform: translateY(9px) rotate(45deg); }
+.menu-toggle.open span:nth-child(2){ opacity:0; }
+.menu-toggle.open span:nth-child(3){ transform: translateY(-9px) rotate(-45deg); }
+
+@media (max-width: 880px){
+  .nav-links{
+    position: fixed; top:0; right:0; height:100vh; width:78vw; max-width:340px;
+    background: var(--charcoal); border-left:1px solid var(--line);
+    flex-direction:column; justify-content:center; gap:30px; padding: 0 42px;
+    transform: translateX(100%); transition: transform .45s var(--ease);
+    z-index: 90;
+  }
+  .nav-links.open{ transform: translateX(0); }
+  .nav-links a{ font-size:16px; }
+  .menu-toggle{ display:block; z-index:110; }
+  .desktop-cta{ display:none; }
+  nav.main-nav{ gap:16px; }
+  .nav-scrim{
+    position:fixed; inset:0; background: rgba(5,5,9,.6); opacity:0; pointer-events:none;
+    transition: opacity .35s var(--ease); z-index:80;
+  }
+  .nav-scrim.open{ opacity:1; pointer-events:auto; }
+}
+
+.btn{
+  font-family: var(--sans); font-size: 13.5px; font-weight:500;
+  letter-spacing:.02em; padding: 12px 22px;
+  border-radius: 2px; border: 1px solid var(--gold-dim);
+  background: transparent; color: var(--off-white);
+  transition: all .35s var(--ease); white-space:nowrap;
+  display:inline-flex; align-items:center; gap:8px;
+  min-height:44px; box-sizing:border-box;
+}
+@media (max-width: 560px){
+  .btn{
+    white-space:normal; text-align:center; line-height:1.3;
+    padding: 13px 20px; justify-content:center;
+  }
+  .hero-cta-row .btn, #waitlist .btn, .final-cta .btn{ width:100%; }
+}
+.btn:hover{ background: var(--gold); border-color: var(--gold); color: var(--obsidian); }
+.btn-solid{ background: var(--gold); color: var(--obsidian); border-color:var(--gold); }
+.btn-solid:hover{ background: var(--gold-bright); border-color: var(--gold-bright); }
+.btn-solid:disabled{ opacity:.6; cursor:default; }
+
+/* ============================= SECTION SHELL ============================= */
+section{ position:relative; }
+.section-pad{ padding: 130px 0; }
+@media (max-width: 780px){ .section-pad{ padding: 88px 0; } }
+
+.section-head{ max-width: 640px; margin-bottom: 64px; }
+.section-head h2{
+  font-family: var(--serif); font-weight:500; font-size: clamp(32px, 4.4vw, 52px);
+  line-height: 1.1; letter-spacing: -.01em; margin-top:18px;
+}
+.section-head p{
+  margin-top: 20px; font-size: 17px; line-height:1.65; color: var(--muted);
+  max-width: 520px;
+}
+
+/* ============================= HERO ============================= */
+.hero{
+  min-height: 100vh;
+  display:flex; align-items:center;
+  padding-top: 140px; padding-bottom: 80px;
+  background:
+    radial-gradient(ellipse 900px 600px at 82% 8%, rgba(201,169,110,.07), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 10% 100%, rgba(201,169,110,.05), transparent 60%),
+    var(--obsidian);
+  position:relative;
+}
+.hero-grid{
+  display:grid; grid-template-columns: 1.05fr .95fr; gap: 64px; align-items:center;
+}
+@media (max-width: 980px){ .hero-grid{ grid-template-columns: 1fr; gap:56px; } }
+
+.hero-copy h1{
+  font-family: var(--serif); font-weight:500;
+  font-size: clamp(38px, 5.2vw, 66px);
+  line-height: 1.05; letter-spacing:-.015em;
+  margin-top: 22px;
+}
+.hero-copy h1 em{ font-style: italic; color: var(--gold); }
+.hero-copy .sub{
+  margin-top: 26px; font-size: 18px; line-height:1.65; color: var(--muted);
+  max-width: 460px;
+}
+.hero-cta-row{ display:flex; align-items:center; gap:20px; margin-top:38px; flex-wrap:wrap; }
+.hero-micro{
+  font-family: var(--mono); font-size: 12px; color: var(--muted-2); letter-spacing:.03em;
+}
+.hero-trust{
+  font-family: var(--mono); font-size: 12px; color: var(--muted-2); letter-spacing:.03em;
+  margin-top:14px;
+}
+
+/* -- receipt / ownership visual -- */
+.visual-stage{
+  position: relative; min-height: 460px;
+  display:flex; align-items:center; justify-content:center;
+}
+.doc{
+  width: 300px; max-width: 88vw;
+  background: var(--surface-2);
+  border: 1px solid var(--line-strong);
+  padding: 26px 24px 30px;
+  font-family: var(--mono); font-size: 12.5px; color: var(--muted);
+  position: relative; z-index:2;
+  box-shadow: 0 40px 90px -30px rgba(0,0,0,.7);
+  transition: opacity .6s var(--ease), transform .6s var(--ease), filter .6s var(--ease);
+}
+.doc::before, .doc::after{
+  content:''; position:absolute; left:0; right:0; height:9px;
+  background: repeating-linear-gradient(90deg, transparent 0 6px, var(--obsidian) 6px 12px);
+}
+.doc::before{ top:-1px; } .doc::after{ bottom:-1px; }
+.doc-row{ display:flex; justify-content:space-between; padding:5px 0; }
+.doc-title{ color: var(--off-white); font-size:13px; letter-spacing:.04em; text-transform:uppercase; margin-bottom:14px; padding-bottom:12px; border-bottom:1px dashed var(--line-strong); }
+.doc-total{ margin-top:14px; padding-top:14px; border-top:1px dashed var(--line-strong); color: var(--off-white); font-weight:500; }
+
+.stage-inner{ position:relative; width: 100%; display:flex; align-items:center; justify-content:center; min-height:460px; }
+
+.scanline{
+  position:absolute; left:0; right:0; height:2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity:0; z-index:3; filter: drop-shadow(0 0 8px var(--gold-dim));
+}
+
+.analysis-log{
+  position:absolute; z-index:4; left:50%; top:50%;
+  transform: translate(-50%,-50%);
+  width: 260px; text-align:center;
+  font-family: var(--mono); font-size:12px; letter-spacing:.06em; text-transform:uppercase;
+  color: var(--gold-dim); opacity:0; pointer-events:none;
+}
+
+.card{
+  position:absolute; z-index:2; width: 300px; max-width:88vw;
+  background: linear-gradient(160deg, var(--surface) 0%, var(--surface-2) 100%);
+  border: 1px solid var(--line-strong);
+  padding: 26px 24px; opacity:0; transform: translateY(14px) scale(.98);
+  transition: opacity .7s var(--ease), transform .7s var(--ease);
+}
+.card .eyebrow{ margin-bottom:8px; }
+.card h3{ font-family: var(--serif); font-size:24px; font-weight:500; color: var(--off-white); }
+.card .price-line{ display:flex; justify-content:space-between; align-items:baseline; margin-top:6px; font-family: var(--mono); font-size:13px; color: var(--muted); }
+.card .price-line b{ color: var(--off-white); font-size:16px; }
+.finding-list{ margin-top:20px; display:flex; flex-direction:column; gap:0; }
+.finding{
+  display:flex; justify-content:space-between; align-items:center;
+  padding: 12px 0; border-top: 1px solid var(--line);
+  font-size: 13px;
+}
+.finding:last-child{ border-bottom: 1px solid var(--line); }
+.finding .f-label{ color: var(--muted); display:flex; align-items:center; gap:8px; }
+.finding .f-label::before{ content:''; width:5px; height:5px; background: var(--gold); border-radius:50%; flex:none; }
+.finding .f-value{ color: var(--off-white); font-family: var(--mono); font-size:12.5px; text-align:right; }
+.value-strip{
+  margin-top:20px; padding-top:18px; border-top:1px solid var(--line-strong);
+  display:flex; align-items:baseline; justify-content:space-between;
+}
+.value-strip .vs-label{ font-size:12px; color: var(--muted); text-transform:uppercase; letter-spacing:.08em; }
+.value-strip .vs-amount{ font-family: var(--serif); font-style:italic; font-size:30px; color: var(--gold); }
+.card-cta{
+  margin-top:18px; width:100%; text-align:center; font-size:13px; color: var(--gold);
+  padding:12px 0; border:1px solid var(--gold-dim); background:transparent;
+  transition: all .3s var(--ease);
+}
+.card-cta:hover{ background: var(--gold); color: var(--obsidian); }
+
+.replay-btn{
+  position:absolute; bottom:-46px; left:50%; transform:translateX(-50%);
+  font-family: var(--mono); font-size:11px; color: var(--muted-2); letter-spacing:.08em;
+  text-transform:uppercase; background:none; border:none; display:flex; gap:8px; align-items:center;
+}
+.replay-btn:hover{ color: var(--gold); }
+@media (max-width: 980px){ .visual-stage{ min-height: 400px; } .stage-inner{ min-height:400px; } }
+
+/* ============================= PROBLEM ============================= */
+.problem{ background: var(--charcoal); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+.frag-grid{
+  display:grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+  background: var(--line); border:1px solid var(--line); margin-top: 10px;
+}
+@media (max-width: 780px){ .frag-grid{ grid-template-columns: repeat(2,1fr); } }
+.frag-item{
+  background: var(--surface-2); padding: 30px 22px; min-height:150px;
+  display:flex; flex-direction:column; justify-content:space-between;
+  opacity:.55; transition: opacity .5s var(--ease), transform .5s var(--ease);
+}
+.frag-item.in-view{ opacity:1; }
+.frag-item .frag-tag{ font-family: var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color: var(--muted-2); }
+.frag-item .frag-name{ font-size:15px; color: var(--muted); margin-top:auto; padding-top:16px; }
+.converge-line{ text-align:center; margin-top: 60px; }
+.converge-line p{
+  font-family: var(--serif); font-style:italic; font-size: clamp(22px,3vw,30px); color: var(--off-white);
+}
+
+/* ============================= ONE RECORD ============================= */
+.transform-row{
+  display:grid; grid-template-columns: 1fr auto 1.15fr; gap: 40px; align-items:center; margin-top:20px;
+}
+@media (max-width: 900px){ .transform-row{ grid-template-columns: 1fr; } }
+.mini-tags{ display:flex; flex-wrap:wrap; gap:10px; }
+.mini-tag{
+  font-family: var(--mono); font-size:11.5px; padding:9px 13px; border:1px solid var(--line-strong);
+  color: var(--muted); background: var(--surface-2);
+}
+.arrow-col{ display:flex; flex-direction:column; align-items:center; gap:8px; color: var(--gold-dim); }
+.arrow-col span{ font-family: var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; }
+.record-card{
+  border:1px solid var(--line-strong); background: var(--surface-2); padding:30px 28px;
+}
+.record-card .rc-head{ display:flex; justify-content:space-between; align-items:baseline; border-bottom:1px dashed var(--line-strong); padding-bottom:16px; margin-bottom:16px; }
+.record-card .rc-head h3{ font-family: var(--serif); font-size:22px; }
+.record-card .rc-head b{ font-family: var(--mono); color: var(--gold); font-size:15px; font-weight:400; }
+.record-grid{ display:grid; grid-template-columns: repeat(2,1fr); gap: 14px 24px; font-size:13px; }
+.record-grid .rg-item .rg-label{ font-family: var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color: var(--muted-2); }
+.record-grid .rg-item .rg-val{ margin-top:4px; color: var(--off-white); }
+.record-grid .rg-item .rg-val.gold{ color: var(--gold); }
+
+/* ============================= HOW IT WORKS ============================= */
+.steps{ display:grid; grid-template-columns: repeat(4,1fr); gap:1px; background: var(--line); border:1px solid var(--line); margin-top:10px; }
+@media (max-width: 900px){ .steps{ grid-template-columns: repeat(2,1fr); } }
+.step{
+  background: var(--obsidian); padding: 38px 26px; min-height:220px;
+  display:flex; flex-direction:column; justify-content:space-between;
+}
+.step .step-no{ font-family: var(--mono); font-size:12px; color: var(--gold-dim); }
+.step h3{ font-family: var(--serif); font-size:21px; margin-top:24px; font-weight:500; }
+.step p{ font-size:13.5px; color: var(--muted); margin-top:10px; line-height:1.55; }
+
+/* ============================= MONEY ============================= */
+.money-panel{
+  border:1px solid var(--line-strong); background: var(--surface-2); margin-top:30px;
+  padding: 40px; display:grid; grid-template-columns: 1fr 1fr; gap: 40px;
+}
+@media (max-width: 780px){ .money-panel{ grid-template-columns:1fr; padding:28px; gap:30px; } }
+.money-col .m-label{ font-family: var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.1em; color: var(--muted); }
+.money-col .m-amount{ font-family: var(--serif); font-size: clamp(38px,5vw,54px); margin-top:12px; color: var(--off-white); }
+.money-col .m-amount.gold{ color: var(--gold); }
+.breakdown{ margin-top:20px; display:flex; flex-direction:column; gap:0; }
+.b-row{ display:flex; justify-content:space-between; padding:10px 0; border-top:1px solid var(--line); font-size:13px; color:var(--muted); }
+.b-row:last-child{ border-bottom:1px solid var(--line); }
+.b-row b{ color: var(--off-white); font-family: var(--mono); font-weight:400; }
+.illustrative-tag{ font-family: var(--mono); font-size:10.5px; color: var(--muted-2); letter-spacing:.06em; text-transform:uppercase; margin-top:16px; display:block; }
+
+/* ============================= DIFFERENCE ============================= */
+.diff-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap: 40px; margin-top: 50px; }
+@media (max-width: 780px){ .diff-grid{ grid-template-columns:1fr; gap:36px; } }
+.diff-item .di-word{ font-family: var(--serif); font-style:italic; font-size:26px; color: var(--gold); }
+.diff-item p{ margin-top:14px; font-size:14.5px; color: var(--muted); line-height:1.6; }
+.diff-item{ border-top:1px solid var(--line-strong); padding-top:24px; }
+
+/* ============================= FUTURE ============================= */
+.future{ background: var(--charcoal); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+.graph-wrap{ position:relative; margin-top: 50px; min-height: 340px; display:flex; align-items:center; justify-content:center; }
+.graph-svg{ width:100%; max-width:720px; }
+.graph-node{ font-family: var(--mono); font-size:10.5px; fill: var(--muted); text-transform:uppercase; letter-spacing:.05em; }
+.graph-line{ stroke: var(--line-strong); stroke-width:1; }
+.graph-dot{ fill: var(--gold-dim); }
+.graph-dot.center{ fill: var(--gold); }
+
+/* ============================= TRUST ============================= */
+.trust-grid{ display:grid; grid-template-columns: repeat(5,1fr); gap: 1px; background: var(--line); border:1px solid var(--line); margin-top:20px; }
+@media (max-width: 900px){ .trust-grid{ grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 520px){ .trust-grid{ grid-template-columns: 1fr; } }
+.trust-item{ background: var(--obsidian); padding: 28px 22px; font-size:13.5px; color: var(--muted); line-height:1.5; }
+.trust-item b{ display:block; color: var(--off-white); font-size:14.5px; margin-bottom:8px; font-weight:500; }
+
+/* ============================= WAITLIST ============================= */
+.waitlist{ position:relative; background: var(--charcoal); border-top:1px solid var(--line); }
+.waitlist-inner{ max-width: 620px; margin: 0 auto; text-align:center; }
+.waitlist h2{ font-family: var(--serif); font-weight:500; font-size: clamp(32px,4.6vw,52px); margin-top:18px; }
+.lede{ margin-top:18px; color: var(--muted); font-size:16.5px; max-width:460px; margin-inline:auto; }
+
+.wl-form{ margin-top: 42px; }
+.email-row{ display:flex; gap:12px; max-width: 460px; margin: 0 auto; }
+@media (max-width: 520px){ .email-row{ flex-direction:column; } }
+.email-input{
+  flex:1; background: var(--surface-2); border:1px solid var(--line-strong); color: var(--off-white);
+  font-family: var(--sans); font-size:16px; padding: 15px 18px; border-radius:2px;
+  transition: border-color .3s var(--ease); min-height:44px; box-sizing:border-box;
+}
+.email-input::placeholder{ color: var(--muted-2); }
+.email-input:focus{ outline:none; border-color: var(--gold); }
+.email-input.error{ border-color: var(--danger); }
+.email-input:disabled{ opacity:.65; border-color: var(--line-strong); color: var(--gold-dim); -webkit-text-fill-color: var(--gold-dim); }
+.wl-error{ margin-top:10px; font-size:12.5px; color: var(--danger); text-align:center; min-height:16px; }
+.wl-micro{ margin-top:18px; font-family: var(--mono); font-size:11.5px; color: var(--muted-2); letter-spacing:.03em; }
+
+/* validation questions */
+.vq-wrap{ margin-top: 56px; text-align:left; border-top:1px solid var(--line); padding-top: 40px; display:none; }
+.vq-wrap.active{ display:block; }
+.vq-block{ margin-bottom: 34px; }
+.vq-block .vq-q{ font-family: var(--serif); font-size:19px; margin-bottom:16px; }
+.vq-options{ display:flex; flex-wrap:wrap; gap:10px; }
+.vq-opt{
+  font-size:13px; padding: 11px 16px; border:1px solid var(--line-strong); background: var(--surface-2);
+  color: var(--muted); transition: all .25s var(--ease); border-radius:2px;
+}
+.vq-opt:hover{ border-color: var(--gold-dim); color: var(--off-white); }
+.vq-opt.selected{ border-color: var(--gold); color: var(--obsidian); background: var(--gold); }
+.vq-skip{ font-family: var(--mono); font-size:11.5px; color: var(--muted-2); background:none; border:none; text-decoration:underline; text-underline-offset:3px; margin-top:6px; }
+
+/* success */
+.success-wrap{ display:none; text-align:center; }
+.success-wrap.active{ display:block; }
+.success-wrap .s-mark{ font-family: var(--serif); font-style:italic; font-size:15px; color: var(--gold); }
+.status-track{ margin-top:34px; display:flex; flex-direction:column; gap:14px; max-width:280px; margin-inline:auto; text-align:left; }
+.status-row{ display:flex; align-items:center; gap:12px; font-size:13.5px; color: var(--muted); }
+.status-dot{ width:8px; height:8px; border-radius:50%; border:1px solid var(--gold-dim); flex:none; }
+.status-row.done .status-dot{ background: var(--gold); border-color: var(--gold); }
+.status-row.done{ color: var(--off-white); }
+
+/* unsubscribe */
+.unsub-row{ margin-top:28px; text-align:center; }
+.unsub-link{ font-family: var(--mono); font-size:11.5px; letter-spacing:.03em; color: var(--muted-2); background:none; border:none; text-decoration:underline; text-underline-offset:3px; cursor:pointer; }
+.unsub-link:hover{ color: var(--muted); }
+.unsub-confirm{ display:none; margin-top:14px; }
+.unsub-confirm.active{ display:block; }
+.unsub-confirm p{ font-size:13px; color: var(--muted); margin-bottom:12px; }
+.unsub-confirm-actions{ display:flex; gap:10px; justify-content:center; }
+.btn-unsub-yes{ font-family: var(--mono); font-size:11.5px; letter-spacing:.03em; color: var(--danger); background:none; border:1px solid var(--danger); border-radius:2px; padding:9px 16px; cursor:pointer; transition: all .25s var(--ease); }
+.btn-unsub-yes:hover{ background: var(--danger); color: var(--obsidian); }
+.btn-unsub-yes:disabled{ opacity:.6; cursor:default; }
+.btn-unsub-cancel{ font-family: var(--mono); font-size:11.5px; letter-spacing:.03em; color: var(--muted-2); background:none; border:1px solid var(--line-strong); border-radius:2px; padding:9px 16px; cursor:pointer; }
+.unsub-error{ margin-top:10px; font-size:12px; color: var(--danger); min-height:14px; }
+.unsub-done-wrap{ display:none; text-align:center; }
+.unsub-done-wrap.active{ display:block; }
+.unsub-done-wrap .s-mark{ font-family: var(--serif); font-style:italic; font-size:15px; color: var(--gold); }
+
+/* ============================= FAQ ============================= */
+.faq-list{ margin-top: 20px; border-top:1px solid var(--line); }
+.faq-item{ border-bottom:1px solid var(--line); }
+.faq-q-heading{ margin:0; font-size:inherit; font-weight:inherit; }
+.faq-q{
+  width:100%; text-align:left; background:none; border:none; color: var(--off-white);
+  padding: 24px 0; display:flex; justify-content:space-between; align-items:center;
+  font-family: var(--serif); font-size: 19px;
+}
+.faq-q .plus{ font-family: var(--mono); color: var(--gold-dim); transition: transform .35s var(--ease); font-size:16px; }
+.faq-item.open .faq-q .plus{ transform: rotate(45deg); }
+.faq-a{ max-height:0; overflow:hidden; transition: max-height .4s var(--ease); }
+.faq-a-inner{ padding-bottom: 22px; color: var(--muted); font-size:14.5px; line-height:1.65; max-width:640px; }
+.faq-item.open .faq-a{ max-height: 300px; }
+
+/* ============================= FINAL CTA ============================= */
+.final-cta{ text-align:center; padding: 150px 0; }
+.final-cta h2{ font-family: var(--serif); font-weight:500; font-size: clamp(34px,5vw,58px); line-height:1.1; }
+.final-cta p{ margin-top:18px; color: var(--muted); font-size:16.5px; }
+.final-cta .btn{ margin-top:36px; padding: 16px 34px; font-size:14.5px; }
+
+/* ============================= FOOTER ============================= */
+footer{ border-top:1px solid var(--line); padding: 44px 0; }
+.footer-inner{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px; }
+.footer-inner .f-logo{ font-family: var(--serif); font-size:15px; letter-spacing:.1em; color: var(--muted); }
+.footer-links{ display:flex; gap: 26px; font-size:13px; color: var(--muted-2); }
+.footer-links a{ text-decoration:none; transition: color .3s var(--ease); }
+.footer-links a:hover{ color: var(--gold); }
+
+/* ============================= SCROLL REVEAL ============================= */
+.reveal{ opacity:0; transform: translateY(24px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+.reveal.in-view{ opacity:1; transform: translateY(0); }
+</style>
 </head>
 <body>
 
@@ -75,6 +555,7 @@ src="https://www.facebook.com/tr?id=1704845827407892&ev=PageView&noscript=1"
         <a href="#waitlist" data-nav-link>Early Access</a>
       </div>
       <button class="btn btn-solid desktop-cta" data-cta="header">Get Early Access</button>
+      <button type="button" class="lang-toggle" id="lang-toggle" aria-label="Switch language">IT</button>
       <button class="menu-toggle" id="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
         <span></span><span></span><span></span>
       </button>
@@ -90,12 +571,13 @@ src="https://www.facebook.com/tr?id=1704845827407892&ev=PageView&noscript=1"
   <div class="wrap hero-grid">
     <div class="hero-copy">
       <span class="eyebrow">OWNERSHIP OS · BY VORNEAUX</span>
-      <h1 id="hero-headline">You could be losing money on things <em>you already bought</em>.</h1>
+      <h1 id="hero-headline">Things you buy don't come with a memory. <em>Ownership OS does.</em></h1>
       <p class="sub" id="hero-subcopy">Upload a receipt. Ownership OS reads it, then keeps watching — the return window, the warranty, a price that drops — so nothing quietly expires in your inbox.</p>
       <div class="hero-cta-row">
         <button class="btn btn-solid" data-cta="hero">Join the Waitlist — Free</button>
         <span class="hero-micro">Early access · iOS &amp; Android · No credit card</span>
       </div>
+      <p class="hero-trust">We never see your card or payment details — only what you choose to upload.</p>
     </div>
 
     <div class="visual-stage">
@@ -106,7 +588,6 @@ src="https://www.facebook.com/tr?id=1704845827407892&ev=PageView&noscript=1"
           <div class="doc-title">Example Store · Receipt</div>
           <div class="doc-row"><span>Apple AirPods Pro</span><span>€249.00</span></div>
           <div class="doc-row"><span>Date</span><span>Jul 14, 2026</span></div>
-          <div class="doc-row"><span>Payment</span><span>•••• 4471</span></div>
           <div class="doc-total doc-row"><span>Total</span><span>€249.00</span></div>
         </div>
 
@@ -306,11 +787,11 @@ src="https://www.facebook.com/tr?id=1704845827407892&ev=PageView&noscript=1"
       <h2>Your purchases. Your information.</h2>
     </div>
     <div class="trust-grid reveal">
-      <div class="trust-item"><b>What's stored</b>The receipt itself, and the details extracted from it — product, price, retailer, dates. That's what builds your record.</div>
-      <div class="trust-item"><b>What's not</b>Receipts aren't sold or shared with advertisers, and aren't used to build a marketing profile.</div>
-      <div class="trust-item"><b>Why we need it</b>Each field exists to answer one question: is a return, warranty or price change still relevant right now.</div>
-      <div class="trust-item"><b>Deletion</b>You can delete a receipt or your account at any time; the underlying data is removed with it.</div>
-      <div class="trust-item"><b>Early stage</b>Ownership OS is pre-launch. Security practices will be documented in full before public release.</div>
+      <div class="trust-item"><b>What's stored</b><span>The receipt itself, and the details extracted from it — product, price, retailer, dates. That's what builds your record.</span></div>
+      <div class="trust-item"><b>What's not</b><span>Receipts aren't sold or shared with advertisers, and aren't used to build a marketing profile.</span></div>
+      <div class="trust-item"><b>Why we need it</b><span>Each field exists to answer one question: is a return, warranty or price change still relevant right now.</span></div>
+      <div class="trust-item"><b>Deletion</b><span>You can delete a receipt or your account at any time; the underlying data is removed with it.</span></div>
+      <div class="trust-item"><b>Early stage</b><span>Ownership OS is pre-launch. Security practices will be documented in full before public release.</span></div>
     </div>
   </div>
 </section>
@@ -358,7 +839,7 @@ src="https://www.facebook.com/tr?id=1704845827407892&ev=PageView&noscript=1"
     <div id="form-stage">
       <span class="eyebrow">EARLY ACCESS</span>
       <h2>Be first to own less worry.</h2>
-      <p class="lede">Join the early access list and be among the first to experience Ownership OS.</p>
+      <p class="lede">Join the early access list and be among the first to experience Ownership OS. Spots are opened gradually as we onboard new users.</p>
 
       <div class="wl-form">
         <form id="waitlist-form" novalidate>
@@ -368,7 +849,7 @@ src="https://www.facebook.com/tr?id=1704845827407892&ev=PageView&noscript=1"
           </div>
           <p class="wl-error" id="wl-error" role="alert"></p>
         </form>
-        <p class="wl-micro">Free during beta · No spam · Unsubscribe anytime</p>
+        <p class="wl-micro">Free during beta · No spam · Unsubscribe anytime · We never see your card or payment details</p>
       </div>
 
       <div class="vq-wrap" id="vq-wrap">
@@ -408,9 +889,9 @@ src="https://www.facebook.com/tr?id=1704845827407892&ev=PageView&noscript=1"
       <h2>You're on the list.</h2>
       <p class="lede">We'll let you know when Ownership OS is ready for you.</p>
       <div class="status-track">
-        <div class="status-row done"><span class="status-dot"></span> Registered</div>
-        <div class="status-row"><span class="status-dot"></span> Beta access</div>
-        <div class="status-row"><span class="status-dot"></span> Product launch</div>
+        <div class="status-row done"><span class="status-dot"></span><span>Registered</span></div>
+        <div class="status-row"><span class="status-dot"></span><span>Beta access</span></div>
+        <div class="status-row"><span class="status-dot"></span><span>Product launch</span></div>
       </div>
 
       <div class="unsub-row">
@@ -445,7 +926,7 @@ src="https://www.facebook.com/tr?id=1704845827407892&ev=PageView&noscript=1"
     <div class="success-wrap" id="email-unsub-stage">
       <span class="s-mark">Ownership OS</span>
       <h2>Confirm unsubscribe</h2>
-      <p class="lede">You're about to remove <strong id="email-unsub-email"></strong> from the Ownership&nbsp;OS early access list. This can't be undone — you'd need to sign up again to rejoin.</p>
+      <p class="lede"><span>You're about to remove</span> <strong id="email-unsub-email"></strong> <span>from the Ownership&nbsp;OS early access list. This can't be undone — you'd need to sign up again to rejoin.</span></p>
       <div class="unsub-row">
         <div class="unsub-confirm active" id="email-unsub-confirm">
           <div class="unsub-confirm-actions">
@@ -514,7 +995,7 @@ src="https://www.facebook.com/tr?id=1704845827407892&ev=PageView&noscript=1"
 <section class="final-cta">
   <div class="wrap reveal">
     <span class="eyebrow">OWNERSHIP OS</span>
-    <h2>The receipt was never the point.<br>What happens after it is.</h2>
+    <h2><span>The receipt was never the point.</span><br><span>What happens after it is.</span></h2>
     <p>Join the early access list — free during beta, no credit card, unsubscribe anytime.</p>
     <button class="btn btn-solid" data-cta="final">Join the Waitlist — Free</button>
   </div>
@@ -533,58 +1014,1134 @@ src="https://www.facebook.com/tr?id=1704845827407892&ev=PageView&noscript=1"
   </div>
 </footer>
 
-<script>(function(){"use strict";var Analytics={track:function(event,data){var payload=Object.assign({event:event,ts:Date.now()},data||{});if(window.dataLayer&&typeof window.dataLayer.push==='function'){window.dataLayer.push(payload);}}};var MESSAGING={active:'a',variants:{a:{headline:'You could be losing money on things <em>you already bought</em>.',sub:'Upload a receipt. Ownership OS reads it, then keeps watching — the return window, the warranty, a price that drops — so nothing quietly expires in your inbox.'},b:{headline:"Your purchases don't stop mattering <em>after checkout</em>.",sub:'Upload a receipt and Ownership OS turns it into a living record — tracking the return window, the warranty and the price, long after your inbox stops paying attention.'},c:{headline:'One purchase. <em>One intelligent record.</em>',sub:'Ownership OS turns a receipt into a structured record that tracks what a receipt alone never could.'}}};(function applyMessagingVariant(){var params=new URLSearchParams(location.search);var requested=params.get('variant');var key=(requested&&MESSAGING.variants[requested])?requested:MESSAGING.active;var variant=MESSAGING.variants[key];var headlineEl=document.getElementById('hero-headline');var subEl=document.getElementById('hero-subcopy');if(headlineEl&&variant)headlineEl.innerHTML=variant.headline;if(subEl&&variant)subEl.textContent=variant.sub;Analytics.track('page_view',{path:location.pathname,messaging_variant:key});})();var WAITLIST_CONFIG={endpoint:'https://script.google.com/macros/s/AKfycbz23vQZbcrq3MpRPvdItdnKDlNtG7CUK2iTW_-CgrdDcqB6tapv0sS2GlVue1GvMWowqw/exec'};function submitWaitlist(email,attributionData,validationData){if(!WAITLIST_CONFIG.endpoint){return Promise.reject(new Error('waitlist_not_configured'));}
-var controller=('AbortController'in window)?new AbortController():null;var timeoutId=controller?setTimeout(function(){controller.abort();},10000):null;var payload={email:email,attribution:attributionData,validation:validationData||null,originPage:location.href,userAgent:navigator.userAgent};return fetch(WAITLIST_CONFIG.endpoint,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload),signal:controller?controller.signal:undefined}).then(function(res){return res.json().catch(function(){return null;}).then(function(json){if(json&&json.ok){return json;}
-var code=(json&&json.error&&json.error.code)||'server_error';var err=new Error(code);err.serverMessage=json&&json.error&&json.error.message;throw err;});}).catch(function(err){if(err&&err.name==='AbortError'){throw new Error('timeout');}
-throw err;}).finally(function(){if(timeoutId)clearTimeout(timeoutId);});}
-function submitUnsubscribe(email,token){if(!WAITLIST_CONFIG.endpoint){return Promise.reject(new Error('waitlist_not_configured'));}
-var controller=('AbortController'in window)?new AbortController():null;var timeoutId=controller?setTimeout(function(){controller.abort();},10000):null;var url=WAITLIST_CONFIG.endpoint+'?action=unsubscribe';if(token){url+='&email='+encodeURIComponent(email)+'&token='+encodeURIComponent(token);}
-return fetch(url,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({email:email}),signal:controller?controller.signal:undefined}).then(function(res){return res.json().catch(function(){return null;}).then(function(json){if(json&&json.ok){return json;}
-var code=(json&&json.error&&json.error.code)||'server_error';var err=new Error(code);err.serverMessage=json&&json.error&&json.error.message;throw err;});}).catch(function(err){if(err&&err.name==='AbortError'){throw new Error('timeout');}
-throw err;}).finally(function(){if(timeoutId)clearTimeout(timeoutId);});}
-function submitCheckRegistration(email){if(!WAITLIST_CONFIG.endpoint||!email)return Promise.resolve(null);var url=WAITLIST_CONFIG.endpoint+'?action=check_registration&email='+encodeURIComponent(email);return fetch(url,{method:'GET'}).then(function(res){return res.json();}).catch(function(){return null;});}
-function getAttribution(){var params=new URLSearchParams(location.search);var keys=['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];var out={};keys.forEach(function(k){if(params.get(k))out[k]=params.get(k);});return out;}
-var attribution=getAttribution();var header=document.getElementById('site-header');var onScroll=function(){if(window.scrollY>30)header.classList.add('scrolled');else header.classList.remove('scrolled');};window.addEventListener('scroll',onScroll,{passive:true});onScroll();var menuToggle=document.getElementById('menu-toggle');var navLinks=document.getElementById('nav-links');var navScrim=document.getElementById('nav-scrim');function closeMenu(){menuToggle.classList.remove('open');menuToggle.setAttribute('aria-expanded','false');menuToggle.setAttribute('aria-label','Open menu');navLinks.classList.remove('open');navScrim.classList.remove('open');}
-function openMenu(){menuToggle.classList.add('open');menuToggle.setAttribute('aria-expanded','true');menuToggle.setAttribute('aria-label','Close menu');navLinks.classList.add('open');navScrim.classList.add('open');}
-menuToggle.addEventListener('click',function(){if(navLinks.classList.contains('open'))closeMenu();else openMenu();});navScrim.addEventListener('click',closeMenu);document.querySelectorAll('[data-nav-link]').forEach(function(a){a.addEventListener('click',closeMenu);});document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMenu();});document.querySelectorAll('[data-cta]').forEach(function(btn){btn.addEventListener('click',function(){Analytics.track('hero_cta_click',{source:btn.getAttribute('data-cta')});var target=document.getElementById('waitlist');if(target)target.scrollIntoView({behavior:'smooth',block:'start'});var input=document.getElementById('email-input');if(input)setTimeout(function(){input.focus({preventScroll:true});},500);});});var revealEls=document.querySelectorAll('.reveal, .frag-item');if('IntersectionObserver'in window){var io=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in-view');io.unobserve(e.target);}});},{threshold:0.16});revealEls.forEach(function(el){io.observe(el);});}else{revealEls.forEach(function(el){el.classList.add('in-view');});}
-var reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;var stage=document.getElementById('hero-stage');var docEl=document.getElementById('doc-receipt');var scanline=document.getElementById('scanline');var log=document.getElementById('analysis-log');var outputCard=document.getElementById('output-card');var replayBtn=document.getElementById('replay-hero');var heroTimers=[];var logMessages=['Reading receipt','Identifying product','Checking return & warranty','Scanning for price drops'];function clearHeroTimers(){heroTimers.forEach(clearTimeout);heroTimers=[];}
-function runHeroSequence(){clearHeroTimers();docEl.style.opacity='1';docEl.style.transform='none';docEl.style.filter='none';outputCard.style.opacity='0';outputCard.style.transform='translateY(14px) scale(.98)';log.style.opacity='0';scanline.style.opacity='0';scanline.style.top='10%';if(reducedMotion){docEl.style.opacity='0';outputCard.style.opacity='1';outputCard.style.transform='none';return;}
-heroTimers.push(setTimeout(function(){scanline.style.transition='top 1.6s linear, opacity .3s ease';scanline.style.opacity='1';scanline.style.top='92%';},300));logMessages.forEach(function(msg,i){heroTimers.push(setTimeout(function(){log.textContent=msg;log.style.transition='opacity .25s ease';log.style.opacity='1';},400+i*420));});heroTimers.push(setTimeout(function(){log.style.opacity='0';scanline.style.opacity='0';docEl.style.transition='opacity .5s ease, transform .5s ease, filter .5s ease';docEl.style.opacity='0';docEl.style.transform='scale(.92)';docEl.style.filter='blur(2px)';},2150));heroTimers.push(setTimeout(function(){outputCard.style.opacity='1';outputCard.style.transform='translateY(0) scale(1)';Analytics.track('receipt_demo_complete',{location:'hero'});},2500));}
-if('IntersectionObserver'in window&&stage){var heroIO=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){runHeroSequence();heroIO.unobserve(e.target);}});},{threshold:0.4});heroIO.observe(stage);}else if(stage){runHeroSequence();}
-if(replayBtn){replayBtn.addEventListener('click',function(){Analytics.track('receipt_demo_interaction',{action:'replay'});runHeroSequence();});}
-var WAITLIST_STORAGE_KEY='vx_ownership_os_waitlist_status';var WAITLIST_COOKIE_NAME='vx_ownership_os_waitlist';var WAITLIST_COOKIE_MAX_AGE_DAYS=730;function generateDeviceId(){if(window.crypto&&typeof crypto.randomUUID==='function')return crypto.randomUUID();return'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){var r=Math.random()*16|0;var v=c==='x'?r:(r&0x3|0x8);return v.toString(16);});}
-function readLocalWaitlistStatus(){try{var raw=localStorage.getItem(WAITLIST_STORAGE_KEY);if(!raw)return null;var parsed=JSON.parse(raw);return(parsed&&parsed.joined===true)?parsed:null;}catch(e){return null;}}
-function readCookieWaitlistStatus(){try{var match=document.cookie.match(new RegExp('(?:^|; )'+WAITLIST_COOKIE_NAME+'=([^;]*)'));if(!match)return null;var parsed=JSON.parse(decodeURIComponent(match[1]));return(parsed&&parsed.joined===true)?parsed:null;}catch(e){return null;}}
-function writeLocalWaitlistStatus(data){try{localStorage.setItem(WAITLIST_STORAGE_KEY,JSON.stringify(data));}catch(e){}}
-function writeCookieWaitlistStatus(data){try{var maxAgeSeconds=WAITLIST_COOKIE_MAX_AGE_DAYS*24*60*60;document.cookie=WAITLIST_COOKIE_NAME+'='+encodeURIComponent(JSON.stringify(data))+'; max-age='+maxAgeSeconds+'; path=/; SameSite=Lax';}catch(e){}}
-function getWaitlistStatus(){var local=readLocalWaitlistStatus();if(local)return local;var cookie=readCookieWaitlistStatus();if(cookie){writeLocalWaitlistStatus(cookie);return cookie;}
-return null;}
-function markWaitlistJoined(email,unsubToken){var existing=getWaitlistStatus();var data={deviceId:(existing&&existing.deviceId)||generateDeviceId(),joined:true,joinedAt:new Date().toISOString(),email:email||(existing&&existing.email)||'',unsubToken:unsubToken||(existing&&existing.unsubToken)||''};writeLocalWaitlistStatus(data);writeCookieWaitlistStatus(data);}
-function clearWaitlistStatus(){try{localStorage.removeItem(WAITLIST_STORAGE_KEY);}catch(e){}
-try{document.cookie=WAITLIST_COOKIE_NAME+'=; max-age=0; path=/; SameSite=Lax';}catch(e){}}
-var form=document.getElementById('waitlist-form');var emailInput=document.getElementById('email-input');var submitBtn=document.getElementById('submit-btn');var errorEl=document.getElementById('wl-error');var vqWrap=document.getElementById('vq-wrap');var formStage=document.getElementById('form-stage');var successStage=document.getElementById('success-stage');var formStarted=false;var currentWaitlistEmail='';var currentWaitlistToken='';(function applyStoredWaitlistState(){var status=getWaitlistStatus();if(status&&status.joined){currentWaitlistEmail=status.email||'';currentWaitlistToken=status.unsubToken||'';formStage.style.display='none';successStage.classList.add('active');Analytics.track('waitlist_returning_device_recognized',{});if(currentWaitlistEmail){submitCheckRegistration(currentWaitlistEmail).then(function(json){if(json&&json.ok&&json.registered===false){clearWaitlistStatus();currentWaitlistEmail='';currentWaitlistToken='';successStage.classList.remove('active');formStage.style.display='';Analytics.track('waitlist_stale_local_state_cleared',{});}});}}})();var emailUnsubStage=document.getElementById('email-unsub-stage');var emailUnsubEmailEl=document.getElementById('email-unsub-email');var emailUnsubConfirmBox=document.getElementById('email-unsub-confirm');var emailUnsubInvalidEl=document.getElementById('email-unsub-invalid');var emailUnsubConfirmBtn=document.getElementById('email-unsub-confirm-btn');var emailUnsubCancelBtn=document.getElementById('email-unsub-cancel-btn');var emailUnsubErrorEl=document.getElementById('email-unsub-error');var unsubDoneStageEl=document.getElementById('unsub-done-stage');(function handleEmailUnsubscribeLink(){var params=new URLSearchParams(location.search);var linkEmail=(params.get('email')||'').trim();var linkToken=(params.get('token')||'').trim();if(!linkEmail)return;formStage.style.display='none';successStage.classList.remove('active');unsubDoneStageEl.classList.remove('active');emailUnsubStage.classList.add('active');Analytics.track('email_unsubscribe_link_opened',{});var waitlistSection=document.getElementById('waitlist');if(waitlistSection){var scrollToWaitlist=function(){var reduceMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;waitlistSection.scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'start'});};if(document.readyState==='complete'){setTimeout(scrollToWaitlist,30);}else{window.addEventListener('load',function(){setTimeout(scrollToWaitlist,30);},{once:true});}}
-if(!linkToken||!isValidEmail(linkEmail)){emailUnsubConfirmBox.classList.remove('active');emailUnsubInvalidEl.style.display='';return;}
-emailUnsubEmailEl.textContent=linkEmail;if(window.history&&window.history.replaceState){window.history.replaceState(null,'',location.pathname+location.hash);}
-if(emailUnsubCancelBtn){emailUnsubCancelBtn.addEventListener('click',function(){Analytics.track('email_unsubscribe_cancelled',{});emailUnsubStage.classList.remove('active');if(currentWaitlistEmail&&currentWaitlistEmail.toLowerCase()===linkEmail.toLowerCase()){successStage.classList.add('active');}else{formStage.style.display='';}});}
-if(emailUnsubConfirmBtn){emailUnsubConfirmBtn.addEventListener('click',function(){emailUnsubErrorEl.textContent='';emailUnsubConfirmBtn.disabled=true;emailUnsubConfirmBtn.textContent='Unsubscribing...';Analytics.track('email_unsubscribe_requested',{});submitUnsubscribe(linkEmail,linkToken).then(function(){emailUnsubStage.classList.remove('active');unsubDoneStageEl.classList.add('active');if(currentWaitlistEmail&&currentWaitlistEmail.toLowerCase()===linkEmail.toLowerCase()){clearWaitlistStatus();currentWaitlistEmail='';currentWaitlistToken='';}
-Analytics.track('email_unsubscribe_success',{});}).catch(function(err){emailUnsubConfirmBtn.disabled=false;emailUnsubConfirmBtn.textContent='Confirm unsubscribe';var reason=err&&err.message;if(reason==='unauthorized'){emailUnsubConfirmBox.classList.remove('active');emailUnsubInvalidEl.style.display='';}else if(reason==='timeout'){emailUnsubErrorEl.textContent="That took too long — please check your connection and try again.";}else if(reason==='rate_limited'){emailUnsubErrorEl.textContent="Too many attempts — please wait a moment and try again.";}else{emailUnsubErrorEl.textContent="Something didn't work — please try again.";}
-Analytics.track('email_unsubscribe_error',{reason:reason||'unknown'});});});}})();function isValidEmail(v){return/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);}
-emailInput.addEventListener('input',function(){if(!formStarted){formStarted=true;Analytics.track('waitlist_form_start',{});}
-emailInput.classList.remove('error');errorEl.textContent='';});form.addEventListener('submit',function(ev){ev.preventDefault();var value=emailInput.value.trim();if(!value){errorEl.textContent='Enter your email to join the list.';emailInput.classList.add('error');emailInput.focus();return;}
-if(!isValidEmail(value)){errorEl.textContent="That email doesn't look quite right.";emailInput.classList.add('error');emailInput.focus();return;}
-errorEl.textContent='';submitBtn.textContent='Joining...';submitBtn.disabled=true;Analytics.track('waitlist_signup',{email_domain:value.split('@')[1]||'',attribution:attribution});submitWaitlist(value,attribution).then(function(json){markWaitlistJoined(value,json&&json.unsubToken);currentWaitlistEmail=value;currentWaitlistToken=(json&&json.unsubToken)||'';submitBtn.textContent="You're in ✓";submitBtn.disabled=true;emailInput.disabled=true;vqWrap.classList.add('active');Analytics.track('waitlist_success',{});}).catch(function(err){submitBtn.textContent='Get Early Access';submitBtn.disabled=false;var reason=err&&err.message;if(reason==='duplicate'){errorEl.textContent="That email is already on the list.";}else if(reason==='waitlist_not_configured'){errorEl.textContent="Waitlist isn't connected yet — set WAITLIST_CONFIG.endpoint to go live.";Analytics.track('waitlist_backend_not_configured',{});}else if(reason==='timeout'){errorEl.textContent="That took too long — please check your connection and try again.";}else if(reason==='rate_limited'){errorEl.textContent="Too many attempts — please wait a moment and try again.";}else if(reason==='validation_error'){errorEl.textContent=(err&&err.serverMessage)||"Please double-check your email address.";}else if(reason==='email_not_allowed'){errorEl.textContent="Please use a valid business or supported email address.";}else{errorEl.textContent="Something didn't work — please try again.";}
-Analytics.track('waitlist_error',{reason:reason||'unknown'});});});document.querySelectorAll('.vq-options').forEach(function(group){group.addEventListener('click',function(ev){var opt=ev.target.closest('.vq-opt');if(!opt)return;group.querySelectorAll('.vq-opt').forEach(function(o){o.classList.remove('selected');o.setAttribute('aria-pressed','false');});opt.classList.add('selected');opt.setAttribute('aria-pressed','true');Analytics.track('validation_question_answered',{question:group.getAttribute('data-group'),answer:opt.textContent.trim()});maybeShowSuccess();});});var vqSkip=document.getElementById('vq-skip');if(vqSkip){vqSkip.addEventListener('click',function(){showSuccess();});}
-function allAnswered(){var groups=document.querySelectorAll('.vq-options');for(var i=0;i<groups.length;i++){if(!groups[i].querySelector('.selected'))return false;}
-return true;}
-function maybeShowSuccess(){if(allAnswered())setTimeout(showSuccess,350);}
-function showSuccess(){formStage.style.display='none';successStage.classList.add('active');Analytics.track('post_demo_cta_click',{flow:'waitlist_complete'});}
-var unsubOpenBtn=document.getElementById('unsub-open-btn');var unsubConfirmBox=document.getElementById('unsub-confirm');var unsubConfirmBtn=document.getElementById('unsub-confirm-btn');var unsubCancelBtn=document.getElementById('unsub-cancel-btn');var unsubErrorEl=document.getElementById('unsub-error');var unsubDoneStage=document.getElementById('unsub-done-stage');if(unsubOpenBtn){unsubOpenBtn.addEventListener('click',function(){unsubConfirmBox.classList.add('active');unsubOpenBtn.style.display='none';Analytics.track('unsubscribe_prompt_opened',{});});}
-if(unsubCancelBtn){unsubCancelBtn.addEventListener('click',function(){unsubConfirmBox.classList.remove('active');unsubOpenBtn.style.display='';unsubErrorEl.textContent='';});}
-if(unsubConfirmBtn){unsubConfirmBtn.addEventListener('click',function(){if(!currentWaitlistEmail){unsubErrorEl.textContent="We couldn't find your email on this device — please contact us to unsubscribe.";return;}
-if(!currentWaitlistToken){unsubErrorEl.textContent="For security, please use the \u201cUnsubscribe\u201d link from your latest VORNEAUX email to complete this — it'll bring you right back here.";Analytics.track('unsubscribe_missing_local_token',{});return;}
-unsubErrorEl.textContent='';unsubConfirmBtn.disabled=true;unsubConfirmBtn.textContent='Unsubscribing...';Analytics.track('unsubscribe_requested',{});submitUnsubscribe(currentWaitlistEmail,currentWaitlistToken).then(function(){clearWaitlistStatus();currentWaitlistEmail='';currentWaitlistToken='';successStage.classList.remove('active');unsubDoneStage.classList.add('active');Analytics.track('unsubscribe_success',{});}).catch(function(err){unsubConfirmBtn.disabled=false;unsubConfirmBtn.textContent='Confirm unsubscribe';var reason=err&&err.message;if(reason==='timeout'){unsubErrorEl.textContent="That took too long — please check your connection and try again.";}else if(reason==='rate_limited'){unsubErrorEl.textContent="Too many attempts — please wait a moment and try again.";}else{unsubErrorEl.textContent="Something didn't work — please try again.";}
-Analytics.track('unsubscribe_error',{reason:reason||'unknown'});});});}
-document.querySelectorAll('.faq-item').forEach(function(item){var q=item.querySelector('.faq-q');q.addEventListener('click',function(){var wasOpen=item.classList.contains('open');document.querySelectorAll('.faq-item').forEach(function(i){i.classList.remove('open');i.querySelector('.faq-q').setAttribute('aria-expanded','false');});if(!wasOpen){item.classList.add('open');q.setAttribute('aria-expanded','true');}});});})();</script>
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- Analytics abstraction ---------------- */
+  var Analytics = {
+    track: function(event, data){
+      var payload = Object.assign({ event: event, ts: Date.now() }, data || {});
+      if (window.dataLayer && typeof window.dataLayer.push === 'function'){
+        window.dataLayer.push(payload);
+      }
+    }
+  };
+
+  /* ---------------- Messaging / A-B test config ---------------- */
+  /* Swap headline variants via ?variant=b or ?variant=c, or override MESSAGING.active directly. */
+  var MESSAGING = {
+    active: 'a',
+    variants: {
+      a: {
+        headline: "Things you buy don't come with a memory. <em>Ownership OS does.</em>",
+        sub: 'Upload a receipt. Ownership OS reads it, then keeps watching — the return window, the warranty, a price that drops — so nothing quietly expires in your inbox.'
+      },
+      b: {
+        headline: "Your purchases don't stop mattering <em>after checkout</em>.",
+        sub: 'Upload a receipt and Ownership OS turns it into a living record — tracking the return window, the warranty and the price, long after your inbox stops paying attention.'
+      },
+      c: {
+        headline: 'One purchase. <em>One intelligent record.</em>',
+        sub: 'Ownership OS turns a receipt into a structured record that tracks what a receipt alone never could.'
+      }
+    },
+    variants_it: {
+      a: {
+        headline: "Quello che compri non ha una memoria. <em>Ownership OS sì.</em>",
+        sub: 'Carica uno scontrino. Ownership OS lo legge, poi continua a monitorare — la finestra di reso, la garanzia, un prezzo che scende — così nulla scade in silenzio nella tua casella email.'
+      },
+      b: {
+        headline: "I tuoi acquisti non smettono di contare <em>dopo il checkout</em>.",
+        sub: 'Carica uno scontrino e Ownership OS lo trasforma in un registro vivo — tenendo traccia della finestra di reso, della garanzia e del prezzo, molto dopo che la tua casella email ha smesso di prestarci attenzione.'
+      },
+      c: {
+        headline: 'Un acquisto. <em>Un registro intelligente.</em>',
+        sub: 'Ownership OS trasforma uno scontrino in un registro strutturato che tiene traccia di ciò che uno scontrino da solo non potrebbe mai fare.'
+      }
+    }
+  };
+
+  /* ---------------- IT translation dictionary (exact-text swap, applied to leaf elements) ---------------- */
+  var IT_DICT = {
+    "Early access · iOS & Android · No credit card": "Accesso anticipato · iOS e Android · Nessuna carta richiesta",
+    "We never see your card or payment details — only what you choose to upload.": "Non vediamo mai i dati della tua carta o del pagamento — solo ciò che scegli di caricare.",
+    "Join the Waitlist — Free": "Iscriviti alla Waiting List — Gratis",
+    "Example Store · Receipt": "Negozio di esempio · Scontrino",
+    "Reading purchase": "Lettura acquisto in corso",
+    "WHAT WE FOUND": "COSA ABBIAMO TROVATO",
+    "AirPods Pro": "AirPods Pro",
+    "Purchased Jul 14, 2026": "Acquistato il 14 lug 2026",
+    "Return window": "Finestra di reso",
+    "6 days remaining": "6 giorni rimanenti",
+    "Warranty": "Garanzia",
+    "Until Jul 14, 2028": "Fino al 14 lug 2028",
+    "Price opportunity": "Opportunità di prezzo",
+    "Now €23 cheaper": "Ora €23 più economico",
+    "Potential value detected": "Valore potenziale rilevato",
+    "Get early access →": "Accedi in anteprima →",
+    "↻ Replay": "↻ Riguarda",
+    "THE PROBLEM": "IL PROBLEMA",
+    "The moment you check out, the record starts to scatter.": "Nel momento in cui paghi, la traccia comincia a disperdersi.",
+    "A purchase creates information you'll likely need later — a return window, a warranty, a price you paid. None of it lives in one place, and none of it reminds you when it matters.": "Un acquisto genera informazioni che ti serviranno più avanti — una finestra di reso, una garanzia, un prezzo pagato. Nessuna di queste vive in un unico posto, e nessuna ti avvisa quando conta davvero.",
+    "Email": "Email",
+    "Order confirmation": "Conferma d'ordine",
+    "PDF": "PDF",
+    "Warranty document": "Documento di garanzia",
+    "Paper": "Carta",
+    "Printed receipt": "Scontrino cartaceo",
+    "Account": "Account",
+    "Retailer order history": "Storico ordini del negozio",
+    "Box": "Scatola",
+    "Serial number, inside a drawer": "Numero di serie, dentro un cassetto",
+    "Notification": "Notifica",
+    "A deadline, easy to miss": "Una scadenza, facile da perdere",
+    "Folder": "Cartella",
+    "Somewhere, on a device": "Da qualche parte, su un dispositivo",
+    "Memory": "Memoria",
+    "\"I bought this... when?\"": "\"L'ho comprato... quando?\"",
+    "Ownership OS brings it together.": "Ownership OS riunisce tutto in un unico posto.",
+    "THE CORE VALUE": "IL VALORE PRINCIPALE",
+    "One purchase. One intelligent record.": "Un acquisto. Un registro intelligente.",
+    "Not a receipt you have to remember to check — a record that stays useful on its own, for as long as the purchase does.": "Non uno scontrino che devi ricordarti di controllare — un registro che resta utile da solo, per tutta la vita dell'acquisto.",
+    "Product": "Prodotto",
+    "Price": "Prezzo",
+    "Retailer": "Negozio",
+    "Documents": "Documenti",
+    "Deadlines": "Scadenze",
+    "Actions": "Azioni",
+    "Becomes": "Diventa",
+    "Example Store": "Negozio di esempio",
+    "Purchased": "Acquistato",
+    "Jul 14, 2026": "14 lug 2026",
+    "Return": "Reso",
+    "24 months": "24 mesi",
+    "HOW IT WORKS": "COME FUNZIONA",
+    "From receipt to intelligence.": "Dallo scontrino all'intelligenza.",
+    "Upload": "Carica",
+    "Take a photo or upload a receipt.": "Scatta una foto o carica uno scontrino.",
+    "Understand": "Comprende",
+    "AI extracts the important details automatically.": "L'AI estrae automaticamente i dettagli importanti.",
+    "Protect": "Protegge",
+    "Ownership OS tracks relevant deadlines, warranties and opportunities.": "Ownership OS tiene traccia di scadenze, garanzie e opportunità rilevanti.",
+    "Act": "Agisci",
+    "When something matters, you know exactly what to do next.": "Quando qualcosa conta davvero, sai esattamente cosa fare.",
+    "WHY THIS IS DIFFERENT": "PERCHÉ È DIVERSO",
+    "You already have a receipt. Why do you need this?": "Hai già lo scontrino. Perché ti serve questo?",
+    "Because a receipt doesn't do anything. It sits in an inbox or a drawer until you remember to look — if you remember at all.": "Perché uno scontrino non fa nulla da solo. Resta in una casella email o in un cassetto finché non ti ricordi di guardarlo — sempre che te ne ricordi.",
+    "Structured": "Strutturato",
+    "An email or a photo is just text. Your ownership record understands what you bought, what it cost and what matters about it.": "Un'email o una foto sono solo testo. Il tuo registro comprende cosa hai comprato, quanto è costato e cosa conta davvero.",
+    "Monitored": "Monitorato",
+    "Nothing in your inbox is watching the calendar. Ownership OS tracks return windows and warranty coverage for you.": "Niente nella tua casella email tiene d'occhio il calendario. Ownership OS monitora finestre di reso e garanzie al posto tuo.",
+    "Proactive": "Proattivo",
+    "A bank statement never tells you a deadline is close. Ownership OS surfaces it before it's too late to act.": "Un estratto conto non ti dice mai che una scadenza si avvicina. Ownership OS te lo segnala prima che sia troppo tardi.",
+    "WHY IT MATTERS": "PERCHÉ CONTA",
+    "Your purchases shouldn't become forgotten expenses.": "I tuoi acquisti non dovrebbero diventare spese dimenticate.",
+    "Ownership OS is designed to continuously look for moments when your purchases may still have value.": "Ownership OS è pensato per cercare continuamente i momenti in cui i tuoi acquisti possono ancora avere valore.",
+    "Your purchases": "I tuoi acquisti",
+    "tracked": "monitorati",
+    "Price opportunity ": "Opportunità di prezzo ",
+    "Return opportunity": "Opportunità di reso",
+    "Warranty-related": "Legato alla garanzia",
+    "Illustrative example": "Esempio illustrativo",
+    "TRUST": "FIDUCIA",
+    "Your purchases. Your information.": "I tuoi acquisti. Le tue informazioni.",
+    "WHERE THIS IS GOING": "DOVE STIAMO ANDANDO",
+    "The more you own, the smarter it gets.": "Più possiedi, più diventa intelligente.",
+    "Over time, Ownership OS is designed to become an intelligent memory for everything you own.": "Nel tempo, Ownership OS è pensato per diventare una memoria intelligente di tutto ciò che possiedi.",
+    "EARLY ACCESS": "ACCESSO ANTICIPATO",
+    "Be first to own less worry.": "Sii tra i primi a preoccuparti di meno.",
+    "Join the early access list and be among the first to experience Ownership OS. Spots are opened gradually as we onboard new users.": "Iscriviti alla lista d'attesa e sii tra i primi a provare Ownership OS. I posti vengono aperti gradualmente man mano che accogliamo nuovi utenti.",
+    "Get Early Access": "Accedi in anteprima",
+    "Free during beta · No spam · Unsubscribe anytime · We never see your card or payment details": "Gratis durante la beta · Nessuno spam · Disiscrizione in qualsiasi momento · Non vediamo mai i dati della tua carta o del pagamento",
+    "What would you most want Ownership OS to protect?": "Cosa vorresti che Ownership OS proteggesse di più?",
+    "Purchases & receipts": "Acquisti e scontrini",
+    "Warranties": "Garanzie",
+    "Returns & refunds": "Resi e rimborsi",
+    "Price opportunities": "Opportunità di prezzo",
+    "Everything I own": "Tutto ciò che possiedo",
+    "How often do you shop online?": "Con che frequenza fai acquisti online?",
+    "Almost every day": "Quasi tutti i giorni",
+    "Several times a week": "Alcune volte a settimana",
+    "A few times a month": "Alcune volte al mese",
+    "Rarely": "Raramente",
+    "Have you ever lost money because you missed a return, warranty or refund?": "Hai mai perso denaro per aver perso un reso, una garanzia o un rimborso?",
+    "Yes": "Sì",
+    "No": "No",
+    "Not sure": "Non sono sicuro",
+    "Skip these questions": "Salta queste domande",
+    "You're on the list.": "Sei in lista.",
+    "We'll let you know when Ownership OS is ready for you.": "Ti avviseremo appena Ownership OS sarà pronto per te.",
+    "Unsubscribe": "Disiscriviti",
+    "Remove your email from the Ownership OS early access list?": "Rimuovere la tua email dalla lista d'attesa di Ownership OS?",
+    "Confirm unsubscribe": "Conferma disiscrizione",
+    "Cancel": "Annulla",
+    "You've been unsubscribed.": "Sei stato disiscritto.",
+    "Your email has been removed from the early access list — no further communications will be sent. A confirmation has also been sent to your inbox.": "La tua email è stata rimossa dalla lista d'attesa — non riceverai ulteriori comunicazioni. Una conferma è stata inviata anche alla tua casella email.",
+    "This unsubscribe link is invalid or has expired. If you still want to unsubscribe, please contact us.": "Questo link di disiscrizione non è valido o è scaduto. Se vuoi comunque disiscriverti, contattaci.",
+    "FAQ": "DOMANDE FREQUENTI",
+    "Questions, answered plainly.": "Domande, con risposte semplici.",
+    "What is Ownership OS?": "Cos'è Ownership OS?",
+    "An AI-powered assistant that helps you keep track of what you own — return windows, warranties and other details tied to your purchases.": "Un assistente basato su AI che ti aiuta a tenere traccia di ciò che possiedi — finestre di reso, garanzie e altri dettagli legati ai tuoi acquisti.",
+    "Why not just keep my receipts, like I already do?": "Perché non tenere semplicemente gli scontrini, come faccio già?",
+    "You can — but nothing in an inbox or a drawer actively watches a deadline or resurfaces an opportunity. Ownership OS turns a static receipt into a record that does that part for you.": "Puoi farlo — ma niente in una casella email o in un cassetto monitora attivamente una scadenza o fa riemergere un'opportunità. Ownership OS trasforma uno scontrino statico in un registro che fa questo al posto tuo.",
+    "How does it work?": "Come funziona?",
+    "You upload or photograph a receipt. Ownership OS reads the details and surfaces anything relevant — like a return deadline or warranty coverage.": "Carichi o fotografi uno scontrino. Ownership OS legge i dettagli e fa emergere tutto ciò che è rilevante — come una scadenza di reso o una copertura di garanzia.",
+    "What can I upload?": "Cosa posso caricare?",
+    "Photos of paper receipts, PDF invoices and email order confirmations, to start.": "Per iniziare: foto di scontrini cartacei, fatture PDF e conferme d'ordine via email.",
+    "Is Ownership OS free?": "Ownership OS è gratis?",
+    "It's free to join the waitlist, and free during the beta period.": "È gratis iscriversi alla waiting list, ed è gratis durante il periodo beta.",
+    "When will it launch?": "Quando sarà lanciato?",
+    "We're in an early validation phase. Joining the waitlist is the best way to hear about beta access first.": "Siamo in una fase di validazione iniziale. Iscriversi alla waiting list è il modo migliore per essere tra i primi a saperne di più sull'accesso alla beta.",
+    "Is this a financial service?": "È un servizio finanziario?",
+    "No. Ownership OS doesn't move money, extend credit or give financial advice — it helps you understand your own purchases.": "No. Ownership OS non muove denaro, non concede credito e non fornisce consulenza finanziaria — ti aiuta a capire meglio i tuoi acquisti.",
+    "Does Ownership OS guarantee refunds or savings?": "Ownership OS garantisce rimborsi o risparmi?",
+    "No. Ownership OS surfaces potential opportunities based on what it reads. Eligibility and outcomes always depend on the retailer or manufacturer's own policies.": "No. Ownership OS segnala potenziali opportunità in base a ciò che legge. L'idoneità e l'esito dipendono sempre dalle policy del negozio o del produttore.",
+    "How is my information handled?": "Come vengono gestite le mie informazioni?",
+    "We aim to collect only what's needed to make the product useful to you, and to be transparent about what's accessed and why.": "Puntiamo a raccogliere solo ciò che serve per rendere il prodotto utile, ed essere trasparenti su cosa viene acceduto e perché.",
+    "Join the early access list — free during beta, no credit card, unsubscribe anytime.": "Iscriviti alla lista d'attesa — gratis durante la beta, nessuna carta richiesta, disiscrizione in qualsiasi momento.",
+
+    /* Header / nav (was previously out of scope of the sweep — see selector fix below) */
+    "How It Works": "Come funziona",
+    "Why Ownership OS": "Perché Ownership OS",
+    "Early Access": "Accesso anticipato",
+    "Skip to content": "Vai al contenuto",
+
+    /* Footer links */
+    "Terms": "Termini",
+    "Contact": "Contatti",
+
+    /* Trust section cards (were skipped: <b> label + sibling text = element with nested markup) */
+    "What's stored": "Cosa viene conservato",
+    "The receipt itself, and the details extracted from it — product, price, retailer, dates. That's what builds your record.": "Lo scontrino stesso e i dettagli estratti da esso — prodotto, prezzo, negozio, date. È questo che costruisce il tuo registro.",
+    "What's not": "Cosa non viene conservato",
+    "Receipts aren't sold or shared with advertisers, and aren't used to build a marketing profile.": "Gli scontrini non vengono venduti né condivisi con inserzionisti, e non vengono usati per costruire un profilo pubblicitario.",
+    "Why we need it": "Perché ci serve",
+    "Each field exists to answer one question: is a return, warranty or price change still relevant right now.": "Ogni campo esiste per rispondere a una domanda: un reso, una garanzia o una variazione di prezzo sono ancora rilevanti adesso.",
+    "Deletion": "Eliminazione",
+    "You can delete a receipt or your account at any time; the underlying data is removed with it.": "Puoi eliminare uno scontrino o il tuo account in qualsiasi momento; i dati sottostanti vengono rimossi insieme ad esso.",
+    "Early stage": "Fase iniziale",
+    "Ownership OS is pre-launch. Security practices will be documented in full before public release.": "Ownership OS non è ancora stato lanciato. Le pratiche di sicurezza saranno documentate integralmente prima del rilascio pubblico.",
+
+    /* Success stage status track (were skipped: <span class=\"status-dot\"> sibling text) */
+    "Registered": "Registrato",
+    "Beta access": "Accesso alla beta",
+    "Product launch": "Lancio del prodotto",
+
+    /* Email-unsubscribe lede (was skipped: <strong> nested in the sentence) */
+    "You're about to remove": "Stai per rimuovere",
+    "from the Ownership\u00A0OS early access list. This can't be undone — you'd need to sign up again to rejoin.": "dalla lista d'attesa di Ownership\u00A0OS. Questa azione non può essere annullata — dovresti iscriverti di nuovo per rientrare.",
+
+    /* Final CTA headline (was skipped: <br> nested inside the h2) */
+    "The receipt was never the point.": "Lo scontrino non è mai stato il punto.",
+    "What happens after it is.": "Quello che succede dopo lo è.",
+
+    /* Waitlist form — validation & submit-button states (set dynamically by JS, not just at page load) */
+    "Enter your email to join the list.": "Inserisci la tua email per iscriverti alla lista.",
+    "That email doesn't look quite right.": "Questa email non sembra corretta.",
+    "Joining...": "Iscrizione in corso...",
+    "You're in ✓": "Sei dentro ✓",
+    "That email is already on the list.": "Questa email è già in lista.",
+    "Waitlist isn't connected yet — set WAITLIST_CONFIG.endpoint to go live.": "La waiting list non è ancora connessa — imposta WAITLIST_CONFIG.endpoint per andare live.",
+    "That took too long — please check your connection and try again.": "Ci sta mettendo troppo tempo — controlla la connessione e riprova.",
+    "Too many attempts — please wait a moment and try again.": "Troppi tentativi — attendi un momento e riprova.",
+    "Please double-check your email address.": "Ricontrolla il tuo indirizzo email.",
+    "Please use a valid business or supported email address.": "Utilizza un indirizzo email aziendale valido o supportato.",
+    "Something didn't work — please try again.": "Qualcosa non ha funzionato — riprova.",
+
+    /* Unsubscribe flows (in-app and from-email) — set dynamically by JS */
+    "Unsubscribing...": "Disiscrizione in corso...",
+    "We couldn't find your email on this device — please contact us to unsubscribe.": "Non abbiamo trovato la tua email su questo dispositivo — contattaci per disiscriverti.",
+    "For security, please use the \u201cUnsubscribe\u201d link from your latest VORNEAUX email to complete this — it'll bring you right back here.": "Per sicurezza, utilizza il link \u201cDisiscriviti\u201d nella tua ultima email di VORNEAUX per completare l'operazione — ti riporterà direttamente qui.",
+
+    /* Accessibility labels (aria-label — not visible text, but translated for consistency) */
+    "Switch language": "Cambia lingua",
+    "Open menu": "Apri il menu",
+    "Replay demonstration": "Rivedi la dimostrazione",
+    "Email address": "Indirizzo email",
+
+    /* Hero receipt demo card labels, and the email-unsubscribe "keep it" button — leaf
+       elements that were simply never added to the dictionary */
+    "Date": "Data",
+    "Total": "Totale",
+    "Keep my subscription": "Mantieni l'iscrizione"
+  };
+
+  /* aria-label values translated the same way as visible text, via IT_ATTR_DICT below */
+  var IT_ATTR_DICT = {
+    "aria-label": {
+      "Switch language": "Cambia lingua",
+      "Open menu": "Apri il menu",
+      "Replay demonstration": "Rivedi la dimostrazione",
+      "Email address": "Indirizzo email"
+    }
+  };
+
+  /* ---------------- Runtime translation helper ----------------
+     Used anywhere JS sets text AFTER the initial page sweep above
+     (form validation messages, submit-button states, unsubscribe
+     flow messages) — these are set in response to user interaction,
+     so they must be looked up against the CURRENT language every
+     time, not just once at DOMContentLoaded. */
+  function T(str){
+    return (document.documentElement.getAttribute('lang') === 'it' && IT_DICT.hasOwnProperty(str)) ? IT_DICT[str] : str;
+  }
+
+  (function applyLanguage(){
+    var params = new URLSearchParams(location.search);
+    var forced = params.get('lang');
+    var stored = null;
+    try { stored = localStorage.getItem('vx-lang'); } catch(e){}
+    var browserLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+    var lang = forced || stored || (browserLang.indexOf('it') === 0 ? 'it' : 'en');
+    if (lang !== 'it' && lang !== 'en') lang = 'en';
+
+    function setLang(l){
+      lang = l;
+      try { localStorage.setItem('vx-lang', l); } catch(e){}
+      var params2 = new URLSearchParams(location.search);
+      var requested = params2.get('variant');
+      var msgSet = (l === 'it') ? MESSAGING.variants_it : MESSAGING.variants;
+      var key = (requested && msgSet[requested]) ? requested : MESSAGING.active;
+      var variant = msgSet[key];
+      var headlineEl = document.getElementById('hero-headline');
+      var subEl = document.getElementById('hero-subcopy');
+      if (headlineEl && variant) headlineEl.innerHTML = variant.headline;
+      if (subEl && variant) subEl.textContent = variant.sub;
+
+      /* NOTE: 'header' and 'a'/'b' were previously missing from this selector, which is why
+         the nav bar (How It Works / Why Ownership OS / Early Access / Get Early Access),
+         the footer links (Privacy / Terms / Contact) and the <b> labels inside the trust
+         cards never got picked up by the sweep below. */
+      var SWEEP_SELECTOR = [
+        'header h1','header h2','header h3','header h4','header p','header button','header label','header span','header small','header div','header a','header b',
+        'main h1','main h2','main h3','main h4','main p','main button','main label','main span','main small','main div','main a','main b',
+        'footer h1','footer h2','footer h3','footer p','footer button','footer span','footer small','footer div','footer a','footer b',
+        'a.sr-only'
+      ].join(', ');
+
+      if (l === 'it') {
+        var els = document.querySelectorAll(SWEEP_SELECTOR);
+        els.forEach(function(el){
+          if (el.children.length > 0) return; // skip elements with nested markup (handled separately, e.g. headline)
+          var t = el.textContent.trim();
+          if (IT_DICT.hasOwnProperty(t)) {
+            if (!el.hasAttribute('data-i18n-orig')) el.setAttribute('data-i18n-orig', t);
+            el.textContent = IT_DICT[t];
+          }
+        });
+        document.querySelectorAll('[aria-label]').forEach(function(el){
+          var current = el.getAttribute('aria-label');
+          if (IT_ATTR_DICT['aria-label'].hasOwnProperty(current)) {
+            if (!el.hasAttribute('data-i18n-aria-orig')) el.setAttribute('data-i18n-aria-orig', current);
+            el.setAttribute('aria-label', IT_ATTR_DICT['aria-label'][current]);
+          }
+        });
+        document.documentElement.setAttribute('lang', 'it');
+      } else {
+        var origEls = document.querySelectorAll('[data-i18n-orig]');
+        origEls.forEach(function(el){
+          el.textContent = el.getAttribute('data-i18n-orig');
+        });
+        document.querySelectorAll('[data-i18n-aria-orig]').forEach(function(el){
+          el.setAttribute('aria-label', el.getAttribute('data-i18n-aria-orig'));
+        });
+        document.documentElement.setAttribute('lang', 'en');
+      }
+      var toggle = document.getElementById('lang-toggle');
+      if (toggle) toggle.textContent = (l === 'it') ? 'EN' : 'IT';
+      Analytics.track('page_view', { path: location.pathname, messaging_variant: key, language: l, browser_language: browserLang });
+    }
+
+    document.addEventListener('DOMContentLoaded', function(){
+      setLang(lang);
+      var toggle = document.getElementById('lang-toggle');
+      if (toggle) {
+        toggle.addEventListener('click', function(){
+          setLang(lang === 'it' ? 'en' : 'it');
+        });
+      }
+    });
+  })();
+
+  /* ---------------- Waitlist submission service adapter ----------------
+     PRODUCTION INTEGRATION POINT — Google Apps Script backend.
+     WAITLIST_CONFIG.endpoint must point at the deployed Apps Script Web
+     App /exec URL (see ownership-os-gas/README.md — "Deploy come Web App").
+     e.g. 'https://script.google.com/macros/s/AKfycb.../exec'
+
+     IMPORTANT — two things that differ from a normal REST API, both
+     required by how Apps Script Web Apps work:
+       1. The body is sent as text/plain (not application/json). Apps
+          Script Web Apps don't handle the CORS preflight (OPTIONS) that
+          browsers send automatically for JSON requests; text/plain is a
+          "simple request" so no preflight happens, and the script still
+          parses it as JSON server-side (see doPost in Code.gs).
+       2. Apps Script Web Apps ALWAYS respond with HTTP 200, even for
+          application errors (duplicate email, validation, etc.) — there
+          is no way to set a custom status code. Success/failure is
+          therefore read from the JSON body's `ok` / `error.code` fields,
+          never from the HTTP status.
+
+     Until endpoint is set to a real URL, this adapter intentionally
+     REJECTS every submission instead of faking a success — the UI will
+     surface an honest "not connected yet" state rather than telling a
+     real visitor they're on the list when they are not. */
+  var WAITLIST_CONFIG = {
+    endpoint: 'https://script.google.com/macros/s/AKfycbz23vQZbcrq3MpRPvdItdnKDlNtG7CUK2iTW_-CgrdDcqB6tapv0sS2GlVue1GvMWowqw/exec'
+  };
+
+  function submitWaitlist(email, attributionData, validationData){
+    if (!WAITLIST_CONFIG.endpoint){
+      return Promise.reject(new Error('waitlist_not_configured'));
+    }
+
+    var controller = ('AbortController' in window) ? new AbortController() : null;
+    var timeoutId = controller ? setTimeout(function(){ controller.abort(); }, 10000) : null;
+
+    var payload = {
+      email: email,
+      attribution: attributionData,
+      validation: validationData || null,
+      originPage: location.href,
+      userAgent: navigator.userAgent /* Apps Script can't read this server-side, so we send it */
+    };
+
+    return fetch(WAITLIST_CONFIG.endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' } /* avoids CORS preflight, see note above */,
+      body: JSON.stringify(payload),
+      signal: controller ? controller.signal : undefined
+    }).then(function(res){
+      return res.json().catch(function(){ return null; }).then(function(json){
+        if (json && json.ok){ return json; }
+        var code = (json && json.error && json.error.code) || 'server_error';
+        var err = new Error(code);
+        err.serverMessage = json && json.error && json.error.message;
+        throw err;
+      });
+    }).catch(function(err){
+      if (err && err.name === 'AbortError'){ throw new Error('timeout'); }
+      throw err;
+    }).finally(function(){
+      if (timeoutId) clearTimeout(timeoutId);
+    });
+  }
+
+  /* ---------------- Unsubscribe ----------------
+     Stesso endpoint della waitlist, con ?action=unsubscribe in query
+     string (il backend lo instrada prima di provare a leggere il body
+     come iscrizione — vedi doPost in Code.gs).
+
+     token è opzionale: assente per la chiamata "dal sito" (pulsante
+     Disiscriviti visto da un dispositivo già riconosciuto come
+     "Registrato" — vedi applyStoredWaitlistState), presente quando la
+     chiamata arriva dal flusso "link nell'email" (vedi
+     handleEmailUnsubscribeLink più sotto), dove email e token arrivano
+     dalla query string del link e vengono qui ri-inoltrati al backend
+     SEMPRE tramite una fetch() in background: la barra indirizzi del
+     browser resta sempre su questo dominio, non viene mai fatta una
+     navigazione diretta verso l'URL di Apps Script. */
+  function submitUnsubscribe(email, token){
+    if (!WAITLIST_CONFIG.endpoint){
+      return Promise.reject(new Error('waitlist_not_configured'));
+    }
+
+    var controller = ('AbortController' in window) ? new AbortController() : null;
+    var timeoutId = controller ? setTimeout(function(){ controller.abort(); }, 10000) : null;
+
+    var url = WAITLIST_CONFIG.endpoint + '?action=unsubscribe';
+    if (token){
+      url += '&email=' + encodeURIComponent(email) + '&token=' + encodeURIComponent(token);
+    }
+
+    return fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ email: email }),
+      signal: controller ? controller.signal : undefined
+    }).then(function(res){
+      return res.json().catch(function(){ return null; }).then(function(json){
+        if (json && json.ok){ return json; }
+        var code = (json && json.error && json.error.code) || 'server_error';
+        var err = new Error(code);
+        err.serverMessage = json && json.error && json.error.message;
+        throw err;
+      });
+    }).catch(function(err){
+      if (err && err.name === 'AbortError'){ throw new Error('timeout'); }
+      throw err;
+    }).finally(function(){
+      if (timeoutId) clearTimeout(timeoutId);
+    });
+  }
+
+  /* ---------------- Check registration (riconciliazione stato locale) ----------------
+     GET, nessun body: chiamata leggera fatta al caricamento della pagina
+     solo quando lo stato locale dice "già registrato", per confermarlo
+     ancora vero lato foglio. Fallisce in modo silenzioso (Promise
+     risolta con null) — un errore di rete qui non deve mai far perdere
+     lo stato "Registrato" a un utente che lo è ancora davvero. */
+  function submitCheckRegistration(email){
+    if (!WAITLIST_CONFIG.endpoint || !email) return Promise.resolve(null);
+    var url = WAITLIST_CONFIG.endpoint + '?action=check_registration&email=' + encodeURIComponent(email);
+    return fetch(url, { method: 'GET' }).then(function(res){
+      return res.json();
+    }).catch(function(){ return null; });
+  }
+
+  /* ---------------- UTM / attribution capture ---------------- */
+  function getAttribution(){
+    var params = new URLSearchParams(location.search);
+    var keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
+    var out = {};
+    keys.forEach(function(k){ if(params.get(k)) out[k] = params.get(k); });
+    return out;
+  }
+  var attribution = getAttribution();
+
+  /* ---------------- Header scroll state ---------------- */
+  var header = document.getElementById('site-header');
+  var onScroll = function(){
+    if (window.scrollY > 30) header.classList.add('scrolled');
+    else header.classList.remove('scrolled');
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* ---------------- Mobile navigation drawer ---------------- */
+  var menuToggle = document.getElementById('menu-toggle');
+  var navLinks = document.getElementById('nav-links');
+  var navScrim = document.getElementById('nav-scrim');
+  function closeMenu(){
+    menuToggle.classList.remove('open');
+    menuToggle.setAttribute('aria-expanded', 'false');
+    menuToggle.setAttribute('aria-label', 'Open menu');
+    navLinks.classList.remove('open');
+    navScrim.classList.remove('open');
+  }
+  function openMenu(){
+    menuToggle.classList.add('open');
+    menuToggle.setAttribute('aria-expanded', 'true');
+    menuToggle.setAttribute('aria-label', 'Close menu');
+    navLinks.classList.add('open');
+    navScrim.classList.add('open');
+  }
+  menuToggle.addEventListener('click', function(){
+    if (navLinks.classList.contains('open')) closeMenu(); else openMenu();
+  });
+  navScrim.addEventListener('click', closeMenu);
+  document.querySelectorAll('[data-nav-link]').forEach(function(a){
+    a.addEventListener('click', closeMenu);
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') closeMenu();
+  });
+
+  /* ---------------- CTA -> scroll to waitlist ---------------- */
+  document.querySelectorAll('[data-cta]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      Analytics.track('hero_cta_click', { source: btn.getAttribute('data-cta') });
+      var target = document.getElementById('waitlist');
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      var input = document.getElementById('email-input');
+      if (input) setTimeout(function(){ input.focus({ preventScroll: true }); }, 500);
+    });
+  });
+
+  /* ---------------- Scroll reveal ---------------- */
+  var revealEls = document.querySelectorAll('.reveal, .frag-item');
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){ e.target.classList.add('in-view'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.16 });
+    revealEls.forEach(function(el){ io.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('in-view'); });
+  }
+
+  /* ---------------- Hero receipt -> record animation ---------------- */
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var stage = document.getElementById('hero-stage');
+  var docEl = document.getElementById('doc-receipt');
+  var scanline = document.getElementById('scanline');
+  var log = document.getElementById('analysis-log');
+  var outputCard = document.getElementById('output-card');
+  var replayBtn = document.getElementById('replay-hero');
+  var heroTimers = [];
+
+  var logMessages = ['Reading receipt','Identifying product','Checking return & warranty','Scanning for price drops'];
+
+  function clearHeroTimers(){ heroTimers.forEach(clearTimeout); heroTimers = []; }
+
+  function runHeroSequence(){
+    clearHeroTimers();
+    docEl.style.opacity = '1'; docEl.style.transform = 'none'; docEl.style.filter = 'none';
+    outputCard.style.opacity = '0'; outputCard.style.transform = 'translateY(14px) scale(.98)';
+    log.style.opacity = '0';
+    scanline.style.opacity = '0'; scanline.style.top = '10%';
+
+    if (reducedMotion){
+      docEl.style.opacity = '0';
+      outputCard.style.opacity = '1'; outputCard.style.transform = 'none';
+      return;
+    }
+
+    heroTimers.push(setTimeout(function(){
+      scanline.style.transition = 'top 1.6s linear, opacity .3s ease';
+      scanline.style.opacity = '1';
+      scanline.style.top = '92%';
+    }, 300));
+
+    logMessages.forEach(function(msg, i){
+      heroTimers.push(setTimeout(function(){
+        log.textContent = msg;
+        log.style.transition = 'opacity .25s ease';
+        log.style.opacity = '1';
+      }, 400 + i * 420));
+    });
+
+    heroTimers.push(setTimeout(function(){
+      log.style.opacity = '0';
+      scanline.style.opacity = '0';
+      docEl.style.transition = 'opacity .5s ease, transform .5s ease, filter .5s ease';
+      docEl.style.opacity = '0';
+      docEl.style.transform = 'scale(.92)';
+      docEl.style.filter = 'blur(2px)';
+    }, 2150));
+
+    heroTimers.push(setTimeout(function(){
+      outputCard.style.opacity = '1';
+      outputCard.style.transform = 'translateY(0) scale(1)';
+      Analytics.track('receipt_demo_complete', { location: 'hero' });
+    }, 2500));
+  }
+
+  if ('IntersectionObserver' in window && stage){
+    var heroIO = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){ runHeroSequence(); heroIO.unobserve(e.target); }
+      });
+    }, { threshold: 0.4 });
+    heroIO.observe(stage);
+  } else if (stage) {
+    runHeroSequence();
+  }
+
+  if (replayBtn){
+    replayBtn.addEventListener('click', function(){
+      Analytics.track('receipt_demo_interaction', { action: 'replay' });
+      runHeroSequence();
+    });
+  }
+
+  /* ---------------- Riconoscimento locale del dispositivo (privacy-friendly) ----------------
+     Obiettivo: dopo un'iscrizione riuscita, un ritorno dallo STESSO
+     browser/dispositivo deve saltare direttamente la schermata post-
+     iscrizione, senza rivedere il form email. NON è fingerprinting: si
+     salva solo un identificatore casuale generato localmente (nessuna
+     caratteristica hardware/software raccolta o combinata), quindi non
+     identifica la persona, solo "questo browser ha già completato
+     un'iscrizione".
+
+     Persistenza a doppio binario — localStorage come fonte primaria,
+     cookie di lunga durata (730 giorni) come rete di sicurezza:
+       - Sopravvive a chiusura pagina/browser, refresh, ritorni a distanza
+         di giorni (entrambi i meccanismi sono persistenti per natura).
+       - Sopravvive alla rimozione dei soli cookie (richiesta esplicita):
+         se l'utente cancella i cookie ma non i dati dei siti, localStorage
+         resta intatto ed è la fonte che viene letta per prima.
+       - Se invece è localStorage ad essere stato svuotato (es. "cancella
+         dati di navigazione" completo) ma il cookie sopravvive ancora,
+         viene letto il cookie e localStorage viene "riparato" per le
+         letture successive.
+     LIMITE ONESTO da sapere: nessuna soluzione client-side non invasiva è
+     a prova di ogni scenario. Una cancellazione completa dei dati di
+     navigazione (cookie + storage insieme), la modalità privata/in
+     incognito, o l'uso di un browser/dispositivo diverso azzerano il
+     riconoscimento: a quel punto il sistema si comporta correttamente
+     come "nuovo utente" e, se l'email è già in lista, sarà comunque il
+     backend a mostrare "That email is already on the list." — quindi non
+     si rischiano MAI doppie iscrizioni, solo, in questi casi limite, di
+     rivedere il form una volta in più. Un riconoscimento a prova di reset
+     completo richiederebbe un vero fingerprinting del dispositivo, che è
+     stato scartato di proposito per motivi di privacy. */
+  var WAITLIST_STORAGE_KEY = 'vx_ownership_os_waitlist_status';
+  var WAITLIST_COOKIE_NAME = 'vx_ownership_os_waitlist';
+  var WAITLIST_COOKIE_MAX_AGE_DAYS = 730;
+
+  function generateDeviceId(){
+    if (window.crypto && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c){
+      var r = Math.random() * 16 | 0;
+      var v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
+  function readLocalWaitlistStatus(){
+    try {
+      var raw = localStorage.getItem(WAITLIST_STORAGE_KEY);
+      if (!raw) return null;
+      var parsed = JSON.parse(raw);
+      return (parsed && parsed.joined === true) ? parsed : null;
+    } catch (e){ return null; }
+  }
+
+  function readCookieWaitlistStatus(){
+    try {
+      var match = document.cookie.match(new RegExp('(?:^|; )' + WAITLIST_COOKIE_NAME + '=([^;]*)'));
+      if (!match) return null;
+      var parsed = JSON.parse(decodeURIComponent(match[1]));
+      return (parsed && parsed.joined === true) ? parsed : null;
+    } catch (e){ return null; }
+  }
+
+  function writeLocalWaitlistStatus(data){
+    try { localStorage.setItem(WAITLIST_STORAGE_KEY, JSON.stringify(data)); } catch (e){ /* storage non disponibile: degradazione silenziosa */ }
+  }
+
+  function writeCookieWaitlistStatus(data){
+    try {
+      var maxAgeSeconds = WAITLIST_COOKIE_MAX_AGE_DAYS * 24 * 60 * 60;
+      document.cookie = WAITLIST_COOKIE_NAME + '=' + encodeURIComponent(JSON.stringify(data)) +
+        '; max-age=' + maxAgeSeconds + '; path=/; SameSite=Lax';
+    } catch (e){ /* cookie non disponibile: degradazione silenziosa, resta localStorage */ }
+  }
+
+  function getWaitlistStatus(){
+    var local = readLocalWaitlistStatus();
+    if (local) return local;
+    var cookie = readCookieWaitlistStatus();
+    if (cookie){
+      writeLocalWaitlistStatus(cookie); // ripara localStorage se solo i cookie sono sopravvissuti
+      return cookie;
+    }
+    return null;
+  }
+
+  // IMPORTANTE: va chiamata SOLO dopo una risposta positiva del backend,
+  // mai in modo ottimistico prima dell'invio — un errore di rete o un
+  // fallimento non devono mai far risultare l'utente come già iscritto.
+  // L'email viene salvata insieme al deviceId (oltre che per il
+  // riconoscimento del dispositivo) perché il pulsante "Disiscriviti"
+  // mostrato al ritorno deve poter chiamare il backend senza chiedere di
+  // nuovo l'indirizzo: è lo stesso indirizzo che l'utente ha già digitato
+  // per iscriversi, non un dato aggiuntivo raccolto.
+  //
+  // unsubToken viene salvato allo stesso modo: è quello restituito dal
+  // backend nella risposta di iscrizione (mai richiedibile a parte in un
+  // secondo momento — vedi commento su submitToWaitlist in Code.gs), ed è
+  // ciò che autentica il pulsante "Disiscriviti" sul sito esattamente
+  // come il link ricevuto via email. Senza, il backend rifiuta la
+  // richiesta (token ora sempre obbligatorio).
+  function markWaitlistJoined(email, unsubToken){
+    var existing = getWaitlistStatus();
+    var data = {
+      deviceId: (existing && existing.deviceId) || generateDeviceId(),
+      joined: true,
+      joinedAt: new Date().toISOString(),
+      email: email || (existing && existing.email) || '',
+      unsubToken: unsubToken || (existing && existing.unsubToken) || ''
+    };
+    writeLocalWaitlistStatus(data);
+    writeCookieWaitlistStatus(data);
+  }
+
+  function clearWaitlistStatus(){
+    try { localStorage.removeItem(WAITLIST_STORAGE_KEY); } catch (e){ /* storage non disponibile: degradazione silenziosa */ }
+    try { document.cookie = WAITLIST_COOKIE_NAME + '=; max-age=0; path=/; SameSite=Lax'; } catch (e){ /* cookie non disponibile: degradazione silenziosa */ }
+  }
+
+  /* ---------------- Waitlist form ---------------- */
+  var form = document.getElementById('waitlist-form');
+  var emailInput = document.getElementById('email-input');
+  var submitBtn = document.getElementById('submit-btn');
+  var errorEl = document.getElementById('wl-error');
+  var vqWrap = document.getElementById('vq-wrap');
+  var formStage = document.getElementById('form-stage');
+  var successStage = document.getElementById('success-stage');
+  var formStarted = false;
+  // Email dell'utente attualmente riconosciuto come iscritto su questo
+  // dispositivo — alimentata sia al submit riuscito del form sia dallo
+  // stato salvato al ritorno; è quella che il pulsante "Disiscriviti" usa.
+  var currentWaitlistEmail = '';
+  // Token di disiscrizione per currentWaitlistEmail — obbligatorio lato
+  // backend per completare una disiscrizione (vedi handleUnsubscribeRequest
+  // in Code.gs). Assente per gli stati salvati PRIMA di questa modifica
+  // (utenti iscritti con una versione precedente del sito): in quel caso
+  // il pulsante "Disiscriviti" sul sito non può completare l'operazione
+  // da solo e reindirizza l'utente al link presente nell'email di
+  // conferma già ricevuta, che resta sempre valido.
+  var currentWaitlistToken = '';
+
+  // Ritorno dallo stesso dispositivo dopo un'iscrizione riuscita (Fase 2):
+  // salta direttamente la schermata post-iscrizione, nessun form email —
+  // ed è qui che compare anche il pulsante "Disiscriviti", visto che
+  // questo stato coincide con "Registrato".
+  (function applyStoredWaitlistState(){
+    var status = getWaitlistStatus();
+    if (status && status.joined){
+      currentWaitlistEmail = status.email || '';
+      currentWaitlistToken = status.unsubToken || '';
+      formStage.style.display = 'none';
+      successStage.classList.add('active');
+      Analytics.track('waitlist_returning_device_recognized', {});
+
+      // Riconciliazione col backend: localStorage/cookie sopravvivono a
+      // una rimozione manuale della riga sul foglio o a una disiscrizione
+      // fatta da un altro dispositivo — senza questo controllo il
+      // dispositivo continuerebbe a risultare "Registrato" per sempre,
+      // anche quando l'email non è più nel foglio. Se manca l'email nello
+      // stato salvato (dati scritti prima di questa versione) il
+      // controllo viene saltato: non c'è nulla da verificare lato server.
+      if (currentWaitlistEmail){
+        submitCheckRegistration(currentWaitlistEmail).then(function(json){
+          if (json && json.ok && json.registered === false){
+            clearWaitlistStatus();
+            currentWaitlistEmail = '';
+            currentWaitlistToken = '';
+            successStage.classList.remove('active');
+            formStage.style.display = '';
+            Analytics.track('waitlist_stale_local_state_cleared', {});
+          }
+        });
+      }
+    }
+  })();
+
+  /* ---------------- Unsubscribe dal link nell'email ----------------
+     Il link "Unsubscribe" nel corpo dell'email (e la pagina di destinazione
+     dell'header List-Unsubscribe per i client che non fanno il one-click)
+     puntano a questo stesso dominio con ?email=...&token=... in query
+     string — MAI a script.google.com. Questa funzione intercetta quei
+     parametri al caricamento della pagina, mostra una schermata di
+     conferma dedicata e, solo al clic su "Confirm unsubscribe", invia la
+     richiesta al backend Apps Script tramite fetch() in background: la
+     barra indirizzi resta sempre su vorneaux.com, l'utente non vede mai
+     Apps Script né il suo redirect interno su script.googleusercontent.com.
+     Ha priorità sullo stato "dispositivo già registrato": un link
+     ricevuto via email arriva quasi sempre su un contesto/dispositivo
+     diverso da quello con cui si era fatta l'iscrizione. */
+  var emailUnsubStage = document.getElementById('email-unsub-stage');
+  var emailUnsubEmailEl = document.getElementById('email-unsub-email');
+  var emailUnsubConfirmBox = document.getElementById('email-unsub-confirm');
+  var emailUnsubInvalidEl = document.getElementById('email-unsub-invalid');
+  var emailUnsubConfirmBtn = document.getElementById('email-unsub-confirm-btn');
+  var emailUnsubCancelBtn = document.getElementById('email-unsub-cancel-btn');
+  var emailUnsubErrorEl = document.getElementById('email-unsub-error');
+  // Presa direttamente via getElementById (non tramite la variabile
+  // unsubDoneStage, dichiarata più sotto nel file): questa IIFE gira
+  // subito, prima che quella riga venga eseguita.
+  var unsubDoneStageEl = document.getElementById('unsub-done-stage');
+
+  (function handleEmailUnsubscribeLink(){
+    var params = new URLSearchParams(location.search);
+    var linkEmail = (params.get('email') || '').trim();
+    var linkToken = (params.get('token') || '').trim();
+
+    if (!linkEmail) return; // nessun parametro di disiscrizione: pagina normale
+
+    formStage.style.display = 'none';
+    successStage.classList.remove('active');
+    unsubDoneStageEl.classList.remove('active');
+    emailUnsubStage.classList.add('active');
+    Analytics.track('email_unsubscribe_link_opened', {});
+
+    // Scroll automatico, fluido, fino alla sezione Waiting List — lo
+    // stesso pattern già usato per i CTA "Get Early Access" (vedi sotto
+    // "CTA -> scroll to waitlist"), così il comportamento resta coerente
+    // col resto del sito. Aspetta il "load" completo della pagina (non
+    // solo il DOM) prima di calcolare la posizione di destinazione: se
+    // ci sono immagini sopra la piega ancora in caricamento, la pagina
+    // può "spostarsi" sotto di esse e far atterrare lo scroll nel punto
+    // sbagliato. Rispetta prefers-reduced-motion: chi ha disattivato le
+    // animazioni nel sistema operativo ottiene uno scroll istantaneo, non
+    // "smooth".
+    var waitlistSection = document.getElementById('waitlist');
+    if (waitlistSection){
+      var scrollToWaitlist = function(){
+        var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        waitlistSection.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+      };
+      if (document.readyState === 'complete'){
+        setTimeout(scrollToWaitlist, 30);
+      } else {
+        window.addEventListener('load', function(){ setTimeout(scrollToWaitlist, 30); }, { once: true });
+      }
+    }
+
+    if (!linkToken || !isValidEmail(linkEmail)){
+      // Link malformato lato client (nessun token, o email palesemente
+      // non valida): non ha senso nemmeno provare la richiesta — il
+      // token viene comunque rivalidato lato server ad ogni chiamata,
+      // questo è solo per non mostrare un pulsante "Confirm" fuorviante
+      // su un link chiaramente rotto.
+      emailUnsubConfirmBox.classList.remove('active');
+      emailUnsubInvalidEl.style.display = '';
+      return;
+    }
+
+    emailUnsubEmailEl.textContent = linkEmail;
+
+    // Rimuove email/token dalla barra indirizzi non appena la richiesta
+    // è stata "presa in carico" da questa schermata: un refresh accidentale
+    // della pagina a questo punto non deve ripresentare il prompt né,
+    // soprattutto, ritentare automaticamente nulla — l'azione resta
+    // sempre e solo quella scelta esplicitamente dall'utente qui sotto.
+    if (window.history && window.history.replaceState){
+      window.history.replaceState(null, '', location.pathname + location.hash);
+    }
+
+    // "Lascia tutto invariato": nessuna chiamata al backend, nessuna
+    // modifica di stato. Riporta semplicemente la pagina a come si
+    // presenterebbe normalmente — form di iscrizione, oppure la schermata
+    // "Sei in lista" se questo stesso dispositivo risultava già
+    // registrato con la stessa email — senza un reload completo.
+    if (emailUnsubCancelBtn){
+      emailUnsubCancelBtn.addEventListener('click', function(){
+        Analytics.track('email_unsubscribe_cancelled', {});
+        emailUnsubStage.classList.remove('active');
+        if (currentWaitlistEmail && currentWaitlistEmail.toLowerCase() === linkEmail.toLowerCase()){
+          successStage.classList.add('active');
+        } else {
+          formStage.style.display = '';
+        }
+      });
+    }
+
+    if (emailUnsubConfirmBtn){
+      emailUnsubConfirmBtn.addEventListener('click', function(){
+        emailUnsubErrorEl.textContent = '';
+        emailUnsubConfirmBtn.disabled = true;
+        emailUnsubConfirmBtn.textContent = T('Unsubscribing...');
+        Analytics.track('email_unsubscribe_requested', {});
+
+        submitUnsubscribe(linkEmail, linkToken).then(function(){
+          emailUnsubStage.classList.remove('active');
+          unsubDoneStageEl.classList.add('active');
+          // Se questo stesso dispositivo risultava "Registrato" con la
+          // stessa email, ripulisce anche lo stato locale — altrimenti,
+          // tornando sul sito, apparirebbe ancora come iscritto.
+          if (currentWaitlistEmail && currentWaitlistEmail.toLowerCase() === linkEmail.toLowerCase()){
+            clearWaitlistStatus();
+            currentWaitlistEmail = '';
+            currentWaitlistToken = '';
+          }
+          Analytics.track('email_unsubscribe_success', {});
+        }).catch(function(err){
+          emailUnsubConfirmBtn.disabled = false;
+          emailUnsubConfirmBtn.textContent = T('Confirm unsubscribe');
+          var reason = err && err.message;
+          if (reason === 'unauthorized'){
+            emailUnsubConfirmBox.classList.remove('active');
+            emailUnsubInvalidEl.style.display = '';
+          } else if (reason === 'timeout'){
+            emailUnsubErrorEl.textContent = T("That took too long — please check your connection and try again.");
+          } else if (reason === 'rate_limited'){
+            emailUnsubErrorEl.textContent = T("Too many attempts — please wait a moment and try again.");
+          } else {
+            emailUnsubErrorEl.textContent = T("Something didn't work — please try again.");
+          }
+          Analytics.track('email_unsubscribe_error', { reason: reason || 'unknown' });
+        });
+      });
+    }
+  })();
+
+  function isValidEmail(v){
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  }
+
+  emailInput.addEventListener('input', function(){
+    if (!formStarted){
+      formStarted = true;
+      Analytics.track('waitlist_form_start', {});
+    }
+    emailInput.classList.remove('error');
+    errorEl.textContent = '';
+  });
+
+  form.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var value = emailInput.value.trim();
+
+    if (!value){
+      errorEl.textContent = T('Enter your email to join the list.');
+      emailInput.classList.add('error');
+      emailInput.focus();
+      return;
+    }
+    if (!isValidEmail(value)){
+      errorEl.textContent = T("That email doesn't look quite right.");
+      emailInput.classList.add('error');
+      emailInput.focus();
+      return;
+    }
+
+    errorEl.textContent = '';
+    submitBtn.textContent = T('Joining...');
+    submitBtn.disabled = true;
+    Analytics.track('waitlist_signup', { email_domain: value.split('@')[1] || '', attribution: attribution });
+
+    submitWaitlist(value, attribution).then(function(json){
+      markWaitlistJoined(value, json && json.unsubToken); // solo dopo conferma positiva del backend, mai prima
+      currentWaitlistEmail = value;
+      currentWaitlistToken = (json && json.unsubToken) || '';
+      submitBtn.textContent = T("You're in ✓");
+      submitBtn.disabled = true;
+      emailInput.disabled = true;
+      vqWrap.classList.add('active');
+      Analytics.track('waitlist_success', {});
+    }).catch(function(err){
+      submitBtn.textContent = T('Get Early Access');
+      submitBtn.disabled = false;
+      var reason = err && err.message;
+      if (reason === 'duplicate'){
+        errorEl.textContent = T("That email is already on the list.");
+      } else if (reason === 'waitlist_not_configured'){
+        // Honest dev-facing state: no backend is wired up yet, so we do not pretend to succeed.
+        errorEl.textContent = T("Waitlist isn't connected yet — set WAITLIST_CONFIG.endpoint to go live.");
+        Analytics.track('waitlist_backend_not_configured', {});
+      } else if (reason === 'timeout'){
+        errorEl.textContent = T("That took too long — please check your connection and try again.");
+      } else if (reason === 'rate_limited'){
+        errorEl.textContent = T("Too many attempts — please wait a moment and try again.");
+      } else if (reason === 'validation_error'){
+        errorEl.textContent = (err && err.serverMessage) || T("Please double-check your email address.");
+      } else if (reason === 'email_not_allowed'){
+        errorEl.textContent = T("Please use a valid business or supported email address.");
+      } else {
+        errorEl.textContent = T("Something didn't work — please try again.");
+      }
+      Analytics.track('waitlist_error', { reason: reason || 'unknown' });
+    });
+  });
+
+  /* ---------------- Validation questions ---------------- */
+  document.querySelectorAll('.vq-options').forEach(function(group){
+    group.addEventListener('click', function(ev){
+      var opt = ev.target.closest('.vq-opt');
+      if (!opt) return;
+      group.querySelectorAll('.vq-opt').forEach(function(o){ o.classList.remove('selected'); o.setAttribute('aria-pressed', 'false'); });
+      opt.classList.add('selected');
+      opt.setAttribute('aria-pressed', 'true');
+      Analytics.track('validation_question_answered', {
+        question: group.getAttribute('data-group'),
+        answer: opt.textContent.trim()
+      });
+      maybeShowSuccess();
+    });
+  });
+
+  var vqSkip = document.getElementById('vq-skip');
+  if (vqSkip){
+    vqSkip.addEventListener('click', function(){ showSuccess(); });
+  }
+
+  function allAnswered(){
+    var groups = document.querySelectorAll('.vq-options');
+    for (var i=0;i<groups.length;i++){
+      if (!groups[i].querySelector('.selected')) return false;
+    }
+    return true;
+  }
+  function maybeShowSuccess(){
+    if (allAnswered()) setTimeout(showSuccess, 350);
+  }
+  function showSuccess(){
+    formStage.style.display = 'none';
+    successStage.classList.add('active');
+    Analytics.track('post_demo_cta_click', { flow: 'waitlist_complete' });
+  }
+
+  /* ---------------- Unsubscribe UI ---------------- */
+  var unsubOpenBtn = document.getElementById('unsub-open-btn');
+  var unsubConfirmBox = document.getElementById('unsub-confirm');
+  var unsubConfirmBtn = document.getElementById('unsub-confirm-btn');
+  var unsubCancelBtn = document.getElementById('unsub-cancel-btn');
+  var unsubErrorEl = document.getElementById('unsub-error');
+  var unsubDoneStage = document.getElementById('unsub-done-stage');
+
+  if (unsubOpenBtn){
+    unsubOpenBtn.addEventListener('click', function(){
+      unsubConfirmBox.classList.add('active');
+      unsubOpenBtn.style.display = 'none';
+      Analytics.track('unsubscribe_prompt_opened', {});
+    });
+  }
+  if (unsubCancelBtn){
+    unsubCancelBtn.addEventListener('click', function(){
+      unsubConfirmBox.classList.remove('active');
+      unsubOpenBtn.style.display = '';
+      unsubErrorEl.textContent = '';
+    });
+  }
+  if (unsubConfirmBtn){
+    unsubConfirmBtn.addEventListener('click', function(){
+      if (!currentWaitlistEmail){
+        unsubErrorEl.textContent = T("We couldn't find your email on this device — please contact us to unsubscribe.");
+        return;
+      }
+      // Stato salvato prima dell'introduzione del token obbligatorio (o
+      // storage manomesso/parziale): il backend non accetterebbe comunque
+      // la richiesta senza token, quindi non proviamo nemmeno — indirizza
+      // invece al percorso che funziona sempre, il link nell'ultima email
+      // ricevuta da VORNEAUX, che porta a questa stessa pagina già con il
+      // token corretto precompilato.
+      if (!currentWaitlistToken){
+        unsubErrorEl.textContent = T("For security, please use the \u201cUnsubscribe\u201d link from your latest VORNEAUX email to complete this — it'll bring you right back here.");
+        Analytics.track('unsubscribe_missing_local_token', {});
+        return;
+      }
+      unsubErrorEl.textContent = '';
+      unsubConfirmBtn.disabled = true;
+      unsubConfirmBtn.textContent = T('Unsubscribing...');
+      Analytics.track('unsubscribe_requested', {});
+
+      submitUnsubscribe(currentWaitlistEmail, currentWaitlistToken).then(function(){
+        clearWaitlistStatus();
+        currentWaitlistEmail = '';
+        currentWaitlistToken = '';
+        successStage.classList.remove('active');
+        unsubDoneStage.classList.add('active');
+        Analytics.track('unsubscribe_success', {});
+      }).catch(function(err){
+        unsubConfirmBtn.disabled = false;
+        unsubConfirmBtn.textContent = T('Confirm unsubscribe');
+        var reason = err && err.message;
+        if (reason === 'timeout'){
+          unsubErrorEl.textContent = T("That took too long — please check your connection and try again.");
+        } else if (reason === 'rate_limited'){
+          unsubErrorEl.textContent = T("Too many attempts — please wait a moment and try again.");
+        } else {
+          unsubErrorEl.textContent = T("Something didn't work — please try again.");
+        }
+        Analytics.track('unsubscribe_error', { reason: reason || 'unknown' });
+      });
+    });
+  }
+
+  /* ---------------- FAQ accordion ---------------- */
+  document.querySelectorAll('.faq-item').forEach(function(item){
+    var q = item.querySelector('.faq-q');
+    q.addEventListener('click', function(){
+      var wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(function(i){
+        i.classList.remove('open');
+        i.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+      });
+      if (!wasOpen){
+        item.classList.add('open');
+        q.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+})();
+</script>
 
 </body>
 </html>
