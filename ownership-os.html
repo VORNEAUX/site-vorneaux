@@ -1404,7 +1404,10 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
       attribution: attributionData,
       validation: validationData || null,
       originPage: location.href,
-      userAgent: navigator.userAgent /* Apps Script can't read this server-side, so we send it */
+      userAgent: navigator.userAgent, /* Apps Script can't read this server-side, so we send it */
+      lang: document.documentElement.getAttribute('lang') || 'en' /* current site language, so the
+        confirmation email — and any later unsubscribe email/page — is sent in the same language
+        the user had selected when they signed up, see Code.gs EMAIL_CONFIG / sendConfirmationEmail */
     };
 
     return fetch(WAITLIST_CONFIG.endpoint, {
@@ -1450,7 +1453,8 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
     var controller = ('AbortController' in window) ? new AbortController() : null;
     var timeoutId = controller ? setTimeout(function(){ controller.abort(); }, 10000) : null;
 
-    var url = WAITLIST_CONFIG.endpoint + '?action=unsubscribe';
+    var lang = document.documentElement.getAttribute('lang') || 'en';
+    var url = WAITLIST_CONFIG.endpoint + '?action=unsubscribe&lang=' + encodeURIComponent(lang);
     if (token){
       url += '&email=' + encodeURIComponent(email) + '&token=' + encodeURIComponent(token);
     }
@@ -1458,7 +1462,7 @@ footer{ border-top:1px solid var(--line); padding: 44px 0; }
     return fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ email: email }),
+      body: JSON.stringify({ email: email, lang: lang }),
       signal: controller ? controller.signal : undefined
     }).then(function(res){
       return res.json().catch(function(){ return null; }).then(function(json){
