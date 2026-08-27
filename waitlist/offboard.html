@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en" id="htmlRoot">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title id="pageTitle">OFFBOARD — Cancel anything. Without giving up your bank account.</title>
+<meta id="metaDescription" name="description" content="OFFBOARD finds every subscription you forgot about and writes the cancellation for you — no bank connection, no percentage fees. Join the waitlist.">
+
+<!-- Open Graph -->
+<meta property="og:title" content="OFFBOARD — Cancel anything, without giving up your bank account.">
+<meta property="og:description" content="You're still paying for things you meant to leave. OFFBOARD finds them and gets you out — no bank access, no cut of your savings.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ink:#12151a; --ink-2:#191d24; --panel:#1b2027; --panel-2:#20262f; --line-dark:rgba(255,255,255,0.08);
+    --amber:#f2a93b; --amber-dim:#c98a2d; --amber-soft:rgba(242,169,59,0.14);
+    --paper:#f6f1e7; --paper-2:#efe8d9; --paper-line:#ded4bc;
+    --ink-soft:#c9cfd8; --slate:#8b93a1; --slate-on-paper:#756d5c;
+    --mint:#5fbfa0; --coral:#e2685a;
+    --display:'Space Grotesk', system-ui, sans-serif;
+    --body:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+    --maxw:1180px;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{ font-family:var(--body); background:var(--ink); color:var(--ink-soft); -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  img,svg{ display:block; max-width:100%; }
+  a{ color:inherit; text-decoration:none; }
+  ::selection{ background:var(--amber); color:var(--ink); }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 28px; }
+  section{ position:relative; }
+  h1,h2,h3{ font-family:var(--display); letter-spacing:-0.01em; }
+  .eyebrow{ font-family:var(--mono); font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--amber); display:inline-flex; align-items:center; gap:10px; }
+  .eyebrow::before{ content:""; width:7px; height:7px; background:var(--amber); border-radius:1px; display:inline-block; }
+
+  /* NAV */
+  .nav{ position:fixed; top:0; left:0; right:0; z-index:100; background:rgba(18,21,26,0.7); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-bottom:1px solid var(--line-dark); }
+  .nav-inner{ max-width:var(--maxw); margin:0 auto; padding:16px 28px; display:flex; align-items:center; justify-content:space-between; }
+  .logo{ font-family:var(--display); font-weight:700; font-size:19px; color:#fff; letter-spacing:-0.01em; display:flex; align-items:center; gap:9px; }
+  .logo .dot{ width:8px; height:8px; background:var(--amber); border-radius:1px; }
+  .logo small{ font-family:var(--mono); font-weight:400; font-size:10px; color:var(--slate); letter-spacing:0.1em; margin-left:2px; }
+  .nav-right{ display:flex; align-items:center; gap:14px; }
+  .nav-cta{ font-family:var(--body); font-weight:600; font-size:13.5px; background:var(--amber); color:var(--ink); padding:10px 20px; border-radius:100px; white-space:nowrap; }
+  .nav-cta:hover{ background:#fff; }
+
+  /* LANGUAGE SWITCHER */
+  .lang-switch{ position:relative; }
+  .lang-btn{ display:flex; align-items:center; gap:6px; background:transparent; border:1px solid var(--line-dark); color:var(--ink-soft); font-family:var(--mono); font-size:12px; letter-spacing:0.06em; padding:8px 12px; border-radius:100px; cursor:pointer; text-transform:uppercase; transition:border-color .18s ease, color .18s ease; }
+  .lang-btn:hover{ border-color:var(--amber); color:#fff; }
+  .lang-btn svg{ width:11px; height:11px; transition:transform .2s ease; }
+  .lang-btn[aria-expanded="true"] svg{ transform:rotate(180deg); }
+  .lang-menu{ position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%); background:var(--panel); border:1px solid var(--line-dark); border-radius:12px; padding:6px; min-width:160px; list-style:none; box-shadow:0 20px 40px -20px rgba(0,0,0,0.6); z-index:200; }
+  .lang-menu[hidden]{ display:none; }
+  .lang-option{ display:flex; align-items:center; justify-content:space-between; width:100%; background:none; border:none; color:var(--ink-soft); font-family:var(--body); font-size:13.5px; padding:9px 12px; border-radius:8px; cursor:pointer; text-align:left; }
+  .lang-option:hover, .lang-option:focus-visible{ background:var(--panel-2); color:#fff; }
+  .lang-option.active{ color:var(--amber); }
+  .lang-option .code{ font-family:var(--mono); font-size:11px; color:var(--slate); }
+
+  /* BUTTONS */
+  .btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:var(--body); font-weight:600; font-size:15px; padding:16px 30px; border-radius:100px; border:none; cursor:pointer; transition:transform .18s ease, background .18s ease; }
+  .btn-primary{ background:var(--amber); color:var(--ink); }
+  .btn-primary:hover{ background:#fff; transform:translateY(-1px); }
+  .btn-primary:active{ transform:translateY(0); }
+  .btn svg{ width:16px; height:16px; }
+  .btn:disabled{ opacity:.6; cursor:default; transform:none; }
+
+  /* HERO */
+  .hero{ background: radial-gradient(ellipse 900px 500px at 15% -10%, rgba(242,169,59,0.10), transparent 60%), radial-gradient(ellipse 700px 500px at 100% 10%, rgba(95,191,160,0.06), transparent 55%), var(--ink); padding:168px 0 100px; overflow:hidden; }
+  .hero-grid{ display:grid; grid-template-columns:1.05fr 0.95fr; gap:56px; align-items:center; }
+  .hero h1{ font-size:clamp(34px, 5vw, 58px); line-height:1.06; color:#fff; margin:22px 0 22px; }
+  .hero h1 em{ font-style:normal; color:var(--amber); }
+  .hero p.lead{ font-size:18px; line-height:1.6; color:var(--ink-soft); max-width:520px; margin-bottom:32px; }
+  .hero-actions{ display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+  .trust-line{ font-family:var(--mono); font-size:12.5px; color:var(--slate); display:flex; align-items:center; gap:8px; }
+  .trust-line svg{ width:14px; height:14px; color:var(--mint); flex-shrink:0; }
+  .avatars{ display:flex; align-items:center; margin-top:34px; gap:12px; }
+  .avatars .stack{ display:flex; }
+  .avatars .stack span{ width:30px; height:30px; border-radius:50%; background:var(--panel-2); border:2px solid var(--ink); margin-left:-9px; display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:10px; color:var(--slate); }
+  .avatars .stack span:first-child{ margin-left:0; }
+  .avatars small{ font-family:var(--mono); font-size:12px; color:var(--slate); }
+
+  /* DEPARTURE BOARD */
+  .board{ background:var(--panel); border:1px solid var(--line-dark); border-radius:16px; padding:22px; box-shadow:0 40px 80px -30px rgba(0,0,0,0.6); }
+  .board-head{ display:flex; justify-content:space-between; align-items:center; font-family:var(--mono); font-size:11px; letter-spacing:0.08em; color:var(--slate); text-transform:uppercase; padding:0 4px 14px; border-bottom:1px solid var(--line-dark); margin-bottom:4px; }
+  .board-head .live{ display:flex; align-items:center; gap:6px; color:var(--mint); }
+  .board-head .live i{ width:6px; height:6px; border-radius:50%; background:var(--mint); display:inline-block; animation:pulse 1.8s infinite; }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.35;} }
+  .board-cols{ display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:10px; font-family:var(--mono); font-size:10.5px; letter-spacing:0.08em; color:var(--slate); text-transform:uppercase; padding:10px 12px 6px; }
+  .board-row{ display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:10px; align-items:center; padding:11px 12px; border-radius:8px; font-family:var(--mono); font-size:13px; color:#fff; background:var(--panel-2); margin-bottom:7px; transform-origin:top center; animation:flap .6s cubic-bezier(.2,.9,.3,1) both; }
+  .board-row .r-service{ color:#fff; font-weight:500; }
+  .board-row .r-price{ color:var(--slate); }
+  .board-row .r-status{ display:flex; align-items:center; gap:6px; justify-self:end; }
+  .board-row .r-status.pending{ color:var(--amber); }
+  .board-row .r-status.done{ color:var(--mint); }
+  .board-row .r-status svg{ width:13px; height:13px; }
+  .board-row:nth-child(1){ animation-delay:.15s; } .board-row:nth-child(2){ animation-delay:.35s; } .board-row:nth-child(3){ animation-delay:.55s; } .board-row:nth-child(4){ animation-delay:.75s; }
+  @keyframes flap{ 0%{ transform:rotateX(90deg); opacity:0; } 60%{ transform:rotateX(-8deg); opacity:1; } 100%{ transform:rotateX(0deg); opacity:1; } }
+  .board-total{ display:flex; justify-content:space-between; align-items:baseline; padding:16px 12px 4px; margin-top:6px; border-top:1px dashed var(--line-dark); }
+  .board-total .label{ font-family:var(--mono); font-size:11px; letter-spacing:0.1em; color:var(--slate); text-transform:uppercase; }
+  .board-total .value{ font-family:var(--display); font-size:26px; font-weight:700; color:var(--mint); }
+  .board-total .value small{ font-family:var(--mono); font-size:12px; color:var(--slate); font-weight:400; margin-left:4px; }
+  @media (prefers-reduced-motion:reduce){ .board-row{ animation:none; } .board-head .live i{ animation:none; } }
+
+  /* SECTIONS */
+  .sec{ padding:110px 0; }
+  .sec-dark{ background:var(--ink); }
+  .sec-paper{ background:var(--paper); color:#2a2620; }
+  .sec-paper .eyebrow{ color:var(--amber-dim); }
+  .sec-head{ max-width:640px; margin-bottom:56px; }
+  .sec-head h2{ font-size:clamp(28px,3.6vw,42px); line-height:1.14; margin-top:16px; }
+  .sec-dark .sec-head h2{ color:#fff; }
+  .sec-paper .sec-head h2{ color:#211d16; }
+  .sec-head p{ font-size:16.5px; line-height:1.65; margin-top:16px; color:var(--slate); max-width:560px; }
+  .sec-paper .sec-head p{ color:var(--slate-on-paper); }
+
+  /* TICKETS */
+  .tickets{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+  .ticket{ background:#fff; border:1px solid var(--paper-line); border-radius:14px; padding:26px 24px 24px; position:relative; box-shadow:0 18px 40px -28px rgba(30,25,15,0.35); }
+  .ticket::before{ content:""; position:absolute; left:-9px; top:50%; transform:translateY(-50%); width:18px; height:18px; border-radius:50%; background:var(--paper); border:1px solid var(--paper-line); }
+  .ticket::after{ content:""; position:absolute; right:-9px; top:50%; transform:translateY(-50%); width:18px; height:18px; border-radius:50%; background:var(--paper); border:1px solid var(--paper-line); }
+  .ticket .t-tag{ font-family:var(--mono); font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--coral); margin-bottom:14px; display:inline-block; }
+  .ticket h3{ font-size:18px; color:#211d16; margin-bottom:10px; line-height:1.35; }
+  .ticket p{ font-size:14.5px; line-height:1.6; color:var(--slate-on-paper); }
+  .ticket .t-foot{ margin-top:18px; padding-top:14px; border-top:1px dashed var(--paper-line); font-family:var(--mono); font-size:12px; color:#a89a6f; display:flex; justify-content:space-between; text-transform:uppercase; }
+
+  /* SOLUTION */
+  .solution-grid{ display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center; }
+  .solution-points{ display:flex; flex-direction:column; gap:26px; }
+  .solution-point{ display:flex; gap:16px; }
+  .solution-point .icon{ flex-shrink:0; width:38px; height:38px; border-radius:10px; background:var(--amber-soft); border:1px solid rgba(242,169,59,0.3); display:flex; align-items:center; justify-content:center; }
+  .solution-point .icon svg{ width:18px; height:18px; color:var(--amber); }
+  .solution-point h4{ font-family:var(--display); font-size:16.5px; color:#fff; margin-bottom:6px; }
+  .solution-point p{ font-size:14.5px; line-height:1.6; color:var(--slate); }
+  .receipt-card{ background:var(--panel); border:1px solid var(--line-dark); border-radius:16px; padding:30px; font-family:var(--mono); }
+  .receipt-card .rc-top{ display:flex; justify-content:space-between; font-size:11px; color:var(--slate); text-transform:uppercase; letter-spacing:0.08em; padding-bottom:14px; border-bottom:1px dashed var(--line-dark); }
+  .receipt-line{ display:flex; justify-content:space-between; padding:12px 0; font-size:13.5px; color:var(--ink-soft); border-bottom:1px solid var(--line-dark); }
+  .receipt-line span:last-child{ color:#fff; }
+  .receipt-line.cancelled span:last-child{ color:var(--mint); }
+
+  /* GATES */
+  .gates{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; }
+  .gate{ background:#fff; border:1px solid var(--paper-line); border-radius:14px; padding:30px 26px; }
+  .gate .g-num{ font-family:var(--mono); font-size:12px; letter-spacing:0.1em; color:var(--amber-dim); background:var(--amber-soft); display:inline-block; padding:5px 11px; border-radius:100px; margin-bottom:20px; }
+  .gate h3{ font-size:19px; color:#211d16; margin-bottom:10px; }
+  .gate p{ font-size:14.5px; line-height:1.65; color:var(--slate-on-paper); }
+
+  /* COMPARE */
+  .compare{ display:grid; grid-template-columns:1fr 1fr; border:1px solid var(--line-dark); border-radius:16px; overflow:hidden; }
+  .compare-col{ padding:34px 30px; }
+  .compare-col.old{ background:var(--panel); }
+  .compare-col.new{ background:linear-gradient(180deg, rgba(242,169,59,0.09), rgba(242,169,59,0.02)); border-left:1px solid var(--line-dark); }
+  .compare-col h4{ font-family:var(--mono); font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:var(--slate); margin-bottom:22px; }
+  .compare-col.new h4{ color:var(--amber); }
+  .compare-row{ display:flex; gap:12px; padding:13px 0; border-bottom:1px solid var(--line-dark); font-size:14.5px; }
+  .compare-col.old .compare-row{ color:var(--slate); }
+  .compare-col.new .compare-row{ color:#fff; }
+  .compare-row svg{ width:16px; height:16px; flex-shrink:0; margin-top:2px; }
+  .compare-col.old svg{ color:var(--coral); }
+  .compare-col.new svg{ color:var(--mint); }
+
+  /* RESULT */
+  .result{ background:var(--paper); border-radius:22px; padding:64px 56px; display:grid; grid-template-columns:1.1fr 0.9fr; gap:56px; align-items:center; }
+  .result h2{ font-size:clamp(26px,3.2vw,36px); color:#211d16; line-height:1.2; margin-bottom:18px; }
+  .result p{ font-size:16px; line-height:1.65; color:var(--slate-on-paper); max-width:480px; }
+  .result-stats{ display:flex; gap:34px; margin-top:30px; }
+  .result-stat b{ font-family:var(--display); font-size:32px; color:#211d16; display:block; }
+  .result-stat span{ font-family:var(--mono); font-size:11.5px; color:var(--slate-on-paper); text-transform:uppercase; letter-spacing:0.06em; }
+  .result-visual{ background:#fff; border:1px solid var(--paper-line); border-radius:16px; padding:26px; font-family:var(--mono); font-size:13px; }
+  .result-visual .rv-line{ display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px dashed var(--paper-line); color:#5c5340; }
+  .result-visual .rv-line b{ color:#211d16; }
+  .result-visual .rv-total{ display:flex; justify-content:space-between; padding-top:16px; margin-top:6px; font-family:var(--display); font-size:20px; color:#1b7a5e; font-weight:700; }
+
+  /* WAITLIST */
+  .waitlist{ background: radial-gradient(ellipse 800px 500px at 50% 0%, rgba(242,169,59,0.12), transparent 60%), var(--ink); text-align:center; padding:120px 0 110px; }
+  .waitlist .eyebrow{ justify-content:center; }
+  .waitlist h2{ color:#fff; font-size:clamp(30px,4.6vw,50px); line-height:1.1; margin:20px auto 18px; max-width:760px; }
+  .waitlist p.sub{ font-size:16.5px; color:var(--slate); max-width:520px; margin:0 auto 40px; line-height:1.6; }
+  .waitlist-form{ max-width:480px; margin:0 auto; display:flex; flex-direction:column; gap:12px; }
+  .field-row{ display:flex; gap:10px; }
+  .field-row input[type="email"]{ flex:1; min-width:0; background:var(--panel); border:1px solid var(--line-dark); color:#fff; font-family:var(--body); font-size:15px; padding:15px 18px; border-radius:100px; outline:none; transition:border-color .18s ease; }
+  .field-row input[type="email"]::placeholder{ color:var(--slate); }
+  .field-row input[type="email"]:focus{ border-color:var(--amber); }
+  .field-row .btn{ flex-shrink:0; }
+  .form-note{ font-family:var(--mono); font-size:11.5px; color:var(--slate); margin-top:6px; }
+  .form-error{ font-family:var(--mono); font-size:12.5px; color:var(--coral); min-height:16px; text-align:left; padding-left:6px; }
+  .waitlist-perks{ display:flex; justify-content:center; gap:34px; flex-wrap:wrap; margin-top:46px; font-family:var(--mono); font-size:12px; color:var(--slate); text-transform:uppercase; letter-spacing:0.06em; }
+  .waitlist-perks span{ display:flex; align-items:center; gap:7px; }
+  .waitlist-perks svg{ width:14px; height:14px; color:var(--mint); }
+  .success-box{ display:none; max-width:480px; margin:0 auto; background:var(--panel); border:1px solid rgba(95,191,160,0.35); border-radius:16px; padding:26px; text-align:left; }
+  .success-box.show{ display:block; }
+  .success-box.pending{ border-color:rgba(242,169,59,0.35); }
+  .success-box h4{ font-family:var(--display); color:#fff; font-size:17px; margin-bottom:6px; }
+  .success-box p{ font-family:var(--body); font-size:13.5px; color:var(--slate); }
+  .success-box .num-badge{ font-family:var(--mono); font-size:11px; color:var(--mint); margin-bottom:10px; display:inline-block; letter-spacing:0.08em; }
+  .success-box.pending .num-badge{ color:var(--amber); }
+
+  /* FOOTER */
+  footer{ background:var(--ink); border-top:1px solid var(--line-dark); padding:38px 0; }
+  .footer-inner{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
+  .footer-inner .brand{ font-family:var(--mono); font-size:12px; color:var(--slate); }
+  .footer-inner .brand b{ color:var(--ink-soft); font-weight:500; }
+  .footer-links{ display:flex; gap:22px; font-family:var(--mono); font-size:12px; color:var(--slate); }
+  .footer-links a:hover{ color:var(--amber); }
+
+  /* STICKY MOBILE CTA */
+  .sticky-cta{ position:fixed; bottom:0; left:0; right:0; z-index:90; background:rgba(18,21,26,0.92); backdrop-filter:blur(10px); border-top:1px solid var(--line-dark); padding:12px 18px; display:none; align-items:center; justify-content:space-between; gap:12px; transform:translateY(100%); transition:transform .3s ease; }
+  .sticky-cta.show{ transform:translateY(0); }
+  .sticky-cta span{ font-family:var(--body); font-size:13px; color:var(--ink-soft); }
+  .sticky-cta .btn{ padding:11px 20px; font-size:13.5px; }
+
+  @media (max-width:980px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .board{ order:-1; }
+    .solution-grid{ grid-template-columns:1fr; }
+    .result{ grid-template-columns:1fr; padding:44px 28px; }
+    .compare{ grid-template-columns:1fr; }
+    .compare-col.new{ border-left:none; border-top:1px solid var(--line-dark); }
+  }
+  @media (max-width:760px){
+    .sec{ padding:76px 0; }
+    .hero{ padding:132px 0 70px; }
+    .tickets{ grid-template-columns:1fr; }
+    .gates{ grid-template-columns:1fr; }
+    .board-cols{ display:none; }
+    .avatars{ display:none; }
+    .field-row{ flex-direction:column; }
+    .field-row .btn{ width:100%; }
+    .waitlist-perks{ gap:18px 26px; }
+    .nav-cta{ display:none; }
+    .sticky-cta{ display:flex; }
+  }
+  :focus-visible{ outline:2px solid var(--amber); outline-offset:2px; }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <div class="logo">OFFBOARD <span class="dot"></span><small>by VORNEAUX</small></div>
+    <div class="nav-right">
+      <div class="lang-switch" id="langSwitch">
+        <button type="button" class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false">
+          <span id="langBtnLabel">EN</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <ul class="lang-menu" id="langMenu" role="menu" hidden>
+          <li role="none"><button role="menuitem" class="lang-option" data-lang="en">English <span class="code">EN</span></button></li>
+          <li role="none"><button role="menuitem" class="lang-option" data-lang="it">Italiano <span class="code">IT</span></button></li>
+          <li role="none"><button role="menuitem" class="lang-option" data-lang="es">Español <span class="code">ES</span></button></li>
+          <li role="none"><button role="menuitem" class="lang-option" data-lang="fr">Français <span class="code">FR</span></button></li>
+        </ul>
+      </div>
+      <a href="#waitlist" class="nav-cta" data-i18n="nav.cta">Get Early Access</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow" data-i18n="hero.eyebrow">Subscription exit assistant</span>
+      <h1 data-i18n="hero.h1">You're still checked in<br>on things you <em>meant to leave.</em></h1>
+      <p class="lead" data-i18n="hero.lead">OFFBOARD finds every subscription you forgot about, tells you exactly what it's costing you, and writes the cancellation for you — without ever asking for your bank login.</p>
+      <div class="hero-actions">
+        <a href="#waitlist" class="btn btn-primary">
+          <span data-i18n="nav.cta">Get Early Access</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+      <div class="trust-line" style="margin-top:22px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 2 4 5v6c0 5 3.4 9 8 11 4.6-2 8-6 8-11V5z"/></svg>
+        <span data-i18n="hero.trust">No bank connection required. No percentage of your savings.</span>
+      </div>
+      <div class="avatars">
+        <div class="stack"><span>JM</span><span>RK</span><span>AL</span><span>+</span></div>
+        <small data-i18n="hero.avatars">Joining founders on the early access list</small>
+      </div>
+    </div>
+
+    <div class="board" role="img" aria-label="Animated board showing subscriptions being reviewed and cancelled">
+      <div class="board-head">
+        <span data-i18n="board.title">Your Subscriptions</span>
+        <span class="live"><i></i><span data-i18n="board.live">Live</span></span>
+      </div>
+      <div class="board-cols">
+        <span data-i18n="board.col.service">Service</span><span data-i18n="board.col.billing">Billing</span><span data-i18n="board.col.status">Status</span>
+      </div>
+      <div class="board-row">
+        <span class="r-service">Streamline+</span>
+        <span class="r-price">$22.99/mo</span>
+        <span class="r-status done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg><span data-i18n="board.status.cancelled">Cancelled</span></span>
+      </div>
+      <div class="board-row">
+        <span class="r-service">CloudSuite Pro</span>
+        <span class="r-price">$59.99/mo</span>
+        <span class="r-status done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg><span data-i18n="board.status.cancelled">Cancelled</span></span>
+      </div>
+      <div class="board-row">
+        <span class="r-service">PulseFit Trial</span>
+        <span class="r-price">$0.00 → $14.99</span>
+        <span class="r-status pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span data-i18n="board.status.renews">Renews in 2d</span></span>
+      </div>
+      <div class="board-row">
+        <span class="r-service">Ledger AI</span>
+        <span class="r-price">$18.00/mo</span>
+        <span class="r-status done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg><span data-i18n="board.status.cancelled">Cancelled</span></span>
+      </div>
+      <div class="board-total">
+        <span class="label" data-i18n="board.total.label">Reclaimed this month</span>
+        <span class="value">$100.98<small>/mo</small></span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="sec sec-paper" id="problem">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow" data-i18n="problem.eyebrow">The problem</span>
+      <h2 data-i18n="problem.h2">You didn't choose to keep paying.<br>You just never got around to leaving.</h2>
+      <p data-i18n="problem.p">The average person underestimates their subscription spend by 2.5×. Not because they're careless — because every single service makes leaving harder than joining.</p>
+    </div>
+    <div class="tickets">
+      <div class="ticket">
+        <span class="t-tag" data-i18n="problem.t1.tag">Scenario 01</span>
+        <h3 data-i18n="problem.t1.h3">The free trial you forgot to end</h3>
+        <p data-i18n="problem.t1.p">You signed up for seven days. It's been eleven months. Nobody reminded you, because nobody profits from reminding you.</p>
+        <div class="t-foot"><span data-i18n="problem.status.label">Status</span><span data-i18n="problem.t1.status">Still billing</span></div>
+      </div>
+      <div class="ticket">
+        <span class="t-tag" data-i18n="problem.t2.tag">Scenario 02</span>
+        <h3 data-i18n="problem.t2.h3">The price that crept up quietly</h3>
+        <p data-i18n="problem.t2.p">$9.99 became $14.99. Then $17.99. No email ever made it worth the trouble of noticing, let alone acting.</p>
+        <div class="t-foot"><span data-i18n="problem.status.label">Status</span><span data-i18n="problem.t2.status">+38% since 2024</span></div>
+      </div>
+      <div class="ticket">
+        <span class="t-tag" data-i18n="problem.t3.tag">Scenario 03</span>
+        <h3 data-i18n="problem.t3.h3">The cancellation that requires a phone call</h3>
+        <p data-i18n="problem.t3.p">You tried once. There was a chatbot, then a retention offer, then a hold queue. You gave up and kept paying instead.</p>
+        <div class="t-foot"><span data-i18n="problem.status.label">Status</span><span data-i18n="problem.t3.status">Abandoned</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-dark" id="solution">
+  <div class="wrap">
+    <div class="solution-grid">
+      <div>
+        <span class="eyebrow" data-i18n="solution.eyebrow">How OFFBOARD solves it</span>
+        <h2 style="color:#fff;font-size:clamp(26px,3.4vw,38px);line-height:1.18;margin:18px 0 26px;max-width:460px;" data-i18n="solution.h2">One place that sees what you're paying for — and finishes the job.</h2>
+        <div class="solution-points">
+          <div class="solution-point">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 4h16v16H4z"/><path d="M4 9h16M9 4v16"/></svg></div>
+            <div><h4 data-i18n="solution.p1.h4">See everything, without linking your bank</h4><p data-i18n="solution.p1.p">Forward a confirmation email or drop in a screenshot. OFFBOARD reads it and builds your list — your banking details never enter the picture.</p></div>
+          </div>
+          <div class="solution-point">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/></svg></div>
+            <div><h4 data-i18n="solution.p2.h4">Get warned before you're charged, not after</h4><p data-i18n="solution.p2.p">A trial ending, a renewal in three days, a price increase — OFFBOARD flags it while you can still do something about it.</p></div>
+          </div>
+          <div class="solution-point">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 6 12 12M18 6 6 18"/></svg></div>
+            <div><h4 data-i18n="solution.p3.h4">Actually leave — in one tap</h4><p data-i18n="solution.p3.p">OFFBOARD drafts the exact cancellation request each service requires, citing your legal right to a simple cancellation where it applies. You approve, it sends.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="receipt-card">
+        <div class="rc-top"><span data-i18n="solution.receipt.title">Monthly review</span><span>Aug 2026</span></div>
+        <div class="receipt-line"><span>Streamline+</span><span data-i18n="solution.receipt.r1b">Used 2× this month</span></div>
+        <div class="receipt-line cancelled"><span data-i18n="solution.receipt.action.label">→ Suggested action</span><span data-i18n="solution.receipt.a1v">Cancel</span></div>
+        <div class="receipt-line"><span>CloudSuite Pro</span><span data-i18n="solution.receipt.r2b">Price up 22%</span></div>
+        <div class="receipt-line cancelled"><span data-i18n="solution.receipt.action.label">→ Suggested action</span><span data-i18n="solution.receipt.a2v">Renegotiate</span></div>
+        <div class="receipt-line"><span>PulseFit Trial</span><span data-i18n="solution.receipt.r3b">Ends in 2 days</span></div>
+        <div class="receipt-line cancelled"><span data-i18n="solution.receipt.action.label">→ Suggested action</span><span data-i18n="solution.receipt.a3v">Decide now</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-paper" id="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow" data-i18n="how.eyebrow">How it works</span>
+      <h2 data-i18n="how.h2">Three gates. About four minutes.</h2>
+      <p data-i18n="how.p">No spreadsheets, no manual entry marathon, no dashboard you need a tutorial for.</p>
+    </div>
+    <div class="gates">
+      <div class="gate"><span class="g-num" data-i18n="how.g1.num">Gate 01 — Check in</span><h3 data-i18n="how.g1.h3">Forward what you've got</h3><p data-i18n="how.g1.p">A couple of confirmation emails or a bank statement screenshot. Nothing to install, nothing to connect.</p></div>
+      <div class="gate"><span class="g-num" data-i18n="how.g2.num">Gate 02 — See the board</span><h3 data-i18n="how.g2.h3">Your full picture, instantly</h3><p data-i18n="how.g2.p">Every active subscription, what it costs monthly and yearly, and which ones are quietly wasting your money.</p></div>
+      <div class="gate"><span class="g-num" data-i18n="how.g3.num">Gate 03 — Depart</span><h3 data-i18n="how.g3.h3">Tap to cancel what you don't need</h3><p data-i18n="how.g3.p">OFFBOARD prepares the request. You review it once, send it, and it's done — no call, no chatbot maze.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-dark" id="different">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow" data-i18n="diff.eyebrow">Why it's different</span>
+      <h2 style="color:#fff;" data-i18n="diff.h2">Everyone tracks. Almost no one helps you leave.</h2>
+      <p data-i18n="diff.p">We looked closely at what people say about the tools they already tried.</p>
+    </div>
+    <div class="compare">
+      <div class="compare-col old">
+        <h4 data-i18n="diff.old.title">The usual options</h4>
+        <div class="compare-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 6 12 12M18 6 6 18"/></svg><span data-i18n="diff.old.r1">Ask for your bank login to "see everything"</span></div>
+        <div class="compare-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 6 12 12M18 6 6 18"/></svg><span data-i18n="diff.old.r2">Take 30–60% of whatever they claim to save you</span></div>
+        <div class="compare-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 6 12 12M18 6 6 18"/></svg><span data-i18n="diff.old.r3">Send you a reminder — and stop there</span></div>
+        <div class="compare-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 6 12 12M18 6 6 18"/></svg><span data-i18n="diff.old.r4">Built for one country, one currency</span></div>
+      </div>
+      <div class="compare-col new">
+        <h4 data-i18n="diff.new.title">OFFBOARD</h4>
+        <div class="compare-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg><span data-i18n="diff.new.r1">Works from forwarded emails or screenshots — no bank access</span></div>
+        <div class="compare-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg><span data-i18n="diff.new.r2">One flat price. No cut of your money, ever</span></div>
+        <div class="compare-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg><span data-i18n="diff.new.r3">Drafts and sends the actual cancellation request</span></div>
+        <div class="compare-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg><span data-i18n="diff.new.r4">Built for multiple currencies and regions from day one</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-paper" id="result">
+  <div class="wrap">
+    <div class="result">
+      <div>
+        <span class="eyebrow" data-i18n="result.eyebrow">The result</span>
+        <h2 data-i18n="result.h2">Not another dashboard to maintain. A decision, made once, that keeps paying you back.</h2>
+        <p data-i18n="result.p">You stop wondering what's quietly leaving your account every month — and you stop being the only one who has to fight to get out of it.</p>
+        <div class="result-stats">
+          <div class="result-stat"><b>4 min</b><span data-i18n="result.stat1.span">To your first review</span></div>
+          <div class="result-stat"><b>0</b><span data-i18n="result.stat2.span">Bank logins required</span></div>
+          <div class="result-stat"><b>1 tap</b><span data-i18n="result.stat3.span">To send a cancellation</span></div>
+        </div>
+      </div>
+      <div class="result-visual">
+        <div class="rv-line"><span data-i18n="result.rv1">Subscriptions found</span><b>7</b></div>
+        <div class="rv-line"><span data-i18n="result.rv2">Recommended to cancel</span><b>3</b></div>
+        <div class="rv-line"><span data-i18n="result.rv3">Renewals flagged early</span><b>2</b></div>
+        <div class="rv-total"><span data-i18n="result.rvtotal">Reclaimed / year</span><span>$1,211</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="waitlist" id="waitlist">
+  <div class="wrap">
+    <span class="eyebrow" data-i18n="waitlist.eyebrow">Early access</span>
+    <h2 data-i18n="waitlist.h2">Be checked out before everyone else.</h2>
+    <p class="sub" data-i18n="waitlist.sub">OFFBOARD is in private validation. Join now and you'll be first through the gate when it opens — plus a founding-member rate, locked in for as long as you stay.</p>
+
+    <form class="waitlist-form" id="waitlistForm" novalidate>
+      <div class="field-row">
+        <input type="email" id="emailInput" name="email" placeholder="you@email.com" autocomplete="email" required>
+        <button type="submit" class="btn btn-primary" id="submitBtn">
+          <span id="submitBtnLabel" data-i18n="nav.cta">Get Early Access</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+      <div class="form-error" id="formError"></div>
+      <div class="form-note" data-i18n="waitlist.note">No spam. One email when boarding opens. Unsubscribe anytime.</div>
+    </form>
+
+    <div class="success-box" id="successBox">
+      <span class="num-badge" id="successBadge" data-i18n="waitlist.success.badge">✓ Confirmed</span>
+      <h4 id="successTitle" data-i18n="waitlist.success.title">You're on the list.</h4>
+      <p id="successBody" data-i18n="waitlist.success.body">We'll email you the moment early access opens — and nowhere else in the meantime.</p>
+    </div>
+
+    <div class="waitlist-perks">
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg><span data-i18n="waitlist.perk1">Founding-member pricing</span></span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg><span data-i18n="waitlist.perk2">Priority onboarding</span></span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg><span data-i18n="waitlist.perk3">No bank connection, ever</span></span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-inner">
+    <div class="brand" id="footerBrand" data-i18n="footer.brand"><b>OFFBOARD</b> — an independent product by VORNEAUX</div>
+    <div class="footer-links">
+      <a href="#problem" data-i18n="footer.link1">The problem</a>
+      <a href="#how" data-i18n="footer.link2">How it works</a>
+      <a href="#waitlist" data-i18n="footer.link3">Waitlist</a>
+    </div>
+  </div>
+</footer>
+
+<div class="sticky-cta" id="stickyCta">
+  <span data-i18n="sticky.text">Free before launch.</span>
+  <a href="#waitlist" class="btn btn-primary" data-i18n="sticky.cta">Join</a>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* =====================================================================
+     CONFIG — point this at the deployed OFFBOARD Google Apps Script URL.
+     See offboard-apps-script.gs for the backend + deployment steps.
+     ===================================================================== */
+  var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyNHVnNqDbxIZGGtJg04PBBQ1BEUkNSF-BqgnBb_6hqbj8nsZ3VTJZVLr41JXteGry01Q/exec";
+  var SUPPORTED_LANGS = ['en','it','es','fr'];
+  var DEFAULT_LANG = 'en';
+  var LANG_STORAGE_KEY = 'offboard_lang';
+  var PENDING_STORAGE_KEY = 'offboard_pending_signups';
+
+  /* =====================================================================
+     TRANSLATIONS
+     ===================================================================== */
+  var translations = {
+    en: {
+      'meta.title':"OFFBOARD — Cancel anything. Without giving up your bank account.",
+      'meta.description':"OFFBOARD finds every subscription you forgot about and writes the cancellation for you — no bank connection, no percentage fees. Join the waitlist.",
+      'lang.switch.aria':"Select language",
+      'nav.cta':"Get Early Access",
+      'hero.eyebrow':"Subscription exit assistant",
+      'hero.h1':"You're still checked in<br>on things you <em>meant to leave.</em>",
+      'hero.lead':"OFFBOARD finds every subscription you forgot about, tells you exactly what it's costing you, and writes the cancellation for you — without ever asking for your bank login.",
+      'hero.trust':"No bank connection required. No percentage of your savings.",
+      'hero.avatars':"Joining founders on the early access list",
+      'board.title':"Your Subscriptions",'board.live':"Live",'board.col.service':"Service",'board.col.billing':"Billing",'board.col.status':"Status",
+      'board.status.cancelled':"Cancelled",'board.status.renews':"Renews in 2d",'board.total.label':"Reclaimed this month",
+      'problem.eyebrow':"The problem",
+      'problem.h2':"You didn't choose to keep paying.<br>You just never got around to leaving.",
+      'problem.p':"The average person underestimates their subscription spend by 2.5×. Not because they're careless — because every single service makes leaving harder than joining.",
+      'problem.status.label':"Status",
+      'problem.t1.tag':"Scenario 01",'problem.t1.h3':"The free trial you forgot to end",
+      'problem.t1.p':"You signed up for seven days. It's been eleven months. Nobody reminded you, because nobody profits from reminding you.",
+      'problem.t1.status':"Still billing",
+      'problem.t2.tag':"Scenario 02",'problem.t2.h3':"The price that crept up quietly",
+      'problem.t2.p':"$9.99 became $14.99. Then $17.99. No email ever made it worth the trouble of noticing, let alone acting.",
+      'problem.t2.status':"+38% since 2024",
+      'problem.t3.tag':"Scenario 03",'problem.t3.h3':"The cancellation that requires a phone call",
+      'problem.t3.p':"You tried once. There was a chatbot, then a retention offer, then a hold queue. You gave up and kept paying instead.",
+      'problem.t3.status':"Abandoned",
+      'solution.eyebrow':"How OFFBOARD solves it",
+      'solution.h2':"One place that sees what you're paying for — and finishes the job.",
+      'solution.p1.h4':"See everything, without linking your bank",
+      'solution.p1.p':"Forward a confirmation email or drop in a screenshot. OFFBOARD reads it and builds your list — your banking details never enter the picture.",
+      'solution.p2.h4':"Get warned before you're charged, not after",
+      'solution.p2.p':"A trial ending, a renewal in three days, a price increase — OFFBOARD flags it while you can still do something about it.",
+      'solution.p3.h4':"Actually leave — in one tap",
+      'solution.p3.p':"OFFBOARD drafts the exact cancellation request each service requires, citing your legal right to a simple cancellation where it applies. You approve, it sends.",
+      'solution.receipt.title':"Monthly review",'solution.receipt.r1b':"Used 2× this month",
+      'solution.receipt.action.label':"→ Suggested action",'solution.receipt.a1v':"Cancel",
+      'solution.receipt.r2b':"Price up 22%",'solution.receipt.a2v':"Renegotiate",
+      'solution.receipt.r3b':"Ends in 2 days",'solution.receipt.a3v':"Decide now",
+      'how.eyebrow':"How it works",'how.h2':"Three gates. About four minutes.",
+      'how.p':"No spreadsheets, no manual entry marathon, no dashboard you need a tutorial for.",
+      'how.g1.num':"Gate 01 — Check in",'how.g1.h3':"Forward what you've got",
+      'how.g1.p':"A couple of confirmation emails or a bank statement screenshot. Nothing to install, nothing to connect.",
+      'how.g2.num':"Gate 02 — See the board",'how.g2.h3':"Your full picture, instantly",
+      'how.g2.p':"Every active subscription, what it costs monthly and yearly, and which ones are quietly wasting your money.",
+      'how.g3.num':"Gate 03 — Depart",'how.g3.h3':"Tap to cancel what you don't need",
+      'how.g3.p':"OFFBOARD prepares the request. You review it once, send it, and it's done — no call, no chatbot maze.",
+      'diff.eyebrow':"Why it's different",'diff.h2':"Everyone tracks. Almost no one helps you leave.",
+      'diff.p':"We looked closely at what people say about the tools they already tried.",
+      'diff.old.title':"The usual options",
+      'diff.old.r1':'Ask for your bank login to "see everything"',
+      'diff.old.r2':"Take 30–60% of whatever they claim to save you",
+      'diff.old.r3':"Send you a reminder — and stop there",
+      'diff.old.r4':"Built for one country, one currency",
+      'diff.new.title':"OFFBOARD",
+      'diff.new.r1':"Works from forwarded emails or screenshots — no bank access",
+      'diff.new.r2':"One flat price. No cut of your money, ever",
+      'diff.new.r3':"Drafts and sends the actual cancellation request",
+      'diff.new.r4':"Built for multiple currencies and regions from day one",
+      'result.eyebrow':"The result",
+      'result.h2':"Not another dashboard to maintain. A decision, made once, that keeps paying you back.",
+      'result.p':"You stop wondering what's quietly leaving your account every month — and you stop being the only one who has to fight to get out of it.",
+      'result.stat1.span':"To your first review",'result.stat2.span':"Bank logins required",'result.stat3.span':"To send a cancellation",
+      'result.rv1':"Subscriptions found",'result.rv2':"Recommended to cancel",'result.rv3':"Renewals flagged early",'result.rvtotal':"Reclaimed / year",
+      'waitlist.eyebrow':"Early access",'waitlist.h2':"Be checked out before everyone else.",
+      'waitlist.sub':"OFFBOARD is in private validation. Join now and you'll be first through the gate when it opens — plus a founding-member rate, locked in for as long as you stay.",
+      'waitlist.note':"No spam. One email when boarding opens. Unsubscribe anytime.",
+      'waitlist.error.invalid':"Enter a valid email address to join the waitlist.",
+      'waitlist.error.generic':"Something went wrong. Please try again in a moment.",
+      'waitlist.submitting':"Joining…",
+      'waitlist.success.badge':"✓ Confirmed",'waitlist.success.title':"You're on the list.",
+      'waitlist.success.body':"We'll email you the moment early access opens — and nowhere else in the meantime.",
+      'waitlist.pending.badge':"◐ Saving…",'waitlist.pending.title':"Almost there.",
+      'waitlist.pending.body':"We couldn't confirm this yet, but your spot is saved on this device — we'll keep trying automatically.",
+      'waitlist.perk1':"Founding-member pricing",'waitlist.perk2':"Priority onboarding",'waitlist.perk3':"No bank connection, ever",
+      'footer.brand':"<b>OFFBOARD</b> — an independent product by VORNEAUX",
+      'footer.link1':"The problem",'footer.link2':"How it works",'footer.link3':"Waitlist",
+      'sticky.text':"Free before launch.",'sticky.cta':"Join"
+    },
+    it: {
+      'meta.title':"OFFBOARD — Disdici qualsiasi cosa. Senza dare accesso alla tua banca.",
+      'meta.description':"OFFBOARD trova ogni abbonamento dimenticato e scrive la disdetta al posto tuo — nessun accesso bancario, nessuna commissione. Iscriviti alla waiting list.",
+      'lang.switch.aria':"Seleziona la lingua",
+      'nav.cta':"Richiedi l'accesso anticipato",
+      'hero.eyebrow':"L'assistente per disdire abbonamenti",
+      'hero.h1':'Sei ancora "dentro"<br>a cose che <em>volevi lasciare.</em>',
+      'hero.lead':"OFFBOARD trova ogni abbonamento che hai dimenticato, ti dice esattamente quanto ti costa e scrive la disdetta al posto tuo — senza mai chiederti le credenziali bancarie.",
+      'hero.trust':"Nessun collegamento bancario richiesto. Nessuna percentuale sui tuoi risparmi.",
+      'hero.avatars':"Si stanno iscrivendo altri founder alla lista d'accesso anticipato",
+      'board.title':"I tuoi abbonamenti",'board.live':"In diretta",'board.col.service':"Servizio",'board.col.billing':"Addebito",'board.col.status':"Stato",
+      'board.status.cancelled':"Disdetto",'board.status.renews':"Rinnova tra 2gg",'board.total.label':"Recuperato questo mese",
+      'problem.eyebrow':"Il problema",
+      'problem.h2':"Non hai scelto di continuare a pagare.<br>Semplicemente, non hai mai trovato il momento per disdire.",
+      'problem.p':"In media, le persone sottostimano la propria spesa in abbonamenti di 2,5 volte. Non per disattenzione — perché ogni servizio rende l'uscita più difficile dell'ingresso.",
+      'problem.status.label':"Stato",
+      'problem.t1.tag':"Scenario 01",'problem.t1.h3':"Il periodo di prova che hai dimenticato di chiudere",
+      'problem.t1.p':"Ti eri iscritto per sette giorni. Sono passati undici mesi. Nessuno te lo ha ricordato, perché a nessuno conviene ricordartelo.",
+      'problem.t1.status':"Ti sta ancora addebitando",
+      'problem.t2.tag':"Scenario 02",'problem.t2.h3':"Il prezzo che è salito senza fare rumore",
+      'problem.t2.p':"Da 9,99€ a 14,99€. Poi a 17,99€. Nessuna email ha mai reso la cosa abbastanza rilevante da notarla, figuriamoci da agire.",
+      'problem.t2.status':"+38% dal 2024",
+      'problem.t3.tag':"Scenario 03",'problem.t3.h3':"La disdetta che richiede una telefonata",
+      'problem.t3.p':"Ci hai provato una volta. C'era un chatbot, poi un'offerta per farti restare, poi un'attesa infinita. Hai rinunciato e hai continuato a pagare.",
+      'problem.t3.status':"Abbandonato",
+      'solution.eyebrow':"Come OFFBOARD risolve il problema",
+      'solution.h2':"Un unico posto che vede per cosa stai pagando — e porta a termine il lavoro.",
+      'solution.p1.h4':"Vedi tutto, senza collegare la tua banca",
+      'solution.p1.p':"Inoltra un'email di conferma o carica uno screenshot. OFFBOARD la legge e costruisce il tuo elenco — i tuoi dati bancari non entrano mai in gioco.",
+      'solution.p2.h4':"Sei avvisato prima dell'addebito, non dopo",
+      'solution.p2.p':"Un periodo di prova in scadenza, un rinnovo tra tre giorni, un aumento di prezzo — OFFBOARD te lo segnala mentre puoi ancora fare qualcosa.",
+      'solution.p3.h4':"Esci davvero — con un tocco",
+      'solution.p3.p':"OFFBOARD prepara esattamente la richiesta di disdetta richiesta da ciascun servizio, citando il tuo diritto a una disdetta semplice dove previsto. Tu approvi, lui la invia.",
+      'solution.receipt.title':"Revisione mensile",'solution.receipt.r1b':"Usato 2 volte questo mese",
+      'solution.receipt.action.label':"→ Azione consigliata",'solution.receipt.a1v':"Disdici",
+      'solution.receipt.r2b':"Prezzo +22%",'solution.receipt.a2v':"Rinegozia",
+      'solution.receipt.r3b':"Termina tra 2 giorni",'solution.receipt.a3v':"Decidi ora",
+      'how.eyebrow':"Come funziona",'how.h2':"Tre gate. Circa quattro minuti.",
+      'how.p':"Niente fogli di calcolo, niente inserimenti manuali infiniti, niente dashboard che richiede un tutorial.",
+      'how.g1.num':"Gate 01 — Check-in",'how.g1.h3':"Inoltra quello che hai",
+      'how.g1.p':"Un paio di email di conferma o uno screenshot dell'estratto conto. Niente da installare, niente da collegare.",
+      'how.g2.num':"Gate 02 — Il tabellone",'how.g2.h3':"Il tuo quadro completo, all'istante",
+      'how.g2.p':"Ogni abbonamento attivo, quanto ti costa al mese e all'anno, e quali stanno silenziosamente sprecando i tuoi soldi.",
+      'how.g3.num':"Gate 03 — Partenza",'how.g3.h3':"Un tocco per disdire ciò che non ti serve",
+      'how.g3.p':"OFFBOARD prepara la richiesta. La rivedi una volta, la invii, ed è fatta — niente telefonate, niente labirinti di chatbot.",
+      'diff.eyebrow':"Perché è diverso",'diff.h2':"Tutti tracciano. Quasi nessuno ti aiuta a uscire davvero.",
+      'diff.p':"Abbiamo analizzato attentamente cosa dicono le persone sugli strumenti che hanno già provato.",
+      'diff.old.title':"Le soluzioni abituali",
+      'diff.old.r1':'Chiedono le tue credenziali bancarie per "vedere tutto"',
+      'diff.old.r2':"Trattengono il 30–60% di quanto dichiarano di farti risparmiare",
+      'diff.old.r3':"Ti mandano un promemoria — e si fermano lì",
+      'diff.old.r4':"Pensati per un solo paese, una sola valuta",
+      'diff.new.title':"OFFBOARD",
+      'diff.new.r1':"Funziona con email inoltrate o screenshot — nessun accesso bancario",
+      'diff.new.r2':"Un prezzo fisso. Mai una percentuale sui tuoi soldi",
+      'diff.new.r3':"Prepara e invia davvero la richiesta di disdetta",
+      'diff.new.r4':"Pensato fin dal primo giorno per più valute e più paesi",
+      'result.eyebrow':"Il risultato",
+      'result.h2':"Non un'altra dashboard da gestire. Una decisione presa una volta, che continua a ripagarti nel tempo.",
+      'result.p':"Smetti di chiederti cosa sta silenziosamente uscendo dal tuo conto ogni mese — e smetti di essere l'unico che deve lottare per uscirne.",
+      'result.stat1.span':"Alla tua prima revisione",'result.stat2.span':"Accessi bancari richiesti",'result.stat3.span':"Per inviare una disdetta",
+      'result.rv1':"Abbonamenti trovati",'result.rv2':"Consigliati per la disdetta",'result.rv3':"Rinnovi segnalati in anticipo",'result.rvtotal':"Recuperato / anno",
+      'waitlist.eyebrow':"Accesso anticipato",'waitlist.h2':"Sii tra i primi a poter uscire davvero.",
+      'waitlist.sub':"OFFBOARD è in fase di validazione privata. Iscriviti ora e sarai tra i primi ad accedere quando apriremo — con una tariffa da founding member, bloccata per tutto il tempo che resterai con noi.",
+      'waitlist.note':"Niente spam. Una sola email quando si aprirà l'accesso. Puoi disiscriverti quando vuoi.",
+      'waitlist.error.invalid':"Inserisci un indirizzo email valido per iscriverti alla waiting list.",
+      'waitlist.error.generic':"Qualcosa è andato storto. Riprova tra qualche istante.",
+      'waitlist.submitting':"Iscrizione in corso…",
+      'waitlist.success.badge':"✓ Confermato",'waitlist.success.title':"Sei nella lista.",
+      'waitlist.success.body':"Ti scriveremo via email nel momento in cui apriremo l'accesso anticipato — e in nessun altro momento.",
+      'waitlist.pending.badge':"◐ Salvataggio…",'waitlist.pending.title':"Ci siamo quasi.",
+      'waitlist.pending.body':"Non abbiamo ancora potuto confermarlo, ma il tuo posto è salvato su questo dispositivo — continueremo a riprovare automaticamente.",
+      'waitlist.perk1':"Tariffa da founding member",'waitlist.perk2':"Accesso prioritario",'waitlist.perk3':"Mai un collegamento bancario",
+      'footer.brand':"<b>OFFBOARD</b> — un prodotto indipendente firmato VORNEAUX",
+      'footer.link1':"Il problema",'footer.link2':"Come funziona",'footer.link3':"Waiting list",
+      'sticky.text':"Gratis prima del lancio.",'sticky.cta':"Iscriviti"
+    },
+    es: {
+      'meta.title':"OFFBOARD — Cancela lo que sea. Sin dar acceso a tu banco.",
+      'meta.description':"OFFBOARD encuentra cada suscripción que olvidaste y redacta la cancelación por ti — sin acceso bancario, sin comisiones. Únete a la lista de espera.",
+      'lang.switch.aria':"Selecciona el idioma",
+      'nav.cta':"Solicita tu acceso anticipado",
+      'hero.eyebrow':"El asistente para cancelar suscripciones",
+      'hero.h1':'Sigues "registrado"<br>en cosas que <em>querías dejar.</em>',
+      'hero.lead':"OFFBOARD encuentra cada suscripción que olvidaste, te dice exactamente cuánto te cuesta y redacta la cancelación por ti — sin pedirte nunca las claves de tu banco.",
+      'hero.trust':"No requiere conexión bancaria. Sin comisión sobre tus ahorros.",
+      'hero.avatars':"Otros founders ya se están uniendo a la lista de acceso anticipado",
+      'board.title':"Tus suscripciones",'board.live':"En vivo",'board.col.service':"Servicio",'board.col.billing':"Facturación",'board.col.status':"Estado",
+      'board.status.cancelled':"Cancelado",'board.status.renews':"Se renueva en 2d",'board.total.label':"Recuperado este mes",
+      'problem.eyebrow':"El problema",
+      'problem.h2':"No elegiste seguir pagando.<br>Simplemente nunca encontraste el momento de cancelar.",
+      'problem.p':"En promedio, las personas subestiman su gasto en suscripciones en un 2,5×. No por descuido, sino porque cada servicio hace que salir sea más difícil que entrar.",
+      'problem.status.label':"Estado",
+      'problem.t1.tag':"Escenario 01",'problem.t1.h3':"La prueba gratuita que olvidaste cancelar",
+      'problem.t1.p':"Te registraste para siete días. Han pasado once meses. Nadie te lo recordó, porque a nadie le conviene recordártelo.",
+      'problem.t1.status':"Sigue cobrando",
+      'problem.t2.tag':"Escenario 02",'problem.t2.h3':"El precio que subió en silencio",
+      'problem.t2.p':"De 9,99€ pasó a 14,99€. Luego a 17,99€. Ningún correo hizo que valiera la pena notarlo, y mucho menos actuar.",
+      'problem.t2.status':"+38% desde 2024",
+      'problem.t3.tag':"Escenario 03",'problem.t3.h3':"La cancelación que exige una llamada telefónica",
+      'problem.t3.p':"Lo intentaste una vez. Había un chatbot, luego una oferta para retenerte, luego una larga espera. Te rendiste y seguiste pagando.",
+      'problem.t3.status':"Abandonado",
+      'solution.eyebrow':"Cómo lo resuelve OFFBOARD",
+      'solution.h2':"Un único lugar que ve por qué estás pagando — y termina el trabajo.",
+      'solution.p1.h4':"Ve todo, sin conectar tu banco",
+      'solution.p1.p':"Reenvía un correo de confirmación o sube una captura de pantalla. OFFBOARD la lee y crea tu lista — tus datos bancarios nunca entran en juego.",
+      'solution.p2.h4':"Recibe el aviso antes del cobro, no después",
+      'solution.p2.p':"Una prueba que termina, una renovación en tres días, una subida de precio — OFFBOARD te lo señala mientras aún puedes hacer algo.",
+      'solution.p3.h4':"Sal de verdad — con un toque",
+      'solution.p3.p':"OFFBOARD redacta exactamente la solicitud de cancelación que exige cada servicio, citando tu derecho a una cancelación sencilla cuando corresponda. Tú apruebas, él la envía.",
+      'solution.receipt.title':"Revisión mensual",'solution.receipt.r1b':"Usado 2 veces este mes",
+      'solution.receipt.action.label':"→ Acción sugerida",'solution.receipt.a1v':"Cancelar",
+      'solution.receipt.r2b':"Precio +22%",'solution.receipt.a2v':"Renegociar",
+      'solution.receipt.r3b':"Termina en 2 días",'solution.receipt.a3v':"Decide ahora",
+      'how.eyebrow':"Cómo funciona",'how.h2':"Tres puertas. Unos cuatro minutos.",
+      'how.p':"Sin hojas de cálculo, sin maratones de entrada manual, sin un panel que necesite un tutorial.",
+      'how.g1.num':"Puerta 01 — Registro",'how.g1.h3':"Reenvía lo que tengas",
+      'how.g1.p':"Un par de correos de confirmación o una captura del extracto bancario. Nada que instalar, nada que conectar.",
+      'how.g2.num':"Puerta 02 — El tablero",'how.g2.h3':"Tu panorama completo, al instante",
+      'how.g2.p':"Cada suscripción activa, lo que cuesta al mes y al año, y cuáles están desperdiciando tu dinero en silencio.",
+      'how.g3.num':"Puerta 03 — Salida",'how.g3.h3':"Un toque para cancelar lo que no necesitas",
+      'how.g3.p':"OFFBOARD prepara la solicitud. La revisas una vez, la envías, y listo — sin llamadas, sin laberintos de chatbots.",
+      'diff.eyebrow':"Por qué es diferente",'diff.h2':"Todos rastrean. Casi nadie te ayuda a salir de verdad.",
+      'diff.p':"Analizamos con detalle lo que dice la gente sobre las herramientas que ya probó.",
+      'diff.old.title':"Las opciones habituales",
+      'diff.old.r1':'Piden las claves de tu banco para "verlo todo"',
+      'diff.old.r2':"Se quedan con el 30–60% de lo que dicen ahorrarte",
+      'diff.old.r3':"Te envían un recordatorio — y ahí se detienen",
+      'diff.old.r4':"Pensados para un solo país, una sola moneda",
+      'diff.new.title':"OFFBOARD",
+      'diff.new.r1':"Funciona con correos reenviados o capturas — sin acceso bancario",
+      'diff.new.r2':"Un precio fijo. Nunca una comisión sobre tu dinero",
+      'diff.new.r3':"Redacta y envía la solicitud de cancelación real",
+      'diff.new.r4':"Pensado desde el primer día para varias monedas y regiones",
+      'result.eyebrow':"El resultado",
+      'result.h2':"No es otro panel que mantener. Una decisión tomada una vez, que sigue devolviéndote valor.",
+      'result.p':"Dejas de preguntarte qué está saliendo silenciosamente de tu cuenta cada mes — y dejas de ser el único que tiene que luchar para salir de ello.",
+      'result.stat1.span':"Hasta tu primera revisión",'result.stat2.span':"Accesos bancarios requeridos",'result.stat3.span':"Para enviar una cancelación",
+      'result.rv1':"Suscripciones encontradas",'result.rv2':"Recomendadas para cancelar",'result.rv3':"Renovaciones señaladas a tiempo",'result.rvtotal':"Recuperado / año",
+      'waitlist.eyebrow':"Acceso anticipado",'waitlist.h2':"Sé de los primeros en poder salir de verdad.",
+      'waitlist.sub':"OFFBOARD está en fase de validación privada. Únete ahora y serás de los primeros en acceder cuando abramos — con una tarifa de miembro fundador, fija mientras te quedes.",
+      'waitlist.note':"Sin spam. Un solo correo cuando se abra el acceso. Puedes darte de baja cuando quieras.",
+      'waitlist.error.invalid':"Introduce una dirección de correo válida para unirte a la lista de espera.",
+      'waitlist.error.generic':"Algo salió mal. Inténtalo de nuevo en un momento.",
+      'waitlist.submitting':"Uniéndote…",
+      'waitlist.success.badge':"✓ Confirmado",'waitlist.success.title':"Ya estás en la lista.",
+      'waitlist.success.body':"Te escribiremos por correo en el momento en que abramos el acceso anticipado — y en ningún otro momento.",
+      'waitlist.pending.badge':"◐ Guardando…",'waitlist.pending.title':"Casi listo.",
+      'waitlist.pending.body':"Aún no pudimos confirmarlo, pero tu lugar está guardado en este dispositivo — seguiremos intentándolo automáticamente.",
+      'waitlist.perk1':"Precio de miembro fundador",'waitlist.perk2':"Incorporación prioritaria",'waitlist.perk3':"Nunca una conexión bancaria",
+      'footer.brand':"<b>OFFBOARD</b> — un producto independiente de VORNEAUX",
+      'footer.link1':"El problema",'footer.link2':"Cómo funciona",'footer.link3':"Lista de espera",
+      'sticky.text':"Gratis antes del lanzamiento.",'sticky.cta':"Únete"
+    },
+    fr: {
+      'meta.title':"OFFBOARD — Résiliez tout. Sans donner accès à votre banque.",
+      'meta.description':"OFFBOARD retrouve chaque abonnement oublié et rédige la résiliation à votre place — sans accès bancaire, sans commission. Rejoignez la liste d'attente.",
+      'lang.switch.aria':"Choisir la langue",
+      'nav.cta':"Demander l'accès anticipé",
+      'hero.eyebrow':"L'assistant pour résilier vos abonnements",
+      'hero.h1':"Vous êtes encore inscrit<br>à des choses que <em>vous vouliez quitter.</em>",
+      'hero.lead':"OFFBOARD retrouve chaque abonnement que vous avez oublié, vous indique précisément ce qu'il vous coûte, et rédige la résiliation à votre place — sans jamais vous demander vos identifiants bancaires.",
+      'hero.trust':"Aucune connexion bancaire requise. Aucun pourcentage sur vos économies.",
+      'hero.avatars':"D'autres fondateurs rejoignent déjà la liste d'accès anticipé",
+      'board.title':"Vos abonnements",'board.live':"En direct",'board.col.service':"Service",'board.col.billing':"Facturation",'board.col.status':"Statut",
+      'board.status.cancelled':"Résilié",'board.status.renews':"Renouvelle dans 2j",'board.total.label':"Récupéré ce mois-ci",
+      'problem.eyebrow':"Le problème",
+      'problem.h2':"Vous n'avez pas choisi de continuer à payer.<br>Vous n'avez juste jamais pris le temps de résilier.",
+      'problem.p':"En moyenne, les gens sous-estiment leurs dépenses d'abonnement d'un facteur 2,5. Pas par négligence — parce que chaque service rend la sortie plus difficile que l'entrée.",
+      'problem.status.label':"Statut",
+      'problem.t1.tag':"Scénario 01",'problem.t1.h3':"L'essai gratuit que vous avez oublié d'arrêter",
+      'problem.t1.p':"Vous vous étiez inscrit pour sept jours. Onze mois ont passé. Personne ne vous l'a rappelé, parce que personne n'a intérêt à le faire.",
+      'problem.t1.status':"Facturation en cours",
+      'problem.t2.tag':"Scénario 02",'problem.t2.h3':"Le prix qui a discrètement augmenté",
+      'problem.t2.p':"9,99 € sont devenus 14,99 €. Puis 17,99 €. Aucun e-mail n'a jamais rendu la chose assez visible pour la remarquer, encore moins pour agir.",
+      'problem.t2.status':"+38 % depuis 2024",
+      'problem.t3.tag':"Scénario 03",'problem.t3.h3':"La résiliation qui exige un appel téléphonique",
+      'problem.t3.p':"Vous avez essayé une fois. Il y avait un chatbot, puis une offre de rétention, puis une longue attente. Vous avez abandonné et continué à payer.",
+      'problem.t3.status':"Abandonné",
+      'solution.eyebrow':"Comment OFFBOARD résout le problème",
+      'solution.h2':"Un seul endroit qui voit ce que vous payez — et va jusqu'au bout.",
+      'solution.p1.h4':"Voyez tout, sans relier votre banque",
+      'solution.p1.p':"Transférez un e-mail de confirmation ou déposez une capture d'écran. OFFBOARD la lit et crée votre liste — vos données bancaires n'entrent jamais en jeu.",
+      'solution.p2.h4':"Vous êtes prévenu avant le prélèvement, pas après",
+      'solution.p2.p':"Un essai qui se termine, un renouvellement dans trois jours, une hausse de prix — OFFBOARD vous prévient pendant qu'il est encore temps d'agir.",
+      'solution.p3.h4':"Partez pour de bon — en un geste",
+      'solution.p3.p':"OFFBOARD rédige exactement la demande de résiliation exigée par chaque service, en citant votre droit à une résiliation simple lorsqu'il s'applique. Vous approuvez, il l'envoie.",
+      'solution.receipt.title':"Bilan mensuel",'solution.receipt.r1b':"Utilisé 2 fois ce mois-ci",
+      'solution.receipt.action.label':"→ Action suggérée",'solution.receipt.a1v':"Résilier",
+      'solution.receipt.r2b':"Prix +22 %",'solution.receipt.a2v':"Renégocier",
+      'solution.receipt.r3b':"Se termine dans 2 jours",'solution.receipt.a3v':"Décidez maintenant",
+      'how.eyebrow':"Comment ça marche",'how.h2':"Trois portes. Environ quatre minutes.",
+      'how.p':"Pas de tableurs, pas de saisie manuelle interminable, pas de tableau de bord nécessitant un tutoriel.",
+      'how.g1.num':"Porte 01 — Enregistrement",'how.g1.h3':"Transférez ce que vous avez",
+      'how.g1.p':"Quelques e-mails de confirmation ou une capture d'écran de relevé bancaire. Rien à installer, rien à connecter.",
+      'how.g2.num':"Porte 02 — Le tableau",'how.g2.h3':"Votre vue d'ensemble, instantanément",
+      'how.g2.p':"Chaque abonnement actif, son coût mensuel et annuel, et lesquels gaspillent discrètement votre argent.",
+      'how.g3.num':"Porte 03 — Départ",'how.g3.h3':"Un geste pour résilier ce dont vous n'avez pas besoin",
+      'how.g3.p':"OFFBOARD prépare la demande. Vous la relisez une fois, l'envoyez, et c'est fait — pas d'appel, pas de labyrinthe de chatbots.",
+      'diff.eyebrow':"Pourquoi c'est différent",'diff.h2':"Tout le monde suit vos abonnements. Presque personne ne vous aide vraiment à en sortir.",
+      'diff.p':"Nous avons étudié de près ce que disent les gens des outils qu'ils ont déjà essayés.",
+      'diff.old.title':"Les solutions habituelles",
+      'diff.old.r1':'Demandent vos identifiants bancaires pour « tout voir »',
+      'diff.old.r2':"Prélèvent 30 à 60 % de ce qu'ils prétendent vous faire économiser",
+      'diff.old.r3':"Vous envoient un rappel — et s'arrêtent là",
+      'diff.old.r4':"Conçus pour un seul pays, une seule devise",
+      'diff.new.title':"OFFBOARD",
+      'diff.new.r1':"Fonctionne à partir d'e-mails transférés ou de captures — aucun accès bancaire",
+      'diff.new.r2':"Un prix fixe. Jamais de pourcentage sur votre argent",
+      'diff.new.r3':"Rédige et envoie la véritable demande de résiliation",
+      'diff.new.r4':"Pensé dès le premier jour pour plusieurs devises et régions",
+      'result.eyebrow':"Le résultat",
+      'result.h2':"Pas un tableau de bord de plus à gérer. Une décision prise une fois, qui continue de vous rapporter.",
+      'result.p':"Vous arrêtez de vous demander ce qui quitte discrètement votre compte chaque mois — et vous n'êtes plus le seul à devoir vous battre pour vous en sortir.",
+      'result.stat1.span':"Jusqu'à votre premier bilan",'result.stat2.span':"Identifiants bancaires requis",'result.stat3.span':"Pour envoyer une résiliation",
+      'result.rv1':"Abonnements détectés",'result.rv2':"Recommandés à résilier",'result.rv3':"Renouvellements signalés à l'avance",'result.rvtotal':"Récupéré / an",
+      'waitlist.eyebrow':"Accès anticipé",'waitlist.h2':"Soyez parmi les premiers à pouvoir vraiment vous en libérer.",
+      'waitlist.sub':"OFFBOARD est en phase de validation privée. Inscrivez-vous maintenant et vous serez parmi les premiers à passer la porte à l'ouverture — avec un tarif fondateur, verrouillé aussi longtemps que vous restez.",
+      'waitlist.note':"Pas de spam. Un seul e-mail à l'ouverture de l'accès. Désabonnement possible à tout moment.",
+      'waitlist.error.invalid':"Saisissez une adresse e-mail valide pour rejoindre la liste d'attente.",
+      'waitlist.error.generic':"Une erreur s'est produite. Veuillez réessayer dans un instant.",
+      'waitlist.submitting':"Inscription en cours…",
+      'waitlist.success.badge':"✓ Confirmé",'waitlist.success.title':"Vous êtes sur la liste.",
+      'waitlist.success.body':"Nous vous écrirons par e-mail dès l'ouverture de l'accès anticipé — et à aucun autre moment.",
+      'waitlist.pending.badge':"◐ Enregistrement…",'waitlist.pending.title':"Presque terminé.",
+      'waitlist.pending.body':"Nous n'avons pas encore pu le confirmer, mais votre place est enregistrée sur cet appareil — nous continuerons à réessayer automatiquement.",
+      'waitlist.perk1':"Tarif fondateur",'waitlist.perk2':"Intégration prioritaire",'waitlist.perk3':"Jamais de connexion bancaire",
+      'footer.brand':"<b>OFFBOARD</b> — un produit indépendant signé VORNEAUX",
+      'footer.link1':"Le problème",'footer.link2':"Comment ça marche",'footer.link3':"Liste d'attente",
+      'sticky.text':"Gratuit avant le lancement.",'sticky.cta':"Rejoindre"
+    }
+  };
+
+  var LANG_NAMES = { en:'EN', it:'IT', es:'ES', fr:'FR' };
+  var currentLang = DEFAULT_LANG;
+
+  /* =====================================================================
+     LANGUAGE DETECTION & APPLICATION
+     Priority: explicit ?lang= URL param > stored manual preference >
+     browser language > English fallback.
+     ===================================================================== */
+  function getUrlLang(){
+    var m = /[?&]lang=([a-zA-Z-]+)/.exec(window.location.search);
+    if (!m) return null;
+    var code = m[1].toLowerCase().slice(0,2);
+    return SUPPORTED_LANGS.indexOf(code) > -1 ? code : null;
+  }
+
+  function getStoredLang(){
+    try {
+      var v = localStorage.getItem(LANG_STORAGE_KEY);
+      return SUPPORTED_LANGS.indexOf(v) > -1 ? v : null;
+    } catch(e){ return null; }
+  }
+
+  function getBrowserLang(){
+    var langs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || navigator.userLanguage || ''];
+    for (var i = 0; i < langs.length; i++){
+      var code = String(langs[i]).toLowerCase().slice(0,2);
+      if (SUPPORTED_LANGS.indexOf(code) > -1) return code;
+    }
+    return null;
+  }
+
+  function detectInitialLang(){
+    var urlLang = getUrlLang();
+    if (urlLang) {
+      // A language-specific link (e.g. from a localized ad) is treated
+      // as an explicit choice and persisted like a manual selection.
+      try { localStorage.setItem(LANG_STORAGE_KEY, urlLang); } catch(e){}
+      return urlLang;
+    }
+    return getStoredLang() || getBrowserLang() || DEFAULT_LANG;
+  }
+
+  function t(lang, key){
+    var dict = translations[lang] || translations[DEFAULT_LANG];
+    if (dict[key] !== undefined) return dict[key];
+    return translations[DEFAULT_LANG][key] !== undefined ? translations[DEFAULT_LANG][key] : '';
+  }
+
+  function applyLanguage(lang){
+    if (SUPPORTED_LANGS.indexOf(lang) === -1) lang = DEFAULT_LANG;
+    currentLang = lang;
+    document.documentElement.setAttribute('lang', lang);
+
+    var nodes = document.querySelectorAll('[data-i18n]');
+    for (var i = 0; i < nodes.length; i++){
+      var key = nodes[i].getAttribute('data-i18n');
+      var val = t(lang, key);
+      if (val) nodes[i].innerHTML = val;
+    }
+
+    var titleVal = t(lang, 'meta.title');
+    if (titleVal) document.title = titleVal;
+    var descVal = t(lang, 'meta.description');
+    var descEl = document.getElementById('metaDescription');
+    if (descEl && descVal) descEl.setAttribute('content', descVal);
+
+    var btnLabel = document.getElementById('langBtnLabel');
+    if (btnLabel) btnLabel.textContent = LANG_NAMES[lang] || 'EN';
+
+    var langBtn = document.getElementById('langBtn');
+    if (langBtn) langBtn.setAttribute('aria-label', t(lang, 'lang.switch.aria'));
+
+    var options = document.querySelectorAll('.lang-option');
+    for (var j = 0; j < options.length; j++){
+      options[j].classList.toggle('active', options[j].getAttribute('data-lang') === lang);
+    }
+  }
+
+  function setLanguage(lang, persist){
+    if (persist !== false) {
+      try { localStorage.setItem(LANG_STORAGE_KEY, lang); } catch(e){}
+    }
+    applyLanguage(lang);
+  }
+
+  applyLanguage(detectInitialLang());
+
+  /* ---- Language switcher UI wiring ---- */
+  var langBtnEl = document.getElementById('langBtn');
+  var langMenuEl = document.getElementById('langMenu');
+
+  function closeLangMenu(){
+    langMenuEl.hidden = true;
+    langBtnEl.setAttribute('aria-expanded', 'false');
+  }
+  function openLangMenu(){
+    langMenuEl.hidden = false;
+    langBtnEl.setAttribute('aria-expanded', 'true');
+  }
+
+  langBtnEl.addEventListener('click', function(e){
+    e.stopPropagation();
+    if (langMenuEl.hidden) openLangMenu(); else closeLangMenu();
+  });
+
+  var langOptionEls = document.querySelectorAll('.lang-option');
+  for (var k = 0; k < langOptionEls.length; k++){
+    langOptionEls[k].addEventListener('click', function(e){
+      var lang = e.currentTarget.getAttribute('data-lang');
+      setLanguage(lang, true); // manual choice: persisted, overrides auto-detection from now on
+      closeLangMenu();
+    });
+  }
+
+  document.addEventListener('click', function(e){
+    if (!document.getElementById('langSwitch').contains(e.target)) closeLangMenu();
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') closeLangMenu();
+  });
+
+  /* ---- Sticky mobile CTA reveal after hero ---- */
+  var stickyCta = document.getElementById('stickyCta');
+  var heroEl = document.querySelector('.hero');
+  if (stickyCta && heroEl && 'IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (!entry.isIntersecting) { stickyCta.classList.add('show'); }
+        else { stickyCta.classList.remove('show'); }
+      });
+    }, { threshold: 0 });
+    io.observe(heroEl);
+  }
+
+  /* =====================================================================
+     WAITLIST SUBMISSION
+     Every submission is written to a local pending queue BEFORE the
+     network call, so a refresh, a closed tab, or a failed request never
+     loses the user's email — it is simply retried automatically.
+     ===================================================================== */
+  function getParam(name){
+    var m = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    return m ? decodeURIComponent(m[1].replace(/\+/g, ' ')) : '';
+  }
+  var traffic = {
+    utm_source: getParam('utm_source'),
+    utm_medium: getParam('utm_medium'),
+    utm_campaign: getParam('utm_campaign'),
+    referrer: document.referrer || ''
+  };
+
+  function isValidEmail(value){
+    var re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    return re.test(value);
+  }
+
+  function readQueue(){
+    try { return JSON.parse(localStorage.getItem(PENDING_STORAGE_KEY) || '[]'); }
+    catch(e){ return []; }
+  }
+  function writeQueue(q){
+    try { localStorage.setItem(PENDING_STORAGE_KEY, JSON.stringify(q)); }
+    catch(e){}
+  }
+  function addToQueue(payload){
+    var q = readQueue();
+    q.push(payload);
+    writeQueue(q);
+  }
+  function removeFromQueueByEmail(email){
+    var q = readQueue().filter(function(p){ return p.email !== email; });
+    writeQueue(q);
+  }
+
+  function sendToBackend(payload){
+    // Regular (CORS) fetch with a text/plain content type avoids a
+    // preflight request against the Apps Script endpoint, so the JSON
+    // response can actually be read back (success vs. duplicate vs. error).
+    return fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    }).then(function(res){ return res.json(); });
+  }
+
+  function retryQueue(){
+    if (!APPS_SCRIPT_URL) return;
+    var q = readQueue();
+    q.forEach(function(payload){
+      sendToBackend(payload)
+        .then(function(data){
+          if (data && data.status === 'ok') removeFromQueueByEmail(payload.email);
+        })
+        .catch(function(){ /* stays in queue, will retry on next load */ });
+    });
+  }
+
+  var form = document.getElementById('waitlistForm');
+  var emailInput = document.getElementById('emailInput');
+  var errorEl = document.getElementById('formError');
+  var submitBtn = document.getElementById('submitBtn');
+  var submitBtnLabel = document.getElementById('submitBtnLabel');
+  var successBox = document.getElementById('successBox');
+  var successBadge = document.getElementById('successBadge');
+  var successTitle = document.getElementById('successTitle');
+  var successBody = document.getElementById('successBody');
+
+  function showSuccess(pending){
+    form.style.display = 'none';
+    successBox.classList.add('show');
+    successBox.classList.toggle('pending', !!pending);
+    successBadge.textContent = t(currentLang, pending ? 'waitlist.pending.badge' : 'waitlist.success.badge');
+    successTitle.textContent = t(currentLang, pending ? 'waitlist.pending.title' : 'waitlist.success.title');
+    successBody.textContent = t(currentLang, pending ? 'waitlist.pending.body' : 'waitlist.success.body');
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    errorEl.textContent = '';
+    var email = emailInput.value.trim();
+
+    if (!isValidEmail(email)) {
+      errorEl.textContent = t(currentLang, 'waitlist.error.invalid');
+      emailInput.focus();
+      return;
+    }
+
+    submitBtn.disabled = true;
+    var originalLabel = submitBtnLabel.textContent;
+    submitBtnLabel.textContent = t(currentLang, 'waitlist.submitting');
+
+    var payload = {
+      action: 'subscribe',
+      email: email,
+      product: 'OFFBOARD',
+      lang: currentLang,
+      timestamp: new Date().toISOString(),
+      utm_source: traffic.utm_source,
+      utm_medium: traffic.utm_medium,
+      utm_campaign: traffic.utm_campaign,
+      referrer: traffic.referrer
+    };
+
+    // Persist locally first: the email is never lost, even if the
+    // network call below fails or the tab closes mid-request.
+    addToQueue(payload);
+
+    if (!APPS_SCRIPT_URL) {
+      // Demo mode: no backend configured yet.
+      setTimeout(function(){ showSuccess(false); }, 400);
+      return;
+    }
+
+    sendToBackend(payload)
+      .then(function(data){
+        submitBtn.disabled = false;
+        submitBtnLabel.textContent = originalLabel;
+        if (data && data.status === 'ok') {
+          removeFromQueueByEmail(email);
+          showSuccess(false);
+        } else {
+          // Row-level error from the script: email stays queued for retry.
+          showSuccess(true);
+        }
+      })
+      .catch(function(){
+        // Network failure: nothing is lost, it stays in the queue and
+        // will be retried automatically on the next page load.
+        submitBtn.disabled = false;
+        submitBtnLabel.textContent = originalLabel;
+        showSuccess(true);
+      });
+  });
+
+  // Retry anything left over from a previous, interrupted session.
+  retryQueue();
+
+})();
+</script>
+</body>
+</html>
