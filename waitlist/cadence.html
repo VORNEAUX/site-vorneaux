@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">Cadence — Know what's safe to spend, every day</title>
+<meta id="pageDescription" name="description" content="For freelancers, creators and independent earners: one calm number, every day, instead of a budgeting system you have to run yourself.">
+
+<!-- ================================================================
+  ANALYTICS CONFIG — fill these in before publishing.
+  GA4 / GTM: paste your container script here.
+  Meta Pixel: paste your pixel base code here (fbq init).
+  The trackEvent() function below already calls both gtag/dataLayer
+  and fbq if they exist, plus logs to console for local testing.
+================================================================= -->
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"></script> -->
+<!--
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-XXXXXXX');
+</script>
+-->
+<!--
+<script>
+!function(f,b,e,v,n,t,s){...}(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'YOUR_PIXEL_ID');
+fbq('track', 'PageView');
+</script>
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@400;500;600&family=DM+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --obsidian:#050509;
+    --panel:#0c0c13;
+    --panel-2:#111119;
+    --hairline:rgba(201,169,110,0.14);
+    --hairline-strong:rgba(201,169,110,0.28);
+    --gold:#C9A96E;
+    --gold-dim:#8a7550;
+    --gold-bright:#E4CB98;
+    --rust:#8B4A3D;
+    --rust-bright:#B5695A;
+    --ink:#F3F1EA;
+    --ink-dim:#B9B6AC;
+    --ink-faint:#7A7870;
+    --ease:cubic-bezier(.16,.8,.24,1);
+    --serif:'Cormorant Garamond', serif;
+    --eyebrow:'Jost', sans-serif;
+    --body:'DM Sans', sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--obsidian);
+    color:var(--ink);
+    font-family:var(--body);
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--gold);color:var(--obsidian);}
+  img,svg{display:block;max-width:100%;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 32px;}
+  .eyebrow{
+    font-family:var(--eyebrow);
+    font-size:12.5px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--gold);
+    font-weight:500;
+  }
+  h1,h2,h3{font-family:var(--serif);font-weight:500;line-height:1.08;letter-spacing:-0.01em;}
+  h1{font-size:clamp(40px,6.2vw,84px);}
+  h2{font-size:clamp(30px,4vw,48px);}
+  h3{font-size:clamp(20px,2.4vw,26px);}
+  p{color:var(--ink-dim);}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:10px;
+    font-family:var(--eyebrow);font-size:14.5px;font-weight:500;letter-spacing:0.04em;
+    padding:16px 30px;border-radius:2px;cursor:pointer;border:1px solid transparent;
+    transition:transform .5s var(--ease), background .4s var(--ease), border-color .4s var(--ease), color .4s var(--ease);
+  }
+  .btn-primary{background:var(--gold);color:var(--obsidian);}
+  .btn-primary:hover{background:var(--gold-bright);transform:translateY(-2px);}
+  .btn-primary:disabled{opacity:0.6;cursor:default;transform:none;}
+  .btn-ghost{background:transparent;color:var(--ink);border-color:var(--hairline-strong);}
+  .btn-ghost:hover{border-color:var(--gold);color:var(--gold);}
+  section{position:relative;}
+  .divider{height:1px;background:linear-gradient(90deg, transparent, var(--hairline-strong) 20%, var(--hairline-strong) 80%, transparent);}
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity 1s var(--ease), transform 1s var(--ease);}
+  .reveal.is-visible{opacity:1;transform:translateY(0);}
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px 32px;
+    background:linear-gradient(180deg, rgba(5,5,9,0.92), rgba(5,5,9,0));
+    backdrop-filter:blur(6px);
+  }
+  .nav-left{display:flex;align-items:center;gap:22px;}
+  .nav-mark{font-family:var(--serif);font-size:20px;letter-spacing:0.03em;}
+  .nav-mark span{color:var(--gold);}
+  .nav-sub{font-family:var(--eyebrow);font-size:10px;letter-spacing:0.2em;color:var(--ink-faint);display:block;margin-top:-2px;}
+  .nav-right{display:flex;align-items:center;gap:14px;}
+  .nav-cta{font-family:var(--eyebrow);font-size:13px;letter-spacing:0.05em;padding:11px 20px;border:1px solid var(--hairline-strong);border-radius:2px;transition:border-color .3s,color .3s;}
+  .nav-cta:hover{border-color:var(--gold);color:var(--gold);}
+
+  /* language switcher */
+  .lang-switch{position:relative;}
+  .lang-btn{
+    display:flex;align-items:center;gap:7px;background:transparent;border:1px solid var(--hairline-strong);
+    color:var(--ink-dim);font-family:var(--eyebrow);font-size:12.5px;letter-spacing:0.05em;
+    padding:10px 13px;border-radius:2px;cursor:pointer;transition:border-color .3s,color .3s;
+  }
+  .lang-btn:hover, .lang-btn[aria-expanded="true"]{border-color:var(--gold);color:var(--gold);}
+  .lang-btn .car{font-size:9px;transition:transform .3s var(--ease);}
+  .lang-btn[aria-expanded="true"] .car{transform:rotate(180deg);}
+  .lang-menu{
+    position:absolute;top:calc(100% + 8px);right:0;min-width:172px;
+    background:var(--panel);border:1px solid var(--hairline-strong);border-radius:2px;
+    padding:6px;display:none;flex-direction:column;gap:2px;
+    box-shadow:0 20px 40px rgba(0,0,0,0.4);
+  }
+  .lang-menu.open{display:flex;}
+  .lang-option{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    background:transparent;border:none;color:var(--ink-dim);text-align:left;
+    font-family:var(--body);font-size:14px;padding:10px 12px;border-radius:2px;cursor:pointer;
+    transition:background .25s,color .25s;
+  }
+  .lang-option:hover{background:rgba(201,169,110,0.08);color:var(--ink);}
+  .lang-option[aria-selected="true"]{color:var(--gold);}
+  .lang-option .code{font-family:var(--eyebrow);font-size:10.5px;letter-spacing:0.06em;color:var(--ink-faint);}
+  .lang-option[aria-selected="true"] .code{color:var(--gold-dim);}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:100vh;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:150px 0 90px;
+    background:
+      radial-gradient(ellipse 900px 500px at 82% -10%, rgba(201,169,110,0.09), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 10% 110%, rgba(139,74,61,0.08), transparent 60%);
+  }
+  .hero-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:64px;align-items:center;}
+  .hero h1{margin:18px 0 22px;}
+  .hero h1 em{font-style:italic;color:var(--gold);}
+  .hero-sub{font-size:19px;max-width:480px;margin-bottom:34px;color:var(--ink-dim);}
+  .hero-actions{display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin-bottom:28px;}
+  .hero-note{font-size:13px;color:var(--ink-faint);font-family:var(--eyebrow);letter-spacing:0.03em;}
+
+  /* cadence line visual */
+  .cadence-card{
+    background:var(--panel);border:1px solid var(--hairline);border-radius:4px;
+    padding:34px 30px 28px;
+  }
+  .cadence-label{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:22px;gap:12px;}
+  .cadence-label .l1{font-family:var(--eyebrow);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-faint);}
+  .cadence-state{font-family:var(--eyebrow);font-size:11px;letter-spacing:0.1em;color:var(--rust-bright);transition:color 1.6s var(--ease);white-space:nowrap;}
+  .cadence-state.settled{color:var(--gold);}
+  .eq{display:flex;align-items:flex-end;gap:5px;height:96px;margin-bottom:24px;}
+  .eq i{
+    flex:1;background:var(--rust);border-radius:1px;
+    transition:height 1.8s var(--ease), background 1.8s var(--ease);
+  }
+  .eq i.settled{background:var(--gold-dim);}
+  .cadence-number{
+    display:flex;align-items:baseline;gap:12px;
+    padding-top:20px;border-top:1px solid var(--hairline);
+  }
+  .cadence-number .amt{
+    font-family:var(--mono);font-size:48px;font-weight:500;color:var(--ink);
+    letter-spacing:-0.02em;
+  }
+  .cadence-number .amt .cur{font-size:24px;color:var(--gold);vertical-align:6px;margin-right:2px;}
+  .cadence-number .cap{font-family:var(--eyebrow);font-size:12px;color:var(--ink-faint);letter-spacing:0.04em;}
+  .pulse-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);margin-left:auto;animation:pulse 1.8s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:0.35;transform:scale(0.85);}50%{opacity:1;transform:scale(1.15);}}
+
+  /* ---------- MIRROR / PROBLEM ---------- */
+  .mirror{padding:150px 0;}
+  .mirror-head{max-width:640px;margin-bottom:64px;}
+  .mirror-head h2{margin-top:16px;}
+  .mirror-list{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--hairline);border:1px solid var(--hairline);}
+  .mirror-item{
+    background:var(--obsidian);padding:34px 34px 30px;position:relative;overflow:hidden;
+  }
+  .mirror-item .spark{position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--rust);transform:scaleY(0);transform-origin:bottom;transition:transform .5s var(--ease);}
+  .mirror-item:hover .spark{transform:scaleY(1);background:var(--gold);}
+  .mirror-item p.line{font-family:var(--serif);font-size:22px;font-style:italic;color:var(--ink);line-height:1.35;}
+  .mirror-item .who{margin-top:16px;font-family:var(--eyebrow);font-size:11.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-faint);}
+
+  /* ---------- SOLUTION / HOW IT WORKS ---------- */
+  .how{padding:150px 0;background:var(--panel);}
+  .how-head{max-width:600px;margin-bottom:70px;}
+  .how-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hairline);}
+  .step{background:var(--panel);padding:8px 36px 40px;}
+  .step .num{font-family:var(--mono);font-size:13px;color:var(--gold);letter-spacing:0.06em;display:block;margin-bottom:26px;padding-top:34px;border-top:1px solid var(--hairline-strong);}
+  .step h3{margin-bottom:14px;}
+  .step p{font-size:15px;}
+
+  /* ---------- LIVE DEMO ---------- */
+  .demo{padding:150px 0;}
+  .demo-grid{display:grid;grid-template-columns:0.85fr 1.15fr;gap:70px;align-items:center;}
+  .demo-head{max-width:420px;}
+  .demo-head h2{margin:16px 0 20px;}
+  .demo-panel{background:var(--panel);border:1px solid var(--hairline);border-radius:4px;padding:40px 38px;}
+  .demo-row{margin-bottom:30px;}
+  .demo-row label{display:flex;justify-content:space-between;font-family:var(--eyebrow);font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:14px;gap:10px;}
+  .demo-row label b{color:var(--gold);font-family:var(--mono);font-weight:500;font-size:13px;white-space:nowrap;}
+  input[type=range]{
+    -webkit-appearance:none;width:100%;height:2px;background:var(--hairline-strong);outline:none;border-radius:2px;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer;
+    border:2px solid var(--obsidian);box-shadow:0 0 0 1px var(--gold);
+  }
+  input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer;border:2px solid var(--obsidian);}
+  .demo-result{
+    margin-top:8px;padding-top:26px;border-top:1px solid var(--hairline);
+    display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px;
+  }
+  .demo-result .rlabel{font-family:var(--eyebrow);font-size:12px;letter-spacing:0.06em;color:var(--ink-faint);text-transform:uppercase;}
+  .demo-result .rnum{font-family:var(--mono);font-size:40px;color:var(--ink);margin-top:8px;}
+  .demo-result .rnum span{color:var(--gold);}
+  .demo-result .rnum .unit{font-size:15px;font-family:var(--body);color:var(--ink-dim);}
+  .demo-sub{font-size:12.5px;color:var(--ink-faint);max-width:220px;text-align:right;}
+
+  /* ---------- COMPARE ---------- */
+  .compare{padding:150px 0;background:var(--panel);}
+  .compare-head{max-width:600px;margin-bottom:60px;}
+  .compare-table{border:1px solid var(--hairline);}
+  .compare-row{display:grid;grid-template-columns:1.3fr 1fr 1fr;border-top:1px solid var(--hairline);}
+  .compare-row:first-child{border-top:none;}
+  .compare-row > div{padding:22px 26px;font-size:14.5px;}
+  .compare-row.head > div{font-family:var(--eyebrow);font-size:11.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);padding-top:26px;padding-bottom:26px;}
+  .compare-row > div:first-child{color:var(--ink);}
+  .compare-row .no{color:var(--ink-faint);}
+  .compare-row .yes{color:var(--gold-bright);}
+  .compare-col-head{color:var(--gold) !important;}
+
+  /* ---------- EVIDENCE ---------- */
+  .evidence{padding:150px 0;}
+  .evidence-head{max-width:560px;margin-bottom:56px;}
+  .evidence-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--hairline);border:1px solid var(--hairline);}
+  .evid{background:var(--obsidian);padding:34px 26px;}
+  .evid .stat{font-family:var(--mono);font-size:38px;color:var(--gold);letter-spacing:-0.01em;}
+  .evid .lab{font-size:13px;color:var(--ink-dim);margin-top:10px;line-height:1.5;}
+  .evid .src{font-family:var(--eyebrow);font-size:10.5px;letter-spacing:0.05em;color:var(--ink-faint);margin-top:14px;text-transform:uppercase;}
+
+  /* ---------- MANIFESTO ---------- */
+  .manifesto{padding:130px 0;text-align:center;}
+  .manifesto blockquote{
+    font-family:var(--serif);font-style:italic;font-weight:400;
+    font-size:clamp(24px,3vw,34px);line-height:1.5;max-width:760px;margin:0 auto;color:var(--ink);
+  }
+  .manifesto blockquote em{color:var(--gold);font-style:italic;}
+  .manifesto .attrib{margin-top:26px;font-family:var(--eyebrow);font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-faint);}
+
+  /* ---------- WAITLIST ---------- */
+  .waitlist{padding:0 0 160px;}
+  .waitlist-panel{
+    background:var(--panel);border:1px solid var(--hairline-strong);border-radius:4px;
+    padding:70px 64px;display:grid;grid-template-columns:0.95fr 1.05fr;gap:60px;
+  }
+  .wl-left h2{margin:16px 0 18px;}
+  .wl-left p{max-width:400px;}
+  .wl-count{margin-top:34px;display:flex;align-items:center;gap:10px;font-family:var(--eyebrow);font-size:12.5px;color:var(--ink-faint);}
+  .wl-count .dotrow{display:flex;gap:4px;}
+  .wl-count .dotrow i{width:5px;height:5px;border-radius:50%;background:var(--gold-dim);}
+  form.wl-form{display:flex;flex-direction:column;gap:18px;}
+  .field label{display:block;font-family:var(--eyebrow);font-size:11.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:9px;}
+  .field input[type=email], .field select{
+    width:100%;background:var(--obsidian);border:1px solid var(--hairline-strong);color:var(--ink);
+    padding:14px 16px;font-family:var(--body);font-size:15px;border-radius:2px;
+    transition:border-color .3s;appearance:none;
+  }
+  .field select{
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23C9A96E' stroke-width='1.4' fill='none'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 16px center;
+  }
+  .field input:focus, .field select:focus{outline:none;border-color:var(--gold);}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .wl-submit{margin-top:6px;width:100%;}
+  .wl-fineprint{font-size:12px;color:var(--ink-faint);margin-top:2px;}
+  .wl-error{font-size:13px;color:var(--rust-bright);display:none;}
+  .wl-success{display:none;text-align:center;padding:30px 10px;}
+  .wl-success .mark{font-family:var(--serif);font-style:italic;font-size:26px;color:var(--gold);margin-bottom:10px;}
+  .wl-success p{max-width:340px;margin:0 auto;}
+
+  /* ---------- FAQ ---------- */
+  .faq{padding:0 0 150px;}
+  .faq-head{max-width:520px;margin-bottom:50px;}
+  .faq-item{border-top:1px solid var(--hairline);padding:26px 0;cursor:pointer;}
+  .faq-item:last-child{border-bottom:1px solid var(--hairline);}
+  .faq-q{display:flex;justify-content:space-between;align-items:center;gap:20px;}
+  .faq-q h3{font-size:19px;}
+  .faq-q .plus{font-family:var(--mono);font-size:20px;color:var(--gold);transition:transform .4s var(--ease);flex-shrink:0;}
+  .faq-item.open .plus{transform:rotate(45deg);}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .5s var(--ease);}
+  .faq-a p{padding-top:16px;max-width:640px;font-size:15px;}
+
+  /* ---------- FOOTER CTA + FOOTER ---------- */
+  .final-cta{padding:120px 0;text-align:center;border-top:1px solid var(--hairline);}
+  .final-cta h2{max-width:620px;margin:16px auto 34px;}
+  footer{border-top:1px solid var(--hairline);padding:40px 0;}
+  .footer-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+  .footer-row .fmark{font-family:var(--serif);font-size:16px;color:var(--ink-dim);}
+  .footer-row .flinks{display:flex;gap:26px;font-family:var(--eyebrow);font-size:12px;letter-spacing:0.05em;color:var(--ink-faint);}
+  .footer-row .flinks a:hover{color:var(--gold);}
+
+  @media(max-width:880px){
+    .hero-grid, .demo-grid, .waitlist-panel{grid-template-columns:1fr;}
+    .mirror-list, .how-steps, .compare-row, .evidence-grid{grid-template-columns:1fr;}
+    .compare-row > div:nth-child(2), .compare-row > div:nth-child(3){border-top:1px solid var(--hairline);}
+    .field-row{grid-template-columns:1fr;}
+    .waitlist-panel{padding:44px 26px;}
+    .wrap{padding:0 22px;}
+    .demo-sub{text-align:left;}
+    .nav-sub{display:none;}
+  }
+  @media(max-width:520px){
+    .lang-menu{right:auto;left:0;}
+  }
+  @media(max-width:480px){
+    nav{flex-wrap:wrap;row-gap:12px;padding:18px 20px;}
+    .nav-mark{font-size:17px;}
+    .nav-right{gap:10px;}
+    .lang-btn{padding:8px 10px;font-size:11.5px;}
+    .nav-cta{padding:9px 14px;font-size:12px;}
+    .hero{padding-top:120px;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <div>
+      <div class="nav-mark">CADENCE <span>™</span></div>
+      <span class="nav-sub">BY VORNEAUX</span>
+    </div>
+  </div>
+  <div class="nav-right">
+    <div class="lang-switch">
+      <button class="lang-btn" id="langBtn" aria-haspopup="listbox" aria-expanded="false" aria-label="Change language">
+        <span id="langBtnLabel">EN</span>
+        <span class="car">▾</span>
+      </button>
+      <div class="lang-menu" id="langMenu" role="listbox" aria-label="Select language"></div>
+    </div>
+    <a href="#waitlist" class="nav-cta" data-track="nav_cta" data-i18n="nav_cta">Request early access</a>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow" data-i18n="hero_eyebrow">For freelancers, creators &amp; independent earners</span>
+      <h1 data-i18n-html="hero_title">Your income has<br>no rhythm. <em>Your money<br>can, anyway.</em></h1>
+      <p class="hero-sub" data-i18n="hero_sub">Cadence turns a messy, unpredictable income into one calm number, every day — what's actually safe to spend, after taxes and the lean months are already accounted for.</p>
+      <div class="hero-actions">
+        <a href="#waitlist" class="btn btn-primary" data-track="hero_cta_primary" data-i18n="hero_cta_primary">Request early access</a>
+        <a href="#how" class="btn btn-ghost" data-track="hero_cta_secondary" data-i18n="hero_cta_secondary">See how it works</a>
+      </div>
+      <div class="hero-note" data-i18n="hero_note">Not launched yet — this page exists to hear from you first.</div>
+    </div>
+
+    <div class="cadence-card">
+      <div class="cadence-label">
+        <span class="l1" data-i18n="cadence_label">6-month income, visualized</span>
+        <span class="cadence-state" id="cadenceState" data-i18n="cadence_state_unsteady">unsteady</span>
+      </div>
+      <div class="eq" id="eqBars"></div>
+      <div class="cadence-number">
+        <div>
+          <div class="amt"><span class="cur">$</span><span id="heroNum">—</span></div>
+          <div class="cap" data-i18n="cadence_cap">safe to spend today</div>
+        </div>
+        <div class="pulse-dot"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<!-- ============ MIRROR / PROBLEM ============ -->
+<section class="mirror">
+  <div class="wrap">
+    <div class="mirror-head reveal">
+      <span class="eyebrow" data-i18n="mirror_eyebrow">The part nobody plans for</span>
+      <h2 data-i18n-html="mirror_title">If any of this sounds<br>familiar, keep reading.</h2>
+    </div>
+    <div class="mirror-list">
+      <div class="mirror-item reveal"><div class="spark"></div>
+        <p class="line" data-i18n="mirror_q1">"I made great money this quarter — and I still don't know if I can afford this."</p>
+        <div class="who" data-i18n="mirror_r1">Freelance designer</div>
+      </div>
+      <div class="mirror-item reveal"><div class="spark"></div>
+        <p class="line" data-i18n="mirror_q2">"Tax season shows up like a surprise bill, every single year."</p>
+        <div class="who" data-i18n="mirror_r2">Independent consultant</div>
+      </div>
+      <div class="mirror-item reveal"><div class="spark"></div>
+        <p class="line" data-i18n="mirror_q3">"I tried a budgeting app once. It wanted me to plan a salary I don't have."</p>
+        <div class="who" data-i18n="mirror_r3">Digital product creator</div>
+      </div>
+      <div class="mirror-item reveal"><div class="spark"></div>
+        <p class="line" data-i18n="mirror_q4">"Good months feel like relief. Slow months feel like free-fall. There's no in-between."</p>
+        <div class="who" data-i18n="mirror_r4">Gig platform worker</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="how" id="how">
+  <div class="wrap">
+    <div class="how-head reveal">
+      <span class="eyebrow" data-i18n="how_eyebrow">How Cadence works</span>
+      <h2 data-i18n-html="how_title">One number a day.<br>Nothing to configure.</h2>
+    </div>
+    <div class="how-steps">
+      <div class="step reveal">
+        <span class="num" data-i18n="step1_num">01 / three min</span>
+        <h3 data-i18n="step1_title">Bring your income</h3>
+        <p data-i18n="step1_desc">Connect an account or enter your last few months by hand — however messy it looks. No fixed paycheck required.</p>
+      </div>
+      <div class="step reveal">
+        <span class="num" data-i18n="step2_num">02 / instant</span>
+        <h3 data-i18n="step2_title">Cadence does the math</h3>
+        <p data-i18n="step2_desc">It calculates a safe baseline, sets aside a tax reserve, and builds a buffer from your strong months — automatically, no categories to assign.</p>
+      </div>
+      <div class="step reveal">
+        <span class="num" data-i18n="step3_num">03 / every day</span>
+        <h3 data-i18n="step3_title">You get one number</h3>
+        <p data-i18n="step3_desc">Open the app, see what's safe to spend today, close it. Ten seconds, not ten minutes of bookkeeping.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LIVE DEMO ============ -->
+<section class="demo">
+  <div class="wrap demo-grid">
+    <div class="demo-head reveal">
+      <span class="eyebrow" data-i18n="demo_eyebrow">Try the math yourself</span>
+      <h2 data-i18n-html="demo_title">See what a<br>real month looks like.</h2>
+      <p data-i18n="demo_desc">Move the sliders to your rough monthly range. This is a simplified preview of the logic Cadence runs on real transaction history.</p>
+    </div>
+    <div class="demo-panel reveal">
+      <div class="demo-row">
+        <label><span data-i18n="demo_low_label">Lean month income</span> <b id="lowOut">$2,400</b></label>
+        <input type="range" min="500" max="8000" step="100" value="2400" id="lowSlider">
+      </div>
+      <div class="demo-row">
+        <label><span data-i18n="demo_high_label">Strong month income</span> <b id="highOut">$7,800</b></label>
+        <input type="range" min="1000" max="20000" step="100" value="7800" id="highSlider">
+      </div>
+      <div class="demo-result">
+        <div>
+          <div class="rlabel" data-i18n="demo_result_label">Estimated daily safe-to-spend</div>
+          <div class="rnum">$<span id="demoResult">61</span> <span class="unit" data-i18n="demo_result_suffix">/ day</span></div>
+        </div>
+        <div class="demo-sub" data-i18n="demo_sub">Based on your lean month, a 25% tax reserve, and a rolling buffer built from the gap above it.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<!-- ============ COMPARE ============ -->
+<section class="compare">
+  <div class="wrap">
+    <div class="compare-head reveal">
+      <span class="eyebrow" data-i18n="compare_eyebrow">Why not just use a budgeting app?</span>
+      <h2 data-i18n="compare_title">You've probably already tried one.</h2>
+    </div>
+    <div class="compare-table reveal">
+      <div class="compare-row head">
+        <div></div>
+        <div class="compare-col-head" data-i18n="compare_col1">Traditional budgeting apps</div>
+        <div class="compare-col-head" data-i18n="compare_col2">Cadence</div>
+      </div>
+      <div class="compare-row">
+        <div data-i18n="compare_row1_label">Built for</div>
+        <div class="no" data-i18n="compare_row1_v1">A fixed monthly paycheck</div>
+        <div class="yes" data-i18n="compare_row1_v2">Income that moves every month</div>
+      </div>
+      <div class="compare-row">
+        <div data-i18n="compare_row2_label">What you do</div>
+        <div class="no" data-i18n="compare_row2_v1">Assign every dollar to a category, yourself</div>
+        <div class="yes" data-i18n="compare_row2_v2">Nothing — the baseline is calculated for you</div>
+      </div>
+      <div class="compare-row">
+        <div data-i18n="compare_row3_label">What you see</div>
+        <div class="no" data-i18n="compare_row3_v1">A dashboard of categories and graphs</div>
+        <div class="yes" data-i18n="compare_row3_v2">One number: what's safe today</div>
+      </div>
+      <div class="compare-row">
+        <div data-i18n="compare_row4_label">Taxes</div>
+        <div class="no" data-i18n="compare_row4_v1">Not accounted for</div>
+        <div class="yes" data-i18n="compare_row4_v2">Reserved automatically as income comes in</div>
+      </div>
+      <div class="compare-row">
+        <div data-i18n="compare_row5_label">Where it works</div>
+        <div class="no" data-i18n="compare_row5_v1">Mostly North American bank sync</div>
+        <div class="yes" data-i18n="compare_row5_v2">Any currency, manual entry always available</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EVIDENCE ============ -->
+<section class="evidence">
+  <div class="wrap">
+    <div class="evidence-head reveal">
+      <span class="eyebrow" data-i18n="evidence_eyebrow">You're not the exception</span>
+      <h2 data-i18n-html="evidence_title">This is the norm for<br>independent income, globally.</h2>
+    </div>
+    <div class="evidence-grid">
+      <div class="evid reveal">
+        <div class="stat">70M+</div>
+        <div class="lab" data-i18n="evid1_label">independent workers in the US alone report income that changes month to month.</div>
+        <div class="src" data-i18n="evid1_src">Upwork / MBO Partners</div>
+      </div>
+      <div class="evid reveal">
+        <div class="stat">80%</div>
+        <div class="lab" data-i18n="evid2_label">of gig workers say their income is unpredictable.</div>
+        <div class="src" data-i18n="evid2_src">Experian, 2026</div>
+      </div>
+      <div class="evid reveal">
+        <div class="stat">80%</div>
+        <div class="lab" data-i18n="evid3_label">couldn't cover a $1,000 surprise expense without borrowing.</div>
+        <div class="src" data-i18n="evid3_src">Bankrate survey</div>
+      </div>
+      <div class="evid reveal">
+        <div class="stat">59%</div>
+        <div class="lab" data-i18n="evid4_label">of freelancers report inconsistent monthly income, making standard budgeting break down.</div>
+        <div class="src" data-i18n="evid4_src">Beancount, 2026</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MANIFESTO ============ -->
+<section class="manifesto reveal">
+  <div class="wrap">
+    <blockquote data-i18n-html="manifesto_quote">The money was never the problem.<br>It was the <em>timing</em> — and no one built a tool<br>that treated that as the actual job.</blockquote>
+    <div class="attrib" data-i18n="manifesto_attrib">Cadence, by VORNEAUX</div>
+  </div>
+</section>
+
+<!-- ============ WAITLIST ============ -->
+<section class="waitlist" id="waitlist">
+  <div class="wrap">
+    <div class="waitlist-panel reveal">
+      <div class="wl-left">
+        <span class="eyebrow" data-i18n="waitlist_eyebrow">Early access</span>
+        <h2 data-i18n-html="waitlist_title">Be first when<br>Cadence opens.</h2>
+        <p data-i18n="waitlist_desc">We're validating this with a small group before writing a line of app code. Join now and you'll help shape what gets built — and get early access before public launch.</p>
+        <div class="wl-count">
+          <div class="dotrow"><i></i><i></i><i></i></div>
+          <span data-i18n="waitlist_note">No spam. One email when we launch.</span>
+        </div>
+      </div>
+
+      <div>
+        <form class="wl-form" id="waitlistForm" novalidate>
+          <div class="field">
+            <label for="email" data-i18n="field_email_label">Email</label>
+            <input type="email" id="email" name="email" placeholder="you@domain.com" data-i18n-placeholder="field_email_placeholder" required>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="incomeSource" data-i18n="field_income_label">Main income source</label>
+              <select id="incomeSource" name="incomeSource">
+                <option value="" data-i18n="select_placeholder">Select one</option>
+                <option value="freelance_services" data-i18n="income_opt_freelance">Freelance services</option>
+                <option value="creator_content" data-i18n="income_opt_creator">Content / creator income</option>
+                <option value="digital_products" data-i18n="income_opt_digital">Digital products</option>
+                <option value="consulting" data-i18n="income_opt_consulting">Consulting</option>
+                <option value="gig_platform" data-i18n="income_opt_gig">Gig platform work</option>
+                <option value="small_business" data-i18n="income_opt_smallbiz">Small business / e-commerce</option>
+                <option value="other" data-i18n="income_opt_other">Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="wtp" data-i18n="field_wtp_label">Would you pay for this?</label>
+              <select id="wtp" name="wtp">
+                <option value="" data-i18n="select_placeholder">Select one</option>
+                <option value="yes_5_8" data-i18n="wtp_opt_yes58">Yes — around $5–8/mo</option>
+                <option value="yes_more" data-i18n="wtp_opt_yesmore">Yes — more, if it delivers</option>
+                <option value="maybe" data-i18n="wtp_opt_maybe">Maybe, need to see it first</option>
+                <option value="free_only" data-i18n="wtp_opt_freeonly">Only if free</option>
+              </select>
+            </div>
+          </div>
+          <span class="wl-error" id="wlError" data-i18n="wl_error_default">Enter a valid email to continue.</span>
+          <button type="submit" class="btn btn-primary wl-submit" id="wlSubmitBtn" data-track="waitlist_submit_attempt" data-i18n="wl_submit">Request early access</button>
+          <span class="wl-fineprint" data-i18n="wl_fineprint">Two questions, both optional — they help us build the right thing.</span>
+        </form>
+        <div class="wl-success" id="wlSuccess">
+          <div class="mark" data-i18n="wl_success_mark">You're on the list.</div>
+          <p data-i18n-html="wl_success_body">We'll reach out from <strong style="color:var(--ink);">hello@vorneaux.com</strong> as Cadence gets closer to launch — including a chance to test it early.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="faq">
+  <div class="wrap">
+    <div class="faq-head reveal">
+      <span class="eyebrow" data-i18n="faq_eyebrow">Before you go</span>
+      <h2 data-i18n="faq_title">Questions people ask first.</h2>
+    </div>
+
+    <div class="faq-item reveal">
+      <div class="faq-q"><h3 data-i18n="faq_q1">Is this just another budgeting app?</h3><span class="plus">+</span></div>
+      <div class="faq-a"><p data-i18n="faq_a1">No. Budgeting apps ask you to manage a system. Cadence is built to hand you one decision — what's safe to spend today — calculated for you, with no categories, no envelopes, no weekly review ritual required.</p></div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q"><h3 data-i18n="faq_q2">Is my financial data safe?</h3><span class="plus">+</span></div>
+      <div class="faq-a"><p data-i18n="faq_a2">Bank connections, when available, go through the same read-only, encrypted providers used across the industry — Cadence never sees your credentials and can't move money. Full details will be published before launch.</p></div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q"><h3 data-i18n="faq_q3">Do I have to connect my bank account?</h3><span class="plus">+</span></div>
+      <div class="faq-a"><p data-i18n="faq_a3">No. Manual entry is a first-class option from day one, not an afterthought — useful if you're not ready to connect an account, or your bank isn't supported yet.</p></div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q"><h3 data-i18n="faq_q4">What if my country isn't supported at launch?</h3><span class="plus">+</span></div>
+      <div class="faq-a"><p data-i18n="faq_a4">Cadence launches with a small number of currencies and tax regimes done properly, then expands. Tell us where you're based when you join — it directly shapes what we build next.</p></div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q"><h3 data-i18n="faq_q5">When does it launch, and what does early access mean?</h3><span class="plus">+</span></div>
+      <div class="faq-a"><p data-i18n="faq_a5">There's no fixed date yet — this page exists to find out if enough people want this before we build it. Early access means you'll be invited to try it, and to influence it, before anyone else.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section class="final-cta">
+  <div class="wrap reveal">
+    <span class="eyebrow" data-i18n="manifesto_attrib">Cadence, by VORNEAUX</span>
+    <h2 data-i18n-html="final_title">Stop guessing what you can afford.<br>Start knowing, every day.</h2>
+    <a href="#waitlist" class="btn btn-primary" data-track="final_cta" data-i18n="final_cta">Request early access</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-row">
+    <div class="fmark">VORNEAUX</div>
+    <div class="flinks">
+      <a href="mailto:contact@vorneaux.com">contact@vorneaux.com</a>
+      <a href="#" id="privacyLink" data-i18n="footer_privacy">Privacy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ================================================================
+   CONFIG — set your Google Apps Script Web App URL before publishing.
+   Same pattern as Ownership OS: a Sheet-bound Apps Script that logs
+   the row and sends automated signup/unsubscribe emails as
+   hello@vorneaux.com.
+================================================================= */
+const CONFIG = {
+  SCRIPT_URL: "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE"
+};
+
+/* ================================================================
+   I18N — translation dictionary, detection, persistence, switcher.
+   Every visible string on the page is driven from this dictionary.
+   English is the fallback whenever a key is missing in another
+   language, and the default when the visitor's language isn't
+   supported at all.
+================================================================= */
+const SUPPORTED_LANGS = ['en','it','es','fr','de'];
+const LANG_NAMES = { en:'English', it:'Italiano', es:'Español', fr:'Français', de:'Deutsch' };
+const LOCALE_MAP = { en:'en-US', it:'it-IT', es:'es-ES', fr:'fr-FR', de:'de-DE' };
+const LANG_STORAGE_KEY = 'cadence_lang_pref';
+
+const I18N = {
+en: {
+  meta_title: "Cadence — Know what's safe to spend, every day",
+  meta_description: "For freelancers, creators and independent earners: one calm number, every day, instead of a budgeting system you have to run yourself.",
+  nav_cta: "Request early access",
+  hero_eyebrow: "For freelancers, creators &amp; independent earners",
+  hero_title: "Your income has<br>no rhythm. <em>Your money<br>can, anyway.</em>",
+  hero_sub: "Cadence turns a messy, unpredictable income into one calm number, every day — what's actually safe to spend, after taxes and the lean months are already accounted for.",
+  hero_cta_primary: "Request early access",
+  hero_cta_secondary: "See how it works",
+  hero_note: "Not launched yet — this page exists to hear from you first.",
+  cadence_label: "6-month income, visualized",
+  cadence_state_unsteady: "unsteady",
+  cadence_state_steady: "steady",
+  cadence_cap: "safe to spend today",
+  mirror_eyebrow: "The part nobody plans for",
+  mirror_title: "If any of this sounds<br>familiar, keep reading.",
+  mirror_q1: "\u201cI made great money this quarter — and I still don't know if I can afford this.\u201d",
+  mirror_r1: "Freelance designer",
+  mirror_q2: "\u201cTax season shows up like a surprise bill, every single year.\u201d",
+  mirror_r2: "Independent consultant",
+  mirror_q3: "\u201cI tried a budgeting app once. It wanted me to plan a salary I don't have.\u201d",
+  mirror_r3: "Digital product creator",
+  mirror_q4: "\u201cGood months feel like relief. Slow months feel like free-fall. There's no in-between.\u201d",
+  mirror_r4: "Gig platform worker",
+  how_eyebrow: "How Cadence works",
+  how_title: "One number a day.<br>Nothing to configure.",
+  step1_num: "01 / three min",
+  step1_title: "Bring your income",
+  step1_desc: "Connect an account or enter your last few months by hand — however messy it looks. No fixed paycheck required.",
+  step2_num: "02 / instant",
+  step2_title: "Cadence does the math",
+  step2_desc: "It calculates a safe baseline, sets aside a tax reserve, and builds a buffer from your strong months — automatically, no categories to assign.",
+  step3_num: "03 / every day",
+  step3_title: "You get one number",
+  step3_desc: "Open the app, see what's safe to spend today, close it. Ten seconds, not ten minutes of bookkeeping.",
+  demo_eyebrow: "Try the math yourself",
+  demo_title: "See what a<br>real month looks like.",
+  demo_desc: "Move the sliders to your rough monthly range. This is a simplified preview of the logic Cadence runs on real transaction history.",
+  demo_low_label: "Lean month income",
+  demo_high_label: "Strong month income",
+  demo_result_label: "Estimated daily safe-to-spend",
+  demo_result_suffix: "/ day",
+  demo_sub: "Based on your lean month, a 25% tax reserve, and a rolling buffer built from the gap above it.",
+  compare_eyebrow: "Why not just use a budgeting app?",
+  compare_title: "You've probably already tried one.",
+  compare_col1: "Traditional budgeting apps",
+  compare_col2: "Cadence",
+  compare_row1_label: "Built for",
+  compare_row1_v1: "A fixed monthly paycheck",
+  compare_row1_v2: "Income that moves every month",
+  compare_row2_label: "What you do",
+  compare_row2_v1: "Assign every dollar to a category, yourself",
+  compare_row2_v2: "Nothing — the baseline is calculated for you",
+  compare_row3_label: "What you see",
+  compare_row3_v1: "A dashboard of categories and graphs",
+  compare_row3_v2: "One number: what's safe today",
+  compare_row4_label: "Taxes",
+  compare_row4_v1: "Not accounted for",
+  compare_row4_v2: "Reserved automatically as income comes in",
+  compare_row5_label: "Where it works",
+  compare_row5_v1: "Mostly North American bank sync",
+  compare_row5_v2: "Any currency, manual entry always available",
+  evidence_eyebrow: "You're not the exception",
+  evidence_title: "This is the norm for<br>independent income, globally.",
+  evid1_label: "independent workers in the US alone report income that changes month to month.",
+  evid1_src: "Upwork / MBO Partners",
+  evid2_label: "of gig workers say their income is unpredictable.",
+  evid2_src: "Experian, 2026",
+  evid3_label: "couldn't cover a $1,000 surprise expense without borrowing.",
+  evid3_src: "Bankrate survey",
+  evid4_label: "of freelancers report inconsistent monthly income, making standard budgeting break down.",
+  evid4_src: "Beancount, 2026",
+  manifesto_quote: "The money was never the problem.<br>It was the <em>timing</em> — and no one built a tool<br>that treated that as the actual job.",
+  manifesto_attrib: "Cadence, by VORNEAUX",
+  waitlist_eyebrow: "Early access",
+  waitlist_title: "Be first when<br>Cadence opens.",
+  waitlist_desc: "We're validating this with a small group before writing a line of app code. Join now and you'll help shape what gets built — and get early access before public launch.",
+  waitlist_note: "No spam. One email when we launch.",
+  field_email_label: "Email",
+  field_email_placeholder: "you@domain.com",
+  field_income_label: "Main income source",
+  select_placeholder: "Select one",
+  income_opt_freelance: "Freelance services",
+  income_opt_creator: "Content / creator income",
+  income_opt_digital: "Digital products",
+  income_opt_consulting: "Consulting",
+  income_opt_gig: "Gig platform work",
+  income_opt_smallbiz: "Small business / e-commerce",
+  income_opt_other: "Other",
+  field_wtp_label: "Would you pay for this?",
+  wtp_opt_yes58: "Yes — around $5–8/mo",
+  wtp_opt_yesmore: "Yes — more, if it delivers",
+  wtp_opt_maybe: "Maybe, need to see it first",
+  wtp_opt_freeonly: "Only if free",
+  wl_error_default: "Enter a valid email to continue.",
+  wl_error_fail: "Something went wrong. Try again, or email contact@vorneaux.com directly.",
+  wl_submit: "Request early access",
+  wl_submitting: "Submitting…",
+  wl_fineprint: "Two questions, both optional — they help us build the right thing.",
+  wl_success_mark: "You're on the list.",
+  wl_success_body: "We'll reach out from <strong style=\"color:var(--ink);\">hello@vorneaux.com</strong> as Cadence gets closer to launch — including a chance to test it early.",
+  faq_eyebrow: "Before you go",
+  faq_title: "Questions people ask first.",
+  faq_q1: "Is this just another budgeting app?",
+  faq_a1: "No. Budgeting apps ask you to manage a system. Cadence is built to hand you one decision — what's safe to spend today — calculated for you, with no categories, no envelopes, no weekly review ritual required.",
+  faq_q2: "Is my financial data safe?",
+  faq_a2: "Bank connections, when available, go through the same read-only, encrypted providers used across the industry — Cadence never sees your credentials and can't move money. Full details will be published before launch.",
+  faq_q3: "Do I have to connect my bank account?",
+  faq_a3: "No. Manual entry is a first-class option from day one, not an afterthought — useful if you're not ready to connect an account, or your bank isn't supported yet.",
+  faq_q4: "What if my country isn't supported at launch?",
+  faq_a4: "Cadence launches with a small number of currencies and tax regimes done properly, then expands. Tell us where you're based when you join — it directly shapes what we build next.",
+  faq_q5: "When does it launch, and what does early access mean?",
+  faq_a5: "There's no fixed date yet — this page exists to find out if enough people want this before we build it. Early access means you'll be invited to try it, and to influence it, before anyone else.",
+  final_title: "Stop guessing what you can afford.<br>Start knowing, every day.",
+  final_cta: "Request early access",
+  footer_privacy: "Privacy",
+  lang_aria_label: "Change language"
+},
+it: {
+  meta_title: "Cadence — Sai sempre quanto puoi spendere, ogni giorno",
+  meta_description: "Per freelance, creator e lavoratori indipendenti: un numero calmo, ogni giorno, al posto di un sistema di budget da gestire da soli.",
+  nav_cta: "Richiedi accesso anticipato",
+  hero_eyebrow: "Per freelance, creator e lavoratori indipendenti",
+  hero_title: "Il tuo reddito non ha<br>un ritmo. <em>I tuoi soldi,<br>invece, possono averlo.</em>",
+  hero_sub: "Cadence trasforma un reddito irregolare e imprevedibile in un unico numero calmo, ogni giorno — quanto puoi davvero spendere, tasse e mesi magri già messi in conto.",
+  hero_cta_primary: "Richiedi accesso anticipato",
+  hero_cta_secondary: "Scopri come funziona",
+  hero_note: "Non ancora lanciato — questa pagina esiste per ascoltare te per primo.",
+  cadence_label: "Reddito degli ultimi 6 mesi",
+  cadence_state_unsteady: "instabile",
+  cadence_state_steady: "stabile",
+  cadence_cap: "spendibile oggi in sicurezza",
+  mirror_eyebrow: "La parte che nessuno pianifica",
+  mirror_title: "Se qualcosa di tutto questo<br>ti suona familiare, continua a leggere.",
+  mirror_q1: "\u00abHo guadagnato bene questo trimestre — e non so ancora se posso permettermi questa spesa.\u00bb",
+  mirror_r1: "Designer freelance",
+  mirror_q2: "\u00abLa dichiarazione dei redditi arriva ogni anno come una bolletta a sorpresa.\u00bb",
+  mirror_r2: "Consulente indipendente",
+  mirror_q3: "\u00abHo provato un'app di budget una volta. Voleva che pianificassi uno stipendio che non ho.\u00bb",
+  mirror_r3: "Creator di prodotti digitali",
+  mirror_q4: "\u00abI mesi buoni sono un sollievo. Quelli lenti, una caduta libera. Non c'è via di mezzo.\u00bb",
+  mirror_r4: "Lavoratore su piattaforma gig",
+  how_eyebrow: "Come funziona Cadence",
+  how_title: "Un numero al giorno.<br>Niente da configurare.",
+  step1_num: "01 / tre minuti",
+  step1_title: "Porta il tuo reddito",
+  step1_desc: "Collega un conto oppure inserisci a mano gli ultimi mesi, per quanto disordinati sembrino. Nessuno stipendio fisso richiesto.",
+  step2_num: "02 / istantaneo",
+  step2_title: "Cadence fa i calcoli",
+  step2_desc: "Calcola una base sicura, accantona una riserva fiscale e costruisce un cuscinetto dai mesi forti — tutto in automatico, senza categorie da assegnare.",
+  step3_num: "03 / ogni giorno",
+  step3_title: "Ricevi un numero",
+  step3_desc: "Apri l'app, vedi quanto puoi spendere oggi in sicurezza, chiudi. Dieci secondi, non dieci minuti di contabilità.",
+  demo_eyebrow: "Prova tu stesso il calcolo",
+  demo_title: "Guarda come appare<br>un mese reale.",
+  demo_desc: "Sposta i cursori sul tuo intervallo mensile approssimativo. È un'anteprima semplificata della logica che Cadence applica ai dati reali.",
+  demo_low_label: "Reddito mese magro",
+  demo_high_label: "Reddito mese forte",
+  demo_result_label: "Stima spendibile al giorno",
+  demo_result_suffix: "/ giorno",
+  demo_sub: "Calcolato sul tuo mese magro, una riserva fiscale del 25% e un cuscinetto costruito sulla differenza rispetto al mese forte.",
+  compare_eyebrow: "Perché non usare una normale app di budget?",
+  compare_title: "Probabilmente ne hai già provata una.",
+  compare_col1: "App di budget tradizionali",
+  compare_col2: "Cadence",
+  compare_row1_label: "Pensata per",
+  compare_row1_v1: "Uno stipendio mensile fisso",
+  compare_row1_v2: "Un reddito che cambia ogni mese",
+  compare_row2_label: "Cosa devi fare tu",
+  compare_row2_v1: "Assegnare ogni euro a una categoria, da solo",
+  compare_row2_v2: "Niente — la base viene calcolata per te",
+  compare_row3_label: "Cosa vedi",
+  compare_row3_v1: "Una dashboard di categorie e grafici",
+  compare_row3_v2: "Un numero solo: quanto è sicuro oggi",
+  compare_row4_label: "Tasse",
+  compare_row4_v1: "Non considerate",
+  compare_row4_v2: "Accantonate in automatico man mano che arriva il reddito",
+  compare_row5_label: "Dove funziona",
+  compare_row5_v1: "Sincronizzazione bancaria quasi solo nordamericana",
+  compare_row5_v2: "Qualsiasi valuta, inserimento manuale sempre disponibile",
+  evidence_eyebrow: "Non sei l'eccezione",
+  evidence_title: "È la norma per il reddito<br>indipendente, in tutto il mondo.",
+  evid1_label: "lavoratori indipendenti solo negli USA riportano un reddito che cambia di mese in mese.",
+  evid1_src: "Upwork / MBO Partners",
+  evid2_label: "dei lavoratori gig dichiara che il proprio reddito è imprevedibile.",
+  evid2_src: "Experian, 2026",
+  evid3_label: "non riuscirebbe a coprire una spesa imprevista di 1.000$ senza indebitarsi.",
+  evid3_src: "Sondaggio Bankrate",
+  evid4_label: "dei freelance riporta un reddito mensile incostante, che manda in crisi il budget tradizionale.",
+  evid4_src: "Beancount, 2026",
+  manifesto_quote: "Il problema non sono mai stati i soldi.<br>Era il <em>momento</em> in cui arrivavano — e nessuno aveva mai costruito<br>uno strumento che trattasse questo come il vero lavoro da fare.",
+  manifesto_attrib: "Cadence, by VORNEAUX",
+  waitlist_eyebrow: "Accesso anticipato",
+  waitlist_title: "Sii il primo quando<br>Cadence aprirà.",
+  waitlist_desc: "Stiamo validando l'idea con un piccolo gruppo prima di scrivere una sola riga di app. Iscriviti ora: aiuterai a definire cosa costruiamo e avrai accesso anticipato prima del lancio pubblico.",
+  waitlist_note: "Nessuno spam. Una sola email al lancio.",
+  field_email_label: "Email",
+  field_email_placeholder: "tu@dominio.com",
+  field_income_label: "Fonte di reddito principale",
+  select_placeholder: "Seleziona",
+  income_opt_freelance: "Servizi freelance",
+  income_opt_creator: "Reddito da contenuti / creator",
+  income_opt_digital: "Prodotti digitali",
+  income_opt_consulting: "Consulenza",
+  income_opt_gig: "Lavoro su piattaforme gig",
+  income_opt_smallbiz: "Piccola impresa / e-commerce",
+  income_opt_other: "Altro",
+  field_wtp_label: "Lo pagheresti?",
+  wtp_opt_yes58: "Sì — circa 5–8$/mese",
+  wtp_opt_yesmore: "Sì — anche di più, se funziona davvero",
+  wtp_opt_maybe: "Forse, devo prima vederlo",
+  wtp_opt_freeonly: "Solo se gratuito",
+  wl_error_default: "Inserisci un'email valida per continuare.",
+  wl_error_fail: "Qualcosa è andato storto. Riprova, oppure scrivi direttamente a contact@vorneaux.com.",
+  wl_submit: "Richiedi accesso anticipato",
+  wl_submitting: "Invio in corso…",
+  wl_fineprint: "Due domande, entrambe facoltative — ci aiutano a costruire la cosa giusta.",
+  wl_success_mark: "Sei in lista.",
+  wl_success_body: "Ti scriveremo da <strong style=\"color:var(--ink);\">hello@vorneaux.com</strong> quando Cadence sarà più vicina al lancio — incluso l'invito a provarla in anteprima.",
+  faq_eyebrow: "Prima di andare",
+  faq_title: "Le domande più frequenti.",
+  faq_q1: "È solo l'ennesima app di budget?",
+  faq_a1: "No. Le app di budget ti chiedono di gestire un sistema. Cadence è pensata per darti una sola decisione — quanto puoi spendere oggi in sicurezza — già calcolata per te, senza categorie, senza buste, senza un rituale settimanale da rispettare.",
+  faq_q2: "I miei dati finanziari sono al sicuro?",
+  faq_a2: "I collegamenti bancari, dove disponibili, passano dagli stessi provider crittografati e in sola lettura usati in tutto il settore — Cadence non vede mai le tue credenziali e non può spostare denaro. I dettagli completi saranno pubblicati prima del lancio.",
+  faq_q3: "Devo per forza collegare il conto bancario?",
+  faq_a3: "No. L'inserimento manuale è un'opzione a tutti gli effetti fin dal primo giorno, non un ripiego — utile se non vuoi ancora collegare un conto o se la tua banca non è ancora supportata.",
+  faq_q4: "E se il mio paese non è supportato al lancio?",
+  faq_a4: "Cadence parte con un numero ridotto di valute e regimi fiscali fatti bene, poi si espande. Dicci dove ti trovi quando ti iscrivi: influenzerà direttamente cosa costruiamo dopo.",
+  faq_q5: "Quando esce, e cosa significa accesso anticipato?",
+  faq_a5: "Non c'è ancora una data fissa — questa pagina esiste per capire se abbastanza persone lo vogliono davvero, prima di costruirlo. Accesso anticipato significa che sarai invitato a provarlo, e a influenzarlo, prima di chiunque altro.",
+  final_title: "Smetti di indovinare quanto puoi permetterti.<br>Inizia a saperlo, ogni giorno.",
+  final_cta: "Richiedi accesso anticipato",
+  footer_privacy: "Privacy",
+  lang_aria_label: "Cambia lingua"
+},
+es: {
+  meta_title: "Cadence — Sabe siempre cuánto puedes gastar, cada día",
+  meta_description: "Para freelancers, creadores y trabajadores independientes: un número tranquilo, cada día, en lugar de un sistema de presupuesto que tienes que gestionar tú mismo.",
+  nav_cta: "Solicitar acceso anticipado",
+  hero_eyebrow: "Para freelancers, creadores y trabajadores independientes",
+  hero_title: "Tu ingreso no tiene<br>ritmo. <em>Tu dinero,<br>en cambio, sí puede tenerlo.</em>",
+  hero_sub: "Cadence convierte un ingreso irregular e impredecible en un único número tranquilo, cada día: lo que realmente puedes gastar, con impuestos y meses flojos ya calculados.",
+  hero_cta_primary: "Solicitar acceso anticipado",
+  hero_cta_secondary: "Ver cómo funciona",
+  hero_note: "Aún no está lanzado — esta página existe para escucharte a ti primero.",
+  cadence_label: "Ingreso de los últimos 6 meses",
+  cadence_state_unsteady: "inestable",
+  cadence_state_steady: "estable",
+  cadence_cap: "seguro para gastar hoy",
+  mirror_eyebrow: "La parte que nadie planea",
+  mirror_title: "Si algo de esto te<br>suena familiar, sigue leyendo.",
+  mirror_q1: "«Este trimestre gané muy bien — y aún no sé si puedo permitirme esto.»",
+  mirror_r1: "Diseñadora freelance",
+  mirror_q2: "«La declaración de impuestos llega cada año como una factura sorpresa.»",
+  mirror_r2: "Consultor independiente",
+  mirror_q3: "«Probé una app de presupuesto una vez. Quería que planeara un salario que no tengo.»",
+  mirror_r3: "Creador de productos digitales",
+  mirror_q4: "«Los meses buenos se sienten como un alivio. Los flojos, como caída libre. No hay término medio.»",
+  mirror_r4: "Trabajador de plataforma gig",
+  how_eyebrow: "Cómo funciona Cadence",
+  how_title: "Un número al día.<br>Nada que configurar.",
+  step1_num: "01 / tres min",
+  step1_title: "Aporta tu ingreso",
+  step1_desc: "Conecta una cuenta o introduce tus últimos meses a mano, por muy desordenados que se vean. No hace falta un sueldo fijo.",
+  step2_num: "02 / al instante",
+  step2_title: "Cadence hace el cálculo",
+  step2_desc: "Calcula una base segura, reserva impuestos y construye un colchón con tus meses fuertes — todo automáticamente, sin categorías que asignar.",
+  step3_num: "03 / cada día",
+  step3_title: "Recibes un número",
+  step3_desc: "Abre la app, mira cuánto puedes gastar hoy con seguridad, ciérrala. Diez segundos, no diez minutos de contabilidad.",
+  demo_eyebrow: "Prueba el cálculo tú mismo",
+  demo_title: "Mira cómo se ve<br>un mes real.",
+  demo_desc: "Mueve los controles a tu rango mensual aproximado. Esta es una vista simplificada de la lógica que Cadence aplica sobre datos reales.",
+  demo_low_label: "Ingreso mes flojo",
+  demo_high_label: "Ingreso mes fuerte",
+  demo_result_label: "Gasto diario seguro estimado",
+  demo_result_suffix: "/ día",
+  demo_sub: "Calculado sobre tu mes flojo, una reserva fiscal del 25% y un colchón construido con la diferencia respecto al mes fuerte.",
+  compare_eyebrow: "¿Por qué no usar una app de presupuesto normal?",
+  compare_title: "Seguramente ya probaste una.",
+  compare_col1: "Apps de presupuesto tradicionales",
+  compare_col2: "Cadence",
+  compare_row1_label: "Pensada para",
+  compare_row1_v1: "Un sueldo mensual fijo",
+  compare_row1_v2: "Un ingreso que cambia cada mes",
+  compare_row2_label: "Lo que haces tú",
+  compare_row2_v1: "Asignar cada euro o dólar a una categoría, tú mismo",
+  compare_row2_v2: "Nada — la base se calcula por ti",
+  compare_row3_label: "Lo que ves",
+  compare_row3_v1: "Un panel de categorías y gráficos",
+  compare_row3_v2: "Un solo número: lo seguro para hoy",
+  compare_row4_label: "Impuestos",
+  compare_row4_v1: "No se tienen en cuenta",
+  compare_row4_v2: "Reservados automáticamente a medida que llega el ingreso",
+  compare_row5_label: "Dónde funciona",
+  compare_row5_v1: "Sincronización bancaria casi solo norteamericana",
+  compare_row5_v2: "Cualquier moneda, entrada manual siempre disponible",
+  evidence_eyebrow: "No eres la excepción",
+  evidence_title: "Esto es lo normal para el ingreso<br>independiente, en todo el mundo.",
+  evid1_label: "trabajadores independientes solo en EE. UU. reportan un ingreso que cambia mes a mes.",
+  evid1_src: "Upwork / MBO Partners",
+  evid2_label: "de los trabajadores gig dice que su ingreso es impredecible.",
+  evid2_src: "Experian, 2026",
+  evid3_label: "no podría cubrir un gasto imprevisto de 1.000$ sin endeudarse.",
+  evid3_src: "Encuesta Bankrate",
+  evid4_label: "de los freelancers reporta un ingreso mensual inconsistente, lo que hace fallar el presupuesto tradicional.",
+  evid4_src: "Beancount, 2026",
+  manifesto_quote: "El dinero nunca fue el problema.<br>Era el <em>momento</em> en que llegaba — y nadie había construido<br>una herramienta que tratara eso como el verdadero trabajo.",
+  manifesto_attrib: "Cadence, by VORNEAUX",
+  waitlist_eyebrow: "Acceso anticipado",
+  waitlist_title: "Sé el primero cuando<br>Cadence abra.",
+  waitlist_desc: "Estamos validando esto con un grupo pequeño antes de escribir una sola línea de la app. Únete ahora: ayudarás a definir qué construimos y tendrás acceso anticipado antes del lanzamiento público.",
+  waitlist_note: "Sin spam. Un solo correo cuando lancemos.",
+  field_email_label: "Correo electrónico",
+  field_email_placeholder: "tu@dominio.com",
+  field_income_label: "Fuente de ingreso principal",
+  select_placeholder: "Selecciona una opción",
+  income_opt_freelance: "Servicios freelance",
+  income_opt_creator: "Ingresos por contenido / creador",
+  income_opt_digital: "Productos digitales",
+  income_opt_consulting: "Consultoría",
+  income_opt_gig: "Trabajo en plataformas gig",
+  income_opt_smallbiz: "Pequeño negocio / e-commerce",
+  income_opt_other: "Otro",
+  field_wtp_label: "¿Pagarías por esto?",
+  wtp_opt_yes58: "Sí — unos 5–8$/mes",
+  wtp_opt_yesmore: "Sí — incluso más, si de verdad funciona",
+  wtp_opt_maybe: "Tal vez, necesito verlo primero",
+  wtp_opt_freeonly: "Solo si es gratis",
+  wl_error_default: "Introduce un correo válido para continuar.",
+  wl_error_fail: "Algo salió mal. Inténtalo de nuevo, o escribe directamente a contact@vorneaux.com.",
+  wl_submit: "Solicitar acceso anticipado",
+  wl_submitting: "Enviando…",
+  wl_fineprint: "Dos preguntas, ambas opcionales — nos ayudan a construir lo correcto.",
+  wl_success_mark: "Ya estás en la lista.",
+  wl_success_body: "Te escribiremos desde <strong style=\"color:var(--ink);\">hello@vorneaux.com</strong> a medida que Cadence se acerque al lanzamiento — incluida una invitación a probarla antes que nadie.",
+  faq_eyebrow: "Antes de irte",
+  faq_title: "Las preguntas más frecuentes.",
+  faq_q1: "¿Es solo otra app de presupuesto?",
+  faq_a1: "No. Las apps de presupuesto te piden gestionar un sistema. Cadence está pensada para darte una sola decisión — cuánto puedes gastar hoy con seguridad — ya calculada por ti, sin categorías, sin sobres, sin un ritual semanal que cumplir.",
+  faq_q2: "¿Mis datos financieros están seguros?",
+  faq_a2: "Las conexiones bancarias, cuando están disponibles, pasan por los mismos proveedores cifrados y de solo lectura usados en toda la industria — Cadence nunca ve tus credenciales y no puede mover dinero. Los detalles completos se publicarán antes del lanzamiento.",
+  faq_q3: "¿Tengo que conectar mi cuenta bancaria?",
+  faq_a3: "No. La entrada manual es una opción de pleno derecho desde el primer día, no un recurso secundario — útil si aún no quieres conectar una cuenta o si tu banco todavía no está soportado.",
+  faq_q4: "¿Y si mi país no está soportado al lanzamiento?",
+  faq_a4: "Cadence lanza con un número reducido de monedas y regímenes fiscales bien hechos, y luego se expande. Dinos dónde estás cuando te unas: eso da forma directamente a lo que construimos después.",
+  faq_q5: "¿Cuándo se lanza, y qué significa el acceso anticipado?",
+  faq_a5: "Todavía no hay fecha fija — esta página existe para saber si suficientes personas lo quieren de verdad antes de construirlo. Acceso anticipado significa que serás invitado a probarlo, e influir en él, antes que nadie.",
+  final_title: "Deja de adivinar cuánto puedes gastar.<br>Empieza a saberlo, cada día.",
+  final_cta: "Solicitar acceso anticipado",
+  footer_privacy: "Privacidad",
+  lang_aria_label: "Cambiar idioma"
+},
+fr: {
+  meta_title: "Cadence — Sachez toujours ce que vous pouvez dépenser, chaque jour",
+  meta_description: "Pour les freelances, créateurs et travailleurs indépendants : un chiffre serein, chaque jour, plutôt qu'un système de budget à gérer soi-même.",
+  nav_cta: "Demander un accès anticipé",
+  hero_eyebrow: "Pour freelances, créateurs et travailleurs indépendants",
+  hero_title: "Votre revenu n'a pas<br>de rythme. <em>Votre argent,<br>lui, peut en avoir un.</em>",
+  hero_sub: "Cadence transforme un revenu irrégulier et imprévisible en un seul chiffre serein, chaque jour — ce que vous pouvez réellement dépenser, impôts et mois creux déjà pris en compte.",
+  hero_cta_primary: "Demander un accès anticipé",
+  hero_cta_secondary: "Voir comment ça marche",
+  hero_note: "Pas encore lancé — cette page existe pour vous écouter en premier.",
+  cadence_label: "Revenu des 6 derniers mois",
+  cadence_state_unsteady: "irrégulier",
+  cadence_state_steady: "stable",
+  cadence_cap: "à dépenser sereinement aujourd'hui",
+  mirror_eyebrow: "Ce que personne n'anticipe",
+  mirror_title: "Si l'une de ces phrases vous<br>parle, continuez à lire.",
+  mirror_q1: "« J'ai très bien gagné ce trimestre — et je ne sais toujours pas si je peux me le permettre. »",
+  mirror_r1: "Designer freelance",
+  mirror_q2: "« La période des impôts arrive chaque année comme une facture surprise. »",
+  mirror_r2: "Consultant indépendant",
+  mirror_q3: "« J'ai essayé une appli de budget une fois. Elle voulait que je planifie un salaire que je n'ai pas. »",
+  mirror_r3: "Créateur de produits numériques",
+  mirror_q4: "« Les bons mois sont un soulagement. Les mois creux, une chute libre. Il n'y a pas d'entre-deux. »",
+  mirror_r4: "Travailleur de plateforme gig",
+  how_eyebrow: "Comment fonctionne Cadence",
+  how_title: "Un chiffre par jour.<br>Rien à configurer.",
+  step1_num: "01 / trois min",
+  step1_title: "Apportez vos revenus",
+  step1_desc: "Connectez un compte ou saisissez vos derniers mois à la main, aussi désordonnés soient-ils. Aucun salaire fixe requis.",
+  step2_num: "02 / instantané",
+  step2_title: "Cadence fait le calcul",
+  step2_desc: "Cadence calcule une base sûre, met de côté une réserve fiscale et constitue un coussin à partir de vos bons mois — automatiquement, sans catégories à assigner.",
+  step3_num: "03 / chaque jour",
+  step3_title: "Vous recevez un chiffre",
+  step3_desc: "Ouvrez l'appli, regardez ce que vous pouvez dépenser aujourd'hui en toute sérénité, refermez-la. Dix secondes, pas dix minutes de comptabilité.",
+  demo_eyebrow: "Testez le calcul vous-même",
+  demo_title: "Voyez à quoi ressemble<br>un mois réel.",
+  demo_desc: "Déplacez les curseurs sur votre fourchette mensuelle approximative. Il s'agit d'un aperçu simplifié de la logique que Cadence applique à un véritable historique de transactions.",
+  demo_low_label: "Revenu du mois creux",
+  demo_high_label: "Revenu du mois fort",
+  demo_result_label: "Estimation du montant sûr par jour",
+  demo_result_suffix: "/ jour",
+  demo_sub: "Calculé sur votre mois creux, une réserve fiscale de 25 %, et un coussin constitué à partir de l'écart avec le mois fort.",
+  compare_eyebrow: "Pourquoi ne pas utiliser une appli de budget classique ?",
+  compare_title: "Vous en avez sans doute déjà essayé une.",
+  compare_col1: "Applis de budget classiques",
+  compare_col2: "Cadence",
+  compare_row1_label: "Conçue pour",
+  compare_row1_v1: "Un salaire mensuel fixe",
+  compare_row1_v2: "Un revenu qui change chaque mois",
+  compare_row2_label: "Ce que vous faites",
+  compare_row2_v1: "Assigner chaque euro à une catégorie, vous-même",
+  compare_row2_v2: "Rien — la base est calculée pour vous",
+  compare_row3_label: "Ce que vous voyez",
+  compare_row3_v1: "Un tableau de bord de catégories et de graphiques",
+  compare_row3_v2: "Un seul chiffre : ce qui est sûr aujourd'hui",
+  compare_row4_label: "Impôts",
+  compare_row4_v1: "Non pris en compte",
+  compare_row4_v2: "Mis de côté automatiquement à chaque rentrée d'argent",
+  compare_row5_label: "Où ça fonctionne",
+  compare_row5_v1: "Synchronisation bancaire surtout nord-américaine",
+  compare_row5_v2: "Toute devise, saisie manuelle toujours disponible",
+  evidence_eyebrow: "Vous n'êtes pas une exception",
+  evidence_title: "C'est la norme pour le revenu<br>indépendant, partout dans le monde.",
+  evid1_label: "travailleurs indépendants rien qu'aux États-Unis déclarent un revenu qui change d'un mois à l'autre.",
+  evid1_src: "Upwork / MBO Partners",
+  evid2_label: "des travailleurs gig déclarent que leur revenu est imprévisible.",
+  evid2_src: "Experian, 2026",
+  evid3_label: "ne pourraient pas couvrir une dépense imprévue de 1 000 $ sans s'endetter.",
+  evid3_src: "Enquête Bankrate",
+  evid4_label: "des freelances déclarent un revenu mensuel irrégulier, qui met en échec le budget traditionnel.",
+  evid4_src: "Beancount, 2026",
+  manifesto_quote: "L'argent n'a jamais été le problème.<br>C'était le <em>moment</em> où il arrivait — et personne n'avait construit<br>un outil qui traitait vraiment cela comme le vrai travail.",
+  manifesto_attrib: "Cadence, by VORNEAUX",
+  waitlist_eyebrow: "Accès anticipé",
+  waitlist_title: "Soyez parmi les premiers<br>à l'ouverture de Cadence.",
+  waitlist_desc: "Nous validons cette idée avec un petit groupe avant d'écrire la moindre ligne de l'application. Inscrivez-vous dès maintenant : vous aiderez à façonner ce que nous construisons, et bénéficierez d'un accès anticipé avant le lancement public.",
+  waitlist_note: "Pas de spam. Un seul e-mail au lancement.",
+  field_email_label: "E-mail",
+  field_email_placeholder: "vous@domaine.com",
+  field_income_label: "Source de revenu principale",
+  select_placeholder: "Choisissez une option",
+  income_opt_freelance: "Prestations freelance",
+  income_opt_creator: "Revenus de contenu / créateur",
+  income_opt_digital: "Produits numériques",
+  income_opt_consulting: "Conseil",
+  income_opt_gig: "Travail sur plateforme gig",
+  income_opt_smallbiz: "Petite entreprise / e-commerce",
+  income_opt_other: "Autre",
+  field_wtp_label: "Paieriez-vous pour ça ?",
+  wtp_opt_yes58: "Oui — environ 5–8 $/mois",
+  wtp_opt_yesmore: "Oui — plus encore, si c'est vraiment efficace",
+  wtp_opt_maybe: "Peut-être, je dois d'abord voir",
+  wtp_opt_freeonly: "Seulement si c'est gratuit",
+  wl_error_default: "Saisissez une adresse e-mail valide pour continuer.",
+  wl_error_fail: "Une erreur s'est produite. Réessayez, ou écrivez directement à contact@vorneaux.com.",
+  wl_submit: "Demander un accès anticipé",
+  wl_submitting: "Envoi en cours…",
+  wl_fineprint: "Deux questions, toutes deux facultatives — elles nous aident à construire la bonne chose.",
+  wl_success_mark: "Vous êtes sur la liste.",
+  wl_success_body: "Nous vous écrirons depuis <strong style=\"color:var(--ink);\">hello@vorneaux.com</strong> à mesure que Cadence se rapprochera du lancement — avec une invitation à la tester en avant-première.",
+  faq_eyebrow: "Avant de partir",
+  faq_title: "Les questions les plus fréquentes.",
+  faq_q1: "Est-ce juste une appli de budget de plus ?",
+  faq_a1: "Non. Les applis de budget vous demandent de gérer un système. Cadence est conçue pour vous donner une seule décision — ce que vous pouvez dépenser aujourd'hui en toute sérénité — déjà calculée pour vous, sans catégories, sans enveloppes, sans rituel hebdomadaire à respecter.",
+  faq_q2: "Mes données financières sont-elles en sécurité ?",
+  faq_a2: "Les connexions bancaires, lorsqu'elles sont disponibles, passent par les mêmes fournisseurs chiffrés et en lecture seule utilisés dans tout le secteur — Cadence ne voit jamais vos identifiants et ne peut pas déplacer d'argent. Tous les détails seront publiés avant le lancement.",
+  faq_q3: "Dois-je connecter mon compte bancaire ?",
+  faq_a3: "Non. La saisie manuelle est une option à part entière dès le premier jour, pas un pis-aller — utile si vous n'êtes pas encore prêt à connecter un compte, ou si votre banque n'est pas encore prise en charge.",
+  faq_q4: "Et si mon pays n'est pas pris en charge au lancement ?",
+  faq_a4: "Cadence se lance avec un petit nombre de devises et de régimes fiscaux bien faits, puis s'étend. Dites-nous où vous êtes basé lors de votre inscription : cela façonne directement ce que nous construisons ensuite.",
+  faq_q5: "Quand est le lancement, et que signifie l'accès anticipé ?",
+  faq_a5: "Il n'y a pas encore de date fixe — cette page existe pour savoir si suffisamment de personnes en veulent vraiment avant qu'on la construise. Accès anticipé signifie que vous serez invité à la tester, et à l'influencer, avant tout le monde.",
+  final_title: "Arrêtez de deviner ce que vous pouvez vous permettre.<br>Commencez à le savoir, chaque jour.",
+  final_cta: "Demander un accès anticipé",
+  footer_privacy: "Confidentialité",
+  lang_aria_label: "Changer de langue"
+},
+de: {
+  meta_title: "Cadence — Wissen Sie jeden Tag, was Sie ausgeben können",
+  meta_description: "Für Freelancer, Creator und Selbstständige: eine ruhige Zahl, jeden Tag, statt eines Budgetsystems, das Sie selbst verwalten müssen.",
+  nav_cta: "Frühen Zugang anfordern",
+  hero_eyebrow: "Für Freelancer, Creator und Selbstständige",
+  hero_title: "Ihr Einkommen hat<br>keinen Rhythmus. <em>Ihr Geld<br>kann trotzdem einen haben.</em>",
+  hero_sub: "Cadence verwandelt ein unregelmäßiges, unvorhersehbares Einkommen in eine ruhige Zahl, jeden Tag — was wirklich sicher ausgegeben werden kann, Steuern und schwache Monate bereits eingerechnet.",
+  hero_cta_primary: "Frühen Zugang anfordern",
+  hero_cta_secondary: "So funktioniert's",
+  hero_note: "Noch nicht gestartet — diese Seite existiert, um zuerst von Ihnen zu hören.",
+  cadence_label: "Einkommen der letzten 6 Monate",
+  cadence_state_unsteady: "unstet",
+  cadence_state_steady: "stetig",
+  cadence_cap: "heute sicher ausgebbar",
+  mirror_eyebrow: "Der Teil, den niemand einplant",
+  mirror_title: "Wenn Ihnen etwas davon<br>bekannt vorkommt, lesen Sie weiter.",
+  mirror_q1: "„Dieses Quartal lief finanziell richtig gut — und trotzdem weiß ich nicht, ob ich mir das leisten kann.“",
+  mirror_r1: "Freelance-Designerin",
+  mirror_q2: "„Die Steuersaison kommt jedes Jahr wie eine überraschende Rechnung.“",
+  mirror_r2: "Unabhängiger Berater",
+  mirror_q3: "„Ich habe mal eine Budget-App ausprobiert. Sie wollte, dass ich ein Gehalt einplane, das ich gar nicht habe.“",
+  mirror_r3: "Creator digitaler Produkte",
+  mirror_q4: "„Gute Monate fühlen sich wie Erleichterung an. Schwache wie freier Fall. Ein Dazwischen gibt es nicht.“",
+  mirror_r4: "Gig-Plattform-Arbeiter",
+  how_eyebrow: "So funktioniert Cadence",
+  how_title: "Eine Zahl pro Tag.<br>Nichts zu konfigurieren.",
+  step1_num: "01 / drei Min.",
+  step1_title: "Einkommen einbringen",
+  step1_desc: "Konto verbinden oder die letzten Monate von Hand eingeben — egal wie unübersichtlich. Kein festes Gehalt erforderlich.",
+  step2_num: "02 / sofort",
+  step2_title: "Cadence rechnet",
+  step2_desc: "Cadence berechnet eine sichere Basis, legt eine Steuerrücklage an und baut aus starken Monaten einen Puffer auf — automatisch, ohne Kategorien zuzuweisen.",
+  step3_num: "03 / jeden Tag",
+  step3_title: "Sie erhalten eine Zahl",
+  step3_desc: "App öffnen, sehen, was heute sicher ausgegeben werden kann, wieder schließen. Zehn Sekunden statt zehn Minuten Buchhaltung.",
+  demo_eyebrow: "Rechnen Sie selbst nach",
+  demo_title: "Sehen Sie, wie ein<br>echter Monat aussieht.",
+  demo_desc: "Bewegen Sie die Regler auf Ihren ungefähren monatlichen Bereich. Dies ist eine vereinfachte Vorschau der Logik, die Cadence auf echte Transaktionsdaten anwendet.",
+  demo_low_label: "Einkommen schwacher Monat",
+  demo_high_label: "Einkommen starker Monat",
+  demo_result_label: "Geschätzter täglich sicherer Betrag",
+  demo_result_suffix: "/ Tag",
+  demo_sub: "Berechnet auf Basis Ihres schwachen Monats, einer Steuerrücklage von 25 % und eines Puffers aus der Differenz zum starken Monat.",
+  compare_eyebrow: "Warum nicht einfach eine normale Budget-App nutzen?",
+  compare_title: "Sie haben wahrscheinlich schon eine ausprobiert.",
+  compare_col1: "Klassische Budget-Apps",
+  compare_col2: "Cadence",
+  compare_row1_label: "Gemacht für",
+  compare_row1_v1: "Ein festes monatliches Gehalt",
+  compare_row1_v2: "Ein Einkommen, das sich jeden Monat ändert",
+  compare_row2_label: "Was Sie tun müssen",
+  compare_row2_v1: "Jeden Euro selbst einer Kategorie zuweisen",
+  compare_row2_v2: "Nichts — die Basis wird für Sie berechnet",
+  compare_row3_label: "Was Sie sehen",
+  compare_row3_v1: "Ein Dashboard mit Kategorien und Diagrammen",
+  compare_row3_v2: "Eine Zahl: was heute sicher ist",
+  compare_row4_label: "Steuern",
+  compare_row4_v1: "Nicht berücksichtigt",
+  compare_row4_v2: "Automatisch zurückgelegt, sobald Einkommen eingeht",
+  compare_row5_label: "Wo es funktioniert",
+  compare_row5_v1: "Bank-Sync meist nur für Nordamerika",
+  compare_row5_v2: "Jede Währung, manuelle Eingabe immer verfügbar",
+  evidence_eyebrow: "Sie sind nicht die Ausnahme",
+  evidence_title: "Das ist der Normalfall für unabhängiges<br>Einkommen, weltweit.",
+  evid1_label: "Selbstständige allein in den USA berichten von einem Einkommen, das sich Monat für Monat ändert.",
+  evid1_src: "Upwork / MBO Partners",
+  evid2_label: "der Gig-Arbeiter geben an, dass ihr Einkommen unvorhersehbar ist.",
+  evid2_src: "Experian, 2026",
+  evid3_label: "könnten eine unerwartete Ausgabe von 1.000 $ nicht ohne Schulden decken.",
+  evid3_src: "Bankrate-Umfrage",
+  evid4_label: "der Freelancer berichten von einem unregelmäßigen Monatseinkommen, an dem klassisches Budgetieren scheitert.",
+  evid4_src: "Beancount, 2026",
+  manifesto_quote: "Das Geld war nie das Problem.<br>Es war der <em>Zeitpunkt</em>, an dem es ankam — und niemand hatte je ein Werkzeug gebaut,<br>das genau das als die eigentliche Aufgabe behandelte.",
+  manifesto_attrib: "Cadence, by VORNEAUX",
+  waitlist_eyebrow: "Früher Zugang",
+  waitlist_title: "Seien Sie dabei, wenn<br>Cadence startet.",
+  waitlist_desc: "Wir validieren das Konzept mit einer kleinen Gruppe, bevor wir auch nur eine Zeile Code schreiben. Melden Sie sich jetzt an: Sie helfen mit zu gestalten, was gebaut wird, und erhalten frühen Zugang vor dem öffentlichen Start.",
+  waitlist_note: "Kein Spam. Eine E-Mail beim Start.",
+  field_email_label: "E-Mail",
+  field_email_placeholder: "sie@domain.com",
+  field_income_label: "Wichtigste Einkommensquelle",
+  select_placeholder: "Bitte wählen",
+  income_opt_freelance: "Freelance-Dienstleistungen",
+  income_opt_creator: "Content- / Creator-Einkommen",
+  income_opt_digital: "Digitale Produkte",
+  income_opt_consulting: "Beratung",
+  income_opt_gig: "Arbeit auf Gig-Plattformen",
+  income_opt_smallbiz: "Kleinunternehmen / E-Commerce",
+  income_opt_other: "Sonstiges",
+  field_wtp_label: "Würden Sie dafür bezahlen?",
+  wtp_opt_yes58: "Ja — etwa 5–8 $/Monat",
+  wtp_opt_yesmore: "Ja — auch mehr, wenn es wirklich hält",
+  wtp_opt_maybe: "Vielleicht, ich muss es erst sehen",
+  wtp_opt_freeonly: "Nur wenn kostenlos",
+  wl_error_default: "Geben Sie eine gültige E-Mail-Adresse ein, um fortzufahren.",
+  wl_error_fail: "Etwas ist schiefgelaufen. Versuchen Sie es erneut oder schreiben Sie direkt an contact@vorneaux.com.",
+  wl_submit: "Frühen Zugang anfordern",
+  wl_submitting: "Wird gesendet…",
+  wl_fineprint: "Zwei Fragen, beide freiwillig — sie helfen uns, das Richtige zu bauen.",
+  wl_success_mark: "Sie stehen auf der Liste.",
+  wl_success_body: "Wir melden uns von <strong style=\"color:var(--ink);\">hello@vorneaux.com</strong>, sobald der Start von Cadence näher rückt — inklusive der Möglichkeit, es vorab zu testen.",
+  faq_eyebrow: "Bevor Sie gehen",
+  faq_title: "Häufig gestellte Fragen.",
+  faq_q1: "Ist das nicht einfach noch eine Budget-App?",
+  faq_a1: "Nein. Budget-Apps verlangen von Ihnen, ein System zu verwalten. Cadence gibt Ihnen eine einzige, für Sie bereits berechnete Entscheidung — was heute sicher ausgegeben werden kann —, ohne Kategorien, ohne Umschläge, ohne wöchentliches Ritual.",
+  faq_q2: "Sind meine Finanzdaten sicher?",
+  faq_a2: "Bankverbindungen laufen, wo verfügbar, über dieselben verschlüsselten Nur-Lese-Anbieter, die branchenweit üblich sind — Cadence sieht Ihre Zugangsdaten nie und kann kein Geld bewegen. Alle Details werden vor dem Start veröffentlicht.",
+  faq_q3: "Muss ich mein Bankkonto verbinden?",
+  faq_a3: "Nein. Die manuelle Eingabe ist von Anfang an eine vollwertige Option, kein Notbehelf — nützlich, wenn Sie noch kein Konto verbinden möchten oder Ihre Bank noch nicht unterstützt wird.",
+  faq_q4: "Was, wenn mein Land beim Start nicht unterstützt wird?",
+  faq_a4: "Cadence startet mit einer kleinen Zahl an Währungen und sauber umgesetzten Steuerregimen und erweitert sich danach. Sagen Sie uns bei der Anmeldung, wo Sie sitzen — das beeinflusst direkt, was wir als Nächstes bauen.",
+  faq_q5: "Wann kommt der Start, und was bedeutet früher Zugang?",
+  faq_a5: "Es gibt noch kein festes Datum — diese Seite existiert, um herauszufinden, ob genug Menschen das wirklich wollen, bevor wir es bauen. Früher Zugang bedeutet, dass Sie vor allen anderen eingeladen werden, es zu testen und mitzugestalten.",
+  final_title: "Hören Sie auf zu raten, was Sie sich leisten können.<br>Fangen Sie an, es jeden Tag zu wissen.",
+  final_cta: "Frühen Zugang anfordern",
+  footer_privacy: "Datenschutz",
+  lang_aria_label: "Sprache ändern"
+}
+};
+
+let currentLang = 'en';
+
+function detectLanguage(){
+  try{
+    const saved = JSON.parse(localStorage.getItem(LANG_STORAGE_KEY) || 'null');
+    if(saved && saved.manual && SUPPORTED_LANGS.indexOf(saved.lang) !== -1){
+      return saved.lang;
+    }
+  }catch(e){}
+  const raw = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || navigator.userLanguage || 'en'];
+  for(let i = 0; i < raw.length; i++){
+    const code = (raw[i] || '').toLowerCase().split('-')[0];
+    if(SUPPORTED_LANGS.indexOf(code) !== -1) return code;
+  }
+  return 'en';
+}
+
+function t(lang, key){
+  if(I18N[lang] && I18N[lang][key] !== undefined) return I18N[lang][key];
+  return I18N.en[key] !== undefined ? I18N.en[key] : '';
+}
+
+function applyTranslations(lang){
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    el.textContent = t(lang, key);
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.getAttribute('data-i18n-html');
+    el.innerHTML = t(lang, key);
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    el.setAttribute('placeholder', t(lang, key));
+  });
+
+  document.getElementById('pageTitle').textContent = t(lang, 'meta_title');
+  document.getElementById('pageDescription').setAttribute('content', t(lang, 'meta_description'));
+  document.getElementById('langBtn').setAttribute('aria-label', t(lang, 'lang_aria_label'));
+
+  const cadenceState = document.getElementById('cadenceState');
+  cadenceState.textContent = cadenceState.classList.contains('settled') ? t(lang, 'cadence_state_steady') : t(lang, 'cadence_state_unsteady');
+
+  const wlError = document.getElementById('wlError');
+  if(wlError.dataset.currentErrorKey){
+    wlError.textContent = t(lang, wlError.dataset.currentErrorKey);
+  }
+
+  const submitBtn = document.getElementById('wlSubmitBtn');
+  if(submitBtn.dataset.submitting === 'true'){
+    submitBtn.textContent = t(lang, 'wl_submitting');
+  } else {
+    submitBtn.textContent = t(lang, 'wl_submit');
+  }
+
+  recalcDemo();
+}
+
+function buildLangMenu(){
+  const menu = document.getElementById('langMenu');
+  menu.innerHTML = '';
+  SUPPORTED_LANGS.forEach(code => {
+    const opt = document.createElement('button');
+    opt.type = 'button';
+    opt.className = 'lang-option';
+    opt.setAttribute('role', 'option');
+    opt.setAttribute('data-lang', code);
+    opt.innerHTML = '<span>' + LANG_NAMES[code] + '</span><span class="code">' + code.toUpperCase() + '</span>';
+    opt.addEventListener('click', () => {
+      setLanguage(code, true);
+      closeLangMenu();
+    });
+    menu.appendChild(opt);
+  });
+  updateLangMenuSelection();
+}
+
+function updateLangMenuSelection(){
+  document.querySelectorAll('.lang-option').forEach(opt => {
+    opt.setAttribute('aria-selected', opt.getAttribute('data-lang') === currentLang ? 'true' : 'false');
+  });
+  document.getElementById('langBtnLabel').textContent = currentLang.toUpperCase();
+}
+
+function openLangMenu(){
+  document.getElementById('langMenu').classList.add('open');
+  document.getElementById('langBtn').setAttribute('aria-expanded', 'true');
+}
+function closeLangMenu(){
+  document.getElementById('langMenu').classList.remove('open');
+  document.getElementById('langBtn').setAttribute('aria-expanded', 'false');
+}
+
+function setLanguage(lang, manual){
+  currentLang = SUPPORTED_LANGS.indexOf(lang) !== -1 ? lang : 'en';
+  document.documentElement.lang = currentLang;
+  applyTranslations(currentLang);
+  updateLangMenuSelection();
+  if(manual){
+    try{ localStorage.setItem(LANG_STORAGE_KEY, JSON.stringify({ lang: currentLang, manual: true })); }catch(e){}
+    trackEvent('language_changed', { language: currentLang });
+  }
+}
+
+document.getElementById('langBtn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  const isOpen = document.getElementById('langMenu').classList.contains('open');
+  if(isOpen){ closeLangMenu(); } else { openLangMenu(); }
+});
+document.addEventListener('click', (e) => {
+  if(!e.target.closest('.lang-switch')){ closeLangMenu(); }
+});
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape'){ closeLangMenu(); }
+});
+
+/* ---------- lightweight analytics ---------- */
+function trackEvent(name, params){
+  params = params || {};
+  try{
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, params));
+  }catch(e){}
+  try{ if(typeof fbq === 'function'){ fbq('trackCustom', name, params); } }catch(e){}
+  console.log('[track]', name, params);
+}
+
+function getUTM(){
+  const p = new URLSearchParams(window.location.search);
+  const keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
+  const out = {};
+  keys.forEach(k => { if(p.get(k)) out[k] = p.get(k); });
+  return out;
+}
+
+document.addEventListener('click', function(e){
+  const el = e.target.closest('[data-track]');
+  if(el){ trackEvent(el.getAttribute('data-track'), {href: el.getAttribute('href') || ''}); }
+});
+
+/* section view tracking */
+const sectionMap = [
+  ['.hero','hero'], ['.mirror','problem_mirror'], ['.how','how_it_works'],
+  ['.demo','live_demo'], ['.compare','comparison'], ['.evidence','evidence'],
+  ['.manifesto','manifesto'], ['.waitlist','waitlist'], ['.faq','faq']
+];
+const seen = new Set();
+const sectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting && entry.intersectionRatio >= 0.4){
+      const id = entry.target.getAttribute('data-section-id');
+      if(!seen.has(id)){ seen.add(id); trackEvent('section_view', {section: id}); }
+    }
+  });
+}, {threshold:[0.4]});
+sectionMap.forEach(([sel, id]) => {
+  const node = document.querySelector(sel);
+  if(node){ node.setAttribute('data-section-id', id); sectionObserver.observe(node); }
+});
+
+/* reveal-on-scroll */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => { if(entry.isIntersecting){ entry.target.classList.add('is-visible'); revealObserver.unobserve(entry.target); } });
+}, {threshold:0.15});
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+/* ---------- hero cadence line: chaotic -> settled ---------- */
+const chaoticHeights = [22,68,34,88,15,54,96,28,44,72,19,60];
+const settledHeights = [46,50,44,52,48,50,46,54,48,50,46,52];
+const eqWrap = document.getElementById('eqBars');
+chaoticHeights.forEach(h => {
+  const bar = document.createElement('i');
+  bar.style.height = h + '%';
+  eqWrap.appendChild(bar);
+});
+const heroNum = document.getElementById('heroNum');
+const cadenceState = document.getElementById('cadenceState');
+let settledOnce = false;
+
+function settleCadence(){
+  if(settledOnce) return;
+  settledOnce = true;
+  const bars = eqWrap.querySelectorAll('i');
+  bars.forEach((bar, i) => { bar.style.height = settledHeights[i] + '%'; bar.classList.add('settled'); });
+  cadenceState.classList.add('settled');
+  cadenceState.textContent = t(currentLang, 'cadence_state_steady');
+  let n = 0;
+  const target = 47;
+  const step = setInterval(() => {
+    n += 3;
+    if(n >= target){ n = target; clearInterval(step); }
+    heroNum.textContent = n.toLocaleString(LOCALE_MAP[currentLang] || 'en-US');
+  }, 45);
+}
+const heroObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => { if(entry.isIntersecting){ setTimeout(settleCadence, 700); heroObserver.disconnect(); } });
+}, {threshold:0.3});
+heroObserver.observe(document.querySelector('.hero'));
+
+/* ---------- live demo slider ---------- */
+const lowSlider = document.getElementById('lowSlider');
+const highSlider = document.getElementById('highSlider');
+const lowOut = document.getElementById('lowOut');
+const highOut = document.getElementById('highOut');
+const demoResult = document.getElementById('demoResult');
+let demoTracked = false;
+
+function fmt(n){
+  const locale = LOCALE_MAP[currentLang] || 'en-US';
+  return '$' + Math.round(n).toLocaleString(locale);
+}
+
+function recalcDemo(){
+  let low = parseInt(lowSlider.value, 10);
+  let high = parseInt(highSlider.value, 10);
+  if(high < low){ high = low; highSlider.value = low; }
+  lowOut.textContent = fmt(low);
+  highOut.textContent = fmt(high);
+  const afterTax = low * 0.75;
+  const bufferContribution = Math.max(0, (high - low)) * 0.15;
+  const safeMonthly = afterTax - bufferContribution;
+  const perDay = Math.max(0, safeMonthly / 30);
+  demoResult.textContent = Math.round(perDay).toLocaleString(LOCALE_MAP[currentLang] || 'en-US');
+}
+lowSlider.addEventListener('input', () => { recalcDemo(); if(!demoTracked){ demoTracked = true; trackEvent('demo_interacted', {}); } });
+highSlider.addEventListener('input', () => { recalcDemo(); if(!demoTracked){ demoTracked = true; trackEvent('demo_interacted', {}); } });
+
+/* ---------- FAQ accordion ---------- */
+document.querySelectorAll('.faq-item').forEach(item => {
+  const q = item.querySelector('.faq-q');
+  const a = item.querySelector('.faq-a');
+  q.addEventListener('click', () => {
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(o => { o.classList.remove('open'); o.querySelector('.faq-a').style.maxHeight = null; });
+    if(!isOpen){ item.classList.add('open'); a.style.maxHeight = a.scrollHeight + 'px'; trackEvent('faq_open', {question: q.querySelector('h3').getAttribute('data-i18n')}); }
+  });
+});
+
+/* ---------- waitlist form ---------- */
+const wlForm = document.getElementById('waitlistForm');
+const wlError = document.getElementById('wlError');
+const wlSuccess = document.getElementById('wlSuccess');
+
+function isValidEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+function showWlError(key){
+  wlError.dataset.currentErrorKey = key;
+  wlError.textContent = t(currentLang, key);
+  wlError.style.display = 'block';
+}
+function hideWlError(){
+  wlError.style.display = 'none';
+  delete wlError.dataset.currentErrorKey;
+}
+
+wlForm.addEventListener('submit', function(e){
+  e.preventDefault();
+  const email = document.getElementById('email').value.trim();
+  if(!isValidEmail(email)){
+    showWlError('wl_error_default');
+    return;
+  }
+  hideWlError();
+
+  const payload = {
+    email: email,
+    incomeSource: document.getElementById('incomeSource').value,
+    willingnessToPay: document.getElementById('wtp').value,
+    page: 'cadence_landing',
+    language: currentLang,
+    timestamp: new Date().toISOString(),
+    referrer: document.referrer || '',
+    ...getUTM()
+  };
+
+  const submitBtn = document.getElementById('wlSubmitBtn');
+  submitBtn.disabled = true;
+  submitBtn.dataset.submitting = 'true';
+  submitBtn.textContent = t(currentLang, 'wl_submitting');
+
+  const finish = function(success){
+    submitBtn.disabled = false;
+    submitBtn.dataset.submitting = 'false';
+    submitBtn.textContent = t(currentLang, 'wl_submit');
+    if(success){
+      wlForm.style.display = 'none';
+      wlSuccess.style.display = 'block';
+      trackEvent('waitlist_signup', {incomeSource: payload.incomeSource, willingnessToPay: payload.willingnessToPay, language: currentLang});
+    }else{
+      showWlError('wl_error_fail');
+    }
+  };
+
+  if(!CONFIG.SCRIPT_URL || CONFIG.SCRIPT_URL.indexOf('PASTE_YOUR') === 0){
+    /* No backend configured yet: keep the signup locally so nothing is lost
+       during testing, and still show the success state. Replace this block
+       once CONFIG.SCRIPT_URL points at the real Apps Script endpoint. */
+    try{
+      const key = 'cadence_waitlist_local';
+      const existing = JSON.parse(localStorage.getItem(key) || '[]');
+      existing.push(payload);
+      localStorage.setItem(key, JSON.stringify(existing));
+    }catch(err){}
+    finish(true);
+    return;
+  }
+
+  fetch(CONFIG.SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {'Content-Type': 'text/plain;charset=utf-8'},
+    body: JSON.stringify(payload)
+  })
+  .then(() => finish(true))
+  .catch(() => finish(false));
+});
+
+/* ---------- language init (runs last: needs every const/function above) ---------- */
+buildLangMenu();
+setLanguage(detectLanguage(), false);
+</script>
+
+</body>
+</html>
