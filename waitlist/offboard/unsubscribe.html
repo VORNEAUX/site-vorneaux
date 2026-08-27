@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" id="htmlRoot">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title id="pageTitle">Unsubscribe — OFFBOARD</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#12151a; --panel:#1b2027; --line-dark:rgba(255,255,255,0.08);
+    --amber:#f2a93b; --amber-soft:rgba(242,169,59,0.14);
+    --ink-soft:#c9cfd8; --slate:#8b93a1; --mint:#5fbfa0; --coral:#e2685a;
+    --display:'Space Grotesk', system-ui, sans-serif;
+    --body:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{
+    font-family:var(--body); background:
+      radial-gradient(ellipse 800px 500px at 50% -10%, rgba(242,169,59,0.10), transparent 60%), var(--ink);
+    color:var(--ink-soft); min-height:100vh; display:flex; align-items:center; justify-content:center;
+    padding:32px 20px; -webkit-font-smoothing:antialiased;
+  }
+  a{ color:inherit; }
+  .card{
+    width:100%; max-width:440px; background:var(--panel); border:1px solid var(--line-dark);
+    border-radius:18px; padding:38px 34px; text-align:center;
+    box-shadow:0 40px 80px -30px rgba(0,0,0,0.6);
+  }
+  .logo{ font-family:var(--display); font-weight:700; font-size:18px; color:#fff; margin-bottom:26px; display:inline-flex; align-items:center; gap:8px; }
+  .logo .dot{ width:7px; height:7px; background:var(--amber); border-radius:1px; }
+  .eyebrow{ font-family:var(--mono); font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:var(--amber); display:block; margin-bottom:14px; }
+  h1{ font-family:var(--display); font-size:22px; color:#fff; line-height:1.3; margin-bottom:12px; }
+  p{ font-size:14.5px; line-height:1.65; color:var(--slate); margin-bottom:26px; }
+  .actions{ display:flex; flex-direction:column; gap:10px; }
+  .btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:var(--body); font-weight:600; font-size:14.5px; padding:14px 22px; border-radius:100px; border:none; cursor:pointer; text-decoration:none; transition:transform .18s ease, background .18s ease, opacity .18s ease; }
+  .btn-primary{ background:var(--amber); color:var(--ink); }
+  .btn-primary:hover{ background:#fff; }
+  .btn-secondary{ background:transparent; color:var(--ink-soft); border:1px solid var(--line-dark); }
+  .btn-secondary:hover{ border-color:rgba(255,255,255,0.3); color:#fff; }
+  .btn:disabled{ opacity:.55; cursor:default; }
+  .state{ display:none; }
+  .state.show{ display:block; }
+  .icon-badge{
+    width:52px; height:52px; border-radius:50%; margin:0 auto 18px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .icon-badge.ok{ background:rgba(95,191,160,0.15); color:var(--mint); }
+  .icon-badge.err{ background:rgba(226,104,90,0.15); color:var(--coral); }
+  .icon-badge svg{ width:24px; height:24px; }
+  .back-link{ display:inline-block; margin-top:6px; font-family:var(--mono); font-size:12.5px; color:var(--slate); }
+  .back-link:hover{ color:var(--amber); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">OFFBOARD <span class="dot"></span></div>
+
+    <!-- STATE: confirm -->
+    <div class="state show" id="stateConfirm">
+      <span class="eyebrow" data-i18n="confirm.eyebrow">Unsubscribe</span>
+      <h1 data-i18n="confirm.title">Leaving the waitlist?</h1>
+      <p data-i18n="confirm.body">You'll stop receiving any emails about OFFBOARD. You can rejoin anytime.</p>
+      <div class="actions">
+        <button type="button" class="btn btn-primary" id="confirmBtn" data-i18n="confirm.confirm">Confirm unsubscribe</button>
+        <a href="https://vorneaux.com/waitlist/offboard" class="btn btn-secondary" data-i18n="confirm.keep">Keep my spot</a>
+      </div>
+    </div>
+
+    <!-- STATE: loading -->
+    <div class="state" id="stateLoading">
+      <p data-i18n="loading" style="margin:0;">Processing…</p>
+    </div>
+
+    <!-- STATE: success -->
+    <div class="state" id="stateSuccess">
+      <div class="icon-badge ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg></div>
+      <h1 data-i18n="success.title">You've been unsubscribed.</h1>
+      <p data-i18n="success.body">You won't receive any further emails from OFFBOARD. If this was a mistake, you're welcome to rejoin anytime.</p>
+      <a href="https://vorneaux.com/waitlist/offboard" class="back-link" data-i18n="backLink">Back to OFFBOARD</a>
+    </div>
+
+    <!-- STATE: error -->
+    <div class="state" id="stateError">
+      <div class="icon-badge err"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="m6 6 12 12M18 6 6 18"/></svg></div>
+      <h1 data-i18n="error.title">This link isn't valid.</h1>
+      <p data-i18n="error.body">It may have expired or already been used. You can manage your subscription from the OFFBOARD waitlist page.</p>
+      <a href="https://vorneaux.com/waitlist/offboard" class="back-link" data-i18n="backLink">Back to OFFBOARD</a>
+    </div>
+  </div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* Keep identical to the constant of the same name in offboard-landing.html
+     — both pages call the same OFFBOARD backend. */
+  var APPS_SCRIPT_URL = ""; // e.g. "https://script.google.com/macros/s/XXXX/exec"
+  var SUPPORTED_LANGS = ['en','it','es','fr'];
+  var DEFAULT_LANG = 'en';
+  var LANG_STORAGE_KEY = 'offboard_lang';
+  var SUBSCRIPTION_STORAGE_KEY = 'offboard_subscription';
+
+  var translations = {
+    en: { 'confirm.eyebrow':"Unsubscribe", 'confirm.title':"Leaving the waitlist?",
+      'confirm.body':"You'll stop receiving any emails about OFFBOARD. You can rejoin anytime.",
+      'confirm.keep':"Keep my spot", 'confirm.confirm':"Confirm unsubscribe", 'loading':"Processing…",
+      'success.title':"You've been unsubscribed.",
+      'success.body':"You won't receive any further emails from OFFBOARD. If this was a mistake, you're welcome to rejoin anytime.",
+      'error.title':"This link isn't valid.",
+      'error.body':"It may have expired or already been used. You can manage your subscription from the OFFBOARD waitlist page.",
+      'backLink':"Back to OFFBOARD" },
+    it: { 'confirm.eyebrow':"Disiscrizione", 'confirm.title':"Vuoi lasciare la waiting list?",
+      'confirm.body':"Non riceverai più alcuna email su OFFBOARD. Potrai iscriverti di nuovo quando vuoi.",
+      'confirm.keep':"Mantieni il mio posto", 'confirm.confirm':"Conferma disiscrizione", 'loading':"Elaborazione…",
+      'success.title':"Ti sei disiscritto.",
+      'success.body':"Non riceverai più email da OFFBOARD. Se si è trattato di un errore, puoi iscriverti di nuovo quando vuoi.",
+      'error.title':"Questo link non è valido.",
+      'error.body':"Potrebbe essere scaduto o già stato utilizzato. Puoi gestire la tua iscrizione dalla pagina della waiting list di OFFBOARD.",
+      'backLink':"Torna a OFFBOARD" },
+    es: { 'confirm.eyebrow':"Baja", 'confirm.title':"¿Quieres salir de la lista de espera?",
+      'confirm.body':"Dejarás de recibir correos sobre OFFBOARD. Puedes volver a unirte cuando quieras.",
+      'confirm.keep':"Mantener mi lugar", 'confirm.confirm':"Confirmar baja", 'loading':"Procesando…",
+      'success.title':"Te has dado de baja.",
+      'success.body':"No recibirás más correos de OFFBOARD. Si fue un error, puedes volver a unirte cuando quieras.",
+      'error.title':"Este enlace no es válido.",
+      'error.body':"Puede haber caducado o ya haberse usado. Puedes gestionar tu suscripción desde la página de la lista de espera de OFFBOARD.",
+      'backLink':"Volver a OFFBOARD" },
+    fr: { 'confirm.eyebrow':"Désabonnement", 'confirm.title':"Quitter la liste d'attente ?",
+      'confirm.body':"Vous ne recevrez plus aucun e-mail concernant OFFBOARD. Vous pourrez vous réinscrire à tout moment.",
+      'confirm.keep':"Garder ma place", 'confirm.confirm':"Confirmer la désinscription", 'loading':"Traitement…",
+      'success.title':"Vous avez été désabonné.",
+      'success.body':"Vous ne recevrez plus d'e-mails d'OFFBOARD. S'il s'agit d'une erreur, vous pouvez vous réinscrire à tout moment.",
+      'error.title':"Ce lien n'est pas valide.",
+      'error.body':"Il a peut-être expiré ou déjà été utilisé. Vous pouvez gérer votre abonnement depuis la page de liste d'attente d'OFFBOARD.",
+      'backLink':"Retour à OFFBOARD" }
+  };
+
+  function getUrlLang(){
+    var m = /[?&]lang=([a-zA-Z-]+)/.exec(window.location.search);
+    if (!m) return null;
+    var code = m[1].toLowerCase().slice(0,2);
+    return SUPPORTED_LANGS.indexOf(code) > -1 ? code : null;
+  }
+  function getStoredLang(){
+    try { var v = localStorage.getItem(LANG_STORAGE_KEY); return SUPPORTED_LANGS.indexOf(v) > -1 ? v : null; }
+    catch(e){ return null; }
+  }
+  function getBrowserLang(){
+    var langs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''];
+    for (var i = 0; i < langs.length; i++){
+      var code = String(langs[i]).toLowerCase().slice(0,2);
+      if (SUPPORTED_LANGS.indexOf(code) > -1) return code;
+    }
+    return null;
+  }
+  var lang = getUrlLang() || getStoredLang() || getBrowserLang() || DEFAULT_LANG;
+
+  function t(key){
+    var dict = translations[lang] || translations[DEFAULT_LANG];
+    return dict[key] !== undefined ? dict[key] : (translations[DEFAULT_LANG][key] || '');
+  }
+  function applyTranslations(){
+    document.documentElement.setAttribute('lang', lang);
+    var nodes = document.querySelectorAll('[data-i18n]');
+    for (var i = 0; i < nodes.length; i++){
+      var val = t(nodes[i].getAttribute('data-i18n'));
+      if (val) nodes[i].textContent = val;
+    }
+  }
+  applyTranslations();
+
+  function getParam(name){
+    var m = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    return m ? decodeURIComponent(m[1].replace(/\+/g, ' ')) : '';
+  }
+  var email = getParam('email');
+  var token = getParam('token');
+
+  var states = {
+    confirm: document.getElementById('stateConfirm'),
+    loading: document.getElementById('stateLoading'),
+    success: document.getElementById('stateSuccess'),
+    error: document.getElementById('stateError')
+  };
+  function showState(name){
+    Object.keys(states).forEach(function(k){ states[k].classList.toggle('show', k === name); });
+  }
+
+  if (!email || !token) {
+    showState('error');
+  } else {
+    showState('confirm');
+  }
+
+  document.getElementById('confirmBtn').addEventListener('click', function(){
+    if (!APPS_SCRIPT_URL) { showState('error'); return; }
+    showState('loading');
+
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'unsubscribe', email: email, token: token })
+    })
+    .then(function(res){ return res.json(); })
+    .then(function(data){
+      if (data && data.status === 'ok') {
+        // Best-effort: if this browser also has the OFFBOARD waitlist page's
+        // local pointer for the same email, clear it so that page reflects
+        // the new state next time it's opened (still re-verified against the
+        // backend there, this is only a local-cache cleanup).
+        try {
+          var stored = JSON.parse(localStorage.getItem(SUBSCRIPTION_STORAGE_KEY) || 'null');
+          if (stored && stored.email === email) localStorage.removeItem(SUBSCRIPTION_STORAGE_KEY);
+        } catch(e){}
+        showState('success');
+      } else {
+        showState('error');
+      }
+    })
+    .catch(function(){ showState('error'); });
+  });
+})();
+</script>
+</body>
+</html>
