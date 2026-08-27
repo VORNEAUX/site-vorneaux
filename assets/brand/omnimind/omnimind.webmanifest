@@ -1,0 +1,36 @@
+{
+  "name": "OMNIMIND™ — The AI Prompt System",
+  "short_name": "OMNIMIND",
+  "description": "150+ expert-engineered prompts across 12 categories, plus an AI prompt builder using 8 reasoning frameworks. Works with any AI model, fully offline.",
+  "start_url": "/discover/omnimind.html",
+  "scope": "/discover/",
+  "display": "standalone",
+  "background_color": "#040509",
+  "theme_color": "#040509",
+  "icons": [
+    {
+      "src": "/assets/brand/omnimind/favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/brand/omnimind/favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/brand/omnimind/favicon-maskable-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/assets/brand/omnimind/favicon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
