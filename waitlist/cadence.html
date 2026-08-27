@@ -340,9 +340,80 @@ fbq('track', 'PageView');
     .nav-cta{padding:9px 14px;font-size:12px;}
     .hero{padding-top:120px;}
   }
+
+  /* ---------- UNSUBSCRIBE VIEW (full takeover) ---------- */
+  body.unsub-mode > *:not(nav):not(#unsubscribeView){display:none !important;}
+  body.unsub-mode .nav-cta{display:none;}
+  .unsub-view{
+    display:none;
+    min-height:100vh;align-items:center;justify-content:center;
+    padding:150px 20px 80px;
+  }
+  .unsub-view.active{display:flex;}
+  .unsub-card{
+    max-width:480px;width:100%;background:var(--panel);border:1px solid var(--hairline-strong);
+    border-radius:4px;padding:52px 44px;
+  }
+  .unsub-card .nav-mark{margin-bottom:26px;}
+  .unsub-card h2{margin:14px 0 16px;}
+  .unsub-card p{font-size:15px;}
+  .unsub-actions{display:flex;gap:16px;flex-wrap:wrap;margin-top:30px;}
+  .unsub-state{display:none;}
+  .unsub-state.active{display:block;}
+  .unsub-spinner{
+    width:18px;height:18px;border-radius:50%;
+    border:2px solid var(--hairline-strong);border-top-color:var(--gold);
+    animation:spin .8s linear infinite;display:inline-block;vertical-align:-3px;margin-right:10px;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* ---------- ALREADY SUBSCRIBED PANEL ---------- */
+  .wl-already{display:none;text-align:center;padding:30px 10px;}
+  .wl-already .mark{font-family:var(--serif);font-style:italic;font-size:26px;color:var(--gold);margin-bottom:10px;}
+  .wl-already p{max-width:360px;margin:0 auto;}
+  .wl-already .manage-link{display:inline-block;margin-top:18px;font-family:var(--eyebrow);font-size:12px;letter-spacing:0.05em;color:var(--ink-faint);border-bottom:1px solid var(--hairline-strong);padding-bottom:2px;transition:color .3s,border-color .3s;}
+  .wl-already .manage-link:hover{color:var(--gold);border-color:var(--gold);}
 </style>
 </head>
 <body>
+
+<section class="unsub-view" id="unsubscribeView">
+  <div class="wrap" style="padding:0;display:flex;justify-content:center;">
+    <div class="unsub-card">
+      <div class="nav-mark">CADENCE <span>™</span></div>
+
+      <div class="unsub-state active" id="unsubStateConfirm">
+        <span class="eyebrow" data-i18n="unsub_eyebrow">Manage your subscription</span>
+        <h2 data-i18n="unsub_title">Unsubscribe from Cadence?</h2>
+        <p data-i18n="unsub_desc">You'll stop receiving emails about Cadence's early access. You can rejoin any time.</p>
+        <div class="unsub-actions">
+          <button type="button" class="btn btn-primary" id="unsubConfirmBtn" data-i18n="unsub_confirm_btn">Confirm unsubscribe</button>
+          <a href="#" class="btn btn-ghost" id="unsubCancelLink" data-i18n="unsub_cancel_link">Take me back</a>
+        </div>
+      </div>
+
+      <div class="unsub-state" id="unsubStateLoading">
+        <p><span class="unsub-spinner"></span><span data-i18n="unsub_loading">Processing…</span></p>
+      </div>
+
+      <div class="unsub-state" id="unsubStateSuccess">
+        <h2 data-i18n="unsub_success_title">You've been unsubscribed.</h2>
+        <p data-i18n="unsub_success_desc">You won't receive any further emails about Cadence. A confirmation has been sent to your inbox.</p>
+        <div class="unsub-actions">
+          <a href="#" class="btn btn-primary" id="unsubBackLink1" data-i18n="back_to_cadence">Back to Cadence</a>
+        </div>
+      </div>
+
+      <div class="unsub-state" id="unsubStateError">
+        <h2 data-i18n="unsub_error_title">Something went wrong.</h2>
+        <p data-i18n="unsub_error_desc">We couldn't process this request. The link may be invalid or already used.</p>
+        <div class="unsub-actions">
+          <a href="#" class="btn btn-primary" id="unsubBackLink2" data-i18n="back_to_cadence">Back to Cadence</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <nav>
   <div class="nav-left">
@@ -616,6 +687,11 @@ fbq('track', 'PageView');
           <div class="mark" data-i18n="wl_success_mark">You're on the list.</div>
           <p data-i18n-html="wl_success_body">We'll reach out from <strong style="color:var(--ink);">hello@vorneaux.com</strong> as Cadence gets closer to launch — including a chance to test it early.</p>
         </div>
+        <div class="wl-already" id="wlAlready">
+          <div class="mark" data-i18n="already_subscribed_title">You're already on the list.</div>
+          <p data-i18n="already_subscribed_desc">We'll email you as soon as early access opens. No need to sign up again.</p>
+          <a href="#" class="manage-link" id="manageSubscriptionLink" data-i18n="already_subscribed_manage_link">Unsubscribe</a>
+        </div>
       </div>
     </div>
   </div>
@@ -679,8 +755,13 @@ fbq('track', 'PageView');
    hello@vorneaux.com.
 ================================================================= */
 const CONFIG = {
-  SCRIPT_URL: "https://script.google.com/macros/s/AKfycbzQG_izMT2BFPuk9dyBDyiw_6YXF8d_LxXnFoiE3VNBsZVuqmWATcuIeSDZuuI_kMt6/exec"
+  SCRIPT_URL: "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE"
 };
+
+const TOKEN_STORAGE_KEY = 'cadence_subscriber_token';
+function getStoredToken(){ try{ return localStorage.getItem(TOKEN_STORAGE_KEY); }catch(e){ return null; } }
+function setStoredToken(token){ try{ localStorage.setItem(TOKEN_STORAGE_KEY, token); }catch(e){} }
+function clearStoredToken(){ try{ localStorage.removeItem(TOKEN_STORAGE_KEY); }catch(e){} }
 
 /* ================================================================
    I18N — translation dictionary, detection, persistence, switcher.
@@ -811,7 +892,22 @@ en: {
   final_title: "Stop guessing what you can afford.<br>Start knowing, every day.",
   final_cta: "Request early access",
   footer_privacy: "Privacy",
-  lang_aria_label: "Change language"
+  lang_aria_label: "Change language",
+  already_subscribed_title: "You're already on the list.",
+  already_subscribed_desc: "We'll email you as soon as early access opens. No need to sign up again.",
+  already_subscribed_manage_link: "Unsubscribe",
+  unsub_eyebrow: "Manage your subscription",
+  unsub_title: "Unsubscribe from Cadence?",
+  unsub_desc: "You'll stop receiving emails about Cadence's early access. You can rejoin any time.",
+  unsub_confirm_btn: "Confirm unsubscribe",
+  unsub_cancel_link: "Take me back",
+  unsub_loading: "Processing…",
+  unsub_success_title: "You've been unsubscribed.",
+  unsub_success_desc: "You won't receive any further emails about Cadence. A confirmation has been sent to your inbox.",
+  unsub_already_removed_desc: "You were already off the list — no further action needed.",
+  unsub_error_title: "Something went wrong.",
+  unsub_error_desc: "We couldn't process this request. The link may be invalid or already used.",
+  back_to_cadence: "Back to Cadence"
 },
 it: {
   meta_title: "Cadence — Sai sempre quanto puoi spendere, ogni giorno",
@@ -929,7 +1025,22 @@ it: {
   final_title: "Smetti di indovinare quanto puoi permetterti.<br>Inizia a saperlo, ogni giorno.",
   final_cta: "Richiedi accesso anticipato",
   footer_privacy: "Privacy",
-  lang_aria_label: "Cambia lingua"
+  lang_aria_label: "Cambia lingua",
+  already_subscribed_title: "Sei già in lista.",
+  already_subscribed_desc: "Ti scriveremo non appena l'accesso anticipato sarà disponibile. Non serve iscriverti di nuovo.",
+  already_subscribed_manage_link: "Disiscriviti",
+  unsub_eyebrow: "Gestisci la tua iscrizione",
+  unsub_title: "Disiscriverti da Cadence?",
+  unsub_desc: "Non riceverai più email sull'accesso anticipato a Cadence. Puoi iscriverti di nuovo in qualsiasi momento.",
+  unsub_confirm_btn: "Conferma disiscrizione",
+  unsub_cancel_link: "Torna indietro",
+  unsub_loading: "Elaborazione in corso…",
+  unsub_success_title: "Ti sei disiscritto.",
+  unsub_success_desc: "Non riceverai più email su Cadence. Una conferma è stata inviata alla tua casella di posta.",
+  unsub_already_removed_desc: "Non eri già più in lista — nessuna ulteriore azione necessaria.",
+  unsub_error_title: "Qualcosa è andato storto.",
+  unsub_error_desc: "Non siamo riusciti a completare la richiesta. Il link potrebbe non essere valido o essere già stato usato.",
+  back_to_cadence: "Torna a Cadence"
 },
 es: {
   meta_title: "Cadence — Sabe siempre cuánto puedes gastar, cada día",
@@ -1047,7 +1158,22 @@ es: {
   final_title: "Deja de adivinar cuánto puedes gastar.<br>Empieza a saberlo, cada día.",
   final_cta: "Solicitar acceso anticipado",
   footer_privacy: "Privacidad",
-  lang_aria_label: "Cambiar idioma"
+  lang_aria_label: "Cambiar idioma",
+  already_subscribed_title: "Ya estás en la lista.",
+  already_subscribed_desc: "Te escribiremos en cuanto se abra el acceso anticipado. No hace falta que te inscribas de nuevo.",
+  already_subscribed_manage_link: "Darse de baja",
+  unsub_eyebrow: "Gestiona tu suscripción",
+  unsub_title: "¿Darte de baja de Cadence?",
+  unsub_desc: "Dejarás de recibir correos sobre el acceso anticipado a Cadence. Puedes volver a unirte cuando quieras.",
+  unsub_confirm_btn: "Confirmar baja",
+  unsub_cancel_link: "Volver",
+  unsub_loading: "Procesando…",
+  unsub_success_title: "Te has dado de baja.",
+  unsub_success_desc: "No recibirás más correos sobre Cadence. Se ha enviado una confirmación a tu bandeja de entrada.",
+  unsub_already_removed_desc: "Ya no estabas en la lista — no hace falta ninguna acción más.",
+  unsub_error_title: "Algo salió mal.",
+  unsub_error_desc: "No pudimos procesar esta solicitud. El enlace puede no ser válido o ya haberse usado.",
+  back_to_cadence: "Volver a Cadence"
 },
 fr: {
   meta_title: "Cadence — Sachez toujours ce que vous pouvez dépenser, chaque jour",
@@ -1165,7 +1291,22 @@ fr: {
   final_title: "Arrêtez de deviner ce que vous pouvez vous permettre.<br>Commencez à le savoir, chaque jour.",
   final_cta: "Demander un accès anticipé",
   footer_privacy: "Confidentialité",
-  lang_aria_label: "Changer de langue"
+  lang_aria_label: "Changer de langue",
+  already_subscribed_title: "Vous êtes déjà sur la liste.",
+  already_subscribed_desc: "Nous vous écrirons dès que l'accès anticipé ouvrira. Pas besoin de vous réinscrire.",
+  already_subscribed_manage_link: "Se désabonner",
+  unsub_eyebrow: "Gérer votre abonnement",
+  unsub_title: "Vous désabonner de Cadence ?",
+  unsub_desc: "Vous ne recevrez plus d'e-mails sur l'accès anticipé à Cadence. Vous pouvez vous réinscrire à tout moment.",
+  unsub_confirm_btn: "Confirmer la désinscription",
+  unsub_cancel_link: "Revenir en arrière",
+  unsub_loading: "Traitement en cours…",
+  unsub_success_title: "Vous avez été désabonné.",
+  unsub_success_desc: "Vous ne recevrez plus d'e-mails concernant Cadence. Une confirmation a été envoyée dans votre boîte de réception.",
+  unsub_already_removed_desc: "Vous n'étiez déjà plus sur la liste — aucune action supplémentaire n'est nécessaire.",
+  unsub_error_title: "Une erreur s'est produite.",
+  unsub_error_desc: "Nous n'avons pas pu traiter cette demande. Le lien est peut-être invalide ou déjà utilisé.",
+  back_to_cadence: "Retour à Cadence"
 },
 de: {
   meta_title: "Cadence — Wissen Sie jeden Tag, was Sie ausgeben können",
@@ -1283,7 +1424,22 @@ de: {
   final_title: "Hören Sie auf zu raten, was Sie sich leisten können.<br>Fangen Sie an, es jeden Tag zu wissen.",
   final_cta: "Frühen Zugang anfordern",
   footer_privacy: "Datenschutz",
-  lang_aria_label: "Sprache ändern"
+  lang_aria_label: "Sprache ändern",
+  already_subscribed_title: "Sie stehen bereits auf der Liste.",
+  already_subscribed_desc: "Wir schreiben Ihnen, sobald der frühe Zugang öffnet. Eine erneute Anmeldung ist nicht nötig.",
+  already_subscribed_manage_link: "Abmelden",
+  unsub_eyebrow: "Abonnement verwalten",
+  unsub_title: "Von Cadence abmelden?",
+  unsub_desc: "Sie erhalten keine E-Mails mehr zum frühen Zugang von Cadence. Sie können jederzeit wieder beitreten.",
+  unsub_confirm_btn: "Abmeldung bestätigen",
+  unsub_cancel_link: "Zurück",
+  unsub_loading: "Wird verarbeitet…",
+  unsub_success_title: "Sie wurden abgemeldet.",
+  unsub_success_desc: "Sie erhalten keine weiteren E-Mails zu Cadence mehr. Eine Bestätigung wurde an Ihr Postfach gesendet.",
+  unsub_already_removed_desc: "Sie waren bereits nicht mehr auf der Liste — keine weitere Aktion nötig.",
+  unsub_error_title: "Etwas ist schiefgelaufen.",
+  unsub_error_desc: "Wir konnten diese Anfrage nicht bearbeiten. Der Link ist möglicherweise ungültig oder wurde bereits verwendet.",
+  back_to_cadence: "Zurück zu Cadence"
 }
 };
 
@@ -1529,6 +1685,8 @@ document.querySelectorAll('.faq-item').forEach(item => {
 const wlForm = document.getElementById('waitlistForm');
 const wlError = document.getElementById('wlError');
 const wlSuccess = document.getElementById('wlSuccess');
+const wlAlready = document.getElementById('wlAlready');
+const manageSubscriptionLink = document.getElementById('manageSubscriptionLink');
 
 function isValidEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
 
@@ -1542,6 +1700,31 @@ function hideWlError(){
   delete wlError.dataset.currentErrorKey;
 }
 
+/* Show the "you're already on the list" panel instead of the form —
+   used both when a returning visitor is recognized via their stored
+   token (verified against the backend, not just the token's presence)
+   and when someone re-submits an email that's already subscribed. */
+function showAlreadySubscribed(token){
+  wlForm.style.display = 'none';
+  wlSuccess.style.display = 'none';
+  wlAlready.style.display = 'block';
+  if(token){ manageSubscriptionLink.setAttribute('data-token', token); }
+}
+function showWaitlistForm(){
+  wlAlready.style.display = 'none';
+  wlSuccess.style.display = 'none';
+  wlForm.style.display = 'flex';
+}
+
+manageSubscriptionLink.addEventListener('click', function(e){
+  e.preventDefault();
+  const token = this.getAttribute('data-token') || getStoredToken();
+  if(!token) return;
+  const url = new URL(window.location.href);
+  url.search = '?unsubscribe=' + encodeURIComponent(token);
+  window.location.href = url.toString();
+});
+
 wlForm.addEventListener('submit', function(e){
   e.preventDefault();
   const email = document.getElementById('email').value.trim();
@@ -1552,14 +1735,13 @@ wlForm.addEventListener('submit', function(e){
   hideWlError();
 
   const payload = {
+    action: 'signup',
     email: email,
     incomeSource: document.getElementById('incomeSource').value,
     willingnessToPay: document.getElementById('wtp').value,
-    page: 'cadence_landing',
     language: currentLang,
-    timestamp: new Date().toISOString(),
-    referrer: document.referrer || '',
-    ...getUTM()
+    utm_source: (getUTM().utm_source || ''),
+    utm_campaign: (getUTM().utm_campaign || '')
   };
 
   const submitBtn = document.getElementById('wlSubmitBtn');
@@ -1567,17 +1749,10 @@ wlForm.addEventListener('submit', function(e){
   submitBtn.dataset.submitting = 'true';
   submitBtn.textContent = t(currentLang, 'wl_submitting');
 
-  const finish = function(success){
+  const resetButton = function(){
     submitBtn.disabled = false;
     submitBtn.dataset.submitting = 'false';
     submitBtn.textContent = t(currentLang, 'wl_submit');
-    if(success){
-      wlForm.style.display = 'none';
-      wlSuccess.style.display = 'block';
-      trackEvent('waitlist_signup', {incomeSource: payload.incomeSource, willingnessToPay: payload.willingnessToPay, language: currentLang});
-    }else{
-      showWlError('wl_error_fail');
-    }
   };
 
   if(!CONFIG.SCRIPT_URL || CONFIG.SCRIPT_URL.indexOf('PASTE_YOUR') === 0){
@@ -1587,22 +1762,129 @@ wlForm.addEventListener('submit', function(e){
     try{
       const key = 'cadence_waitlist_local';
       const existing = JSON.parse(localStorage.getItem(key) || '[]');
-      existing.push(payload);
+      existing.push(Object.assign({}, payload, {timestamp: new Date().toISOString()}));
       localStorage.setItem(key, JSON.stringify(existing));
     }catch(err){}
-    finish(true);
+    resetButton();
+    wlForm.style.display = 'none';
+    wlSuccess.style.display = 'block';
+    trackEvent('waitlist_signup', {incomeSource: payload.incomeSource, willingnessToPay: payload.willingnessToPay, language: currentLang});
     return;
   }
 
   fetch(CONFIG.SCRIPT_URL, {
     method: 'POST',
-    mode: 'no-cors',
-    headers: {'Content-Type': 'text/plain;charset=utf-8'},
+    headers: {'Content-Type': 'text/plain;charset=utf-8'}, // avoids a CORS preflight Apps Script can't answer
     body: JSON.stringify(payload)
   })
-  .then(() => finish(true))
-  .catch(() => finish(false));
+  .then(r => r.json())
+  .then(res => {
+    resetButton();
+    if(!res || !res.ok){ showWlError('wl_error_fail'); return; }
+    if(res.token){ setStoredToken(res.token); }
+    if(res.duplicate){
+      showAlreadySubscribed(res.token);
+      trackEvent('waitlist_duplicate', {language: currentLang});
+    } else {
+      wlForm.style.display = 'none';
+      wlSuccess.style.display = 'block';
+      trackEvent('waitlist_signup', {incomeSource: payload.incomeSource, willingnessToPay: payload.willingnessToPay, language: currentLang});
+    }
+  })
+  .catch(() => { resetButton(); showWlError('wl_error_fail'); });
 });
+
+/* ---------- real subscription state check (source of truth = backend) ----------
+   localStorage only stores WHICH token to ask about; the backend's answer,
+   not the token's mere presence, is what decides what the page shows. */
+function checkStoredSubscription(){
+  const token = getStoredToken();
+  if(!token) return;
+  if(!CONFIG.SCRIPT_URL || CONFIG.SCRIPT_URL.indexOf('PASTE_YOUR') === 0) return;
+
+  fetch(CONFIG.SCRIPT_URL + '?action=status&token=' + encodeURIComponent(token))
+    .then(r => r.json())
+    .then(res => {
+      if(res && res.ok && res.subscribed){
+        showAlreadySubscribed(token);
+      } else {
+        clearStoredToken();
+      }
+    })
+    .catch(() => { /* network/CORS issue: fail silently, keep showing the form */ });
+}
+
+/* ---------- unsubscribe view ----------
+   Reached as vorneaux.com/waitlist/cadence?unsubscribe=<token>. Loading the
+   link only ever shows the confirmation card (safe for email-scanning bots);
+   the actual removal happens only after an explicit click on "Confirm". */
+const unsubscribeView = document.getElementById('unsubscribeView');
+const unsubStates = {
+  confirm: document.getElementById('unsubStateConfirm'),
+  loading: document.getElementById('unsubStateLoading'),
+  success: document.getElementById('unsubStateSuccess'),
+  error: document.getElementById('unsubStateError')
+};
+function showUnsubState(name){
+  Object.keys(unsubStates).forEach(k => unsubStates[k].classList.toggle('active', k === name));
+}
+function baseUrlNoQuery(){
+  return window.location.origin + window.location.pathname;
+}
+
+function initUnsubscribeView(token){
+  document.body.classList.add('unsub-mode');
+  unsubscribeView.classList.add('active');
+  showUnsubState('confirm');
+
+  ['unsubCancelLink','unsubBackLink1','unsubBackLink2'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.setAttribute('href', baseUrlNoQuery());
+  });
+
+  document.getElementById('unsubConfirmBtn').addEventListener('click', function(){
+    showUnsubState('loading');
+    trackEvent('unsubscribe_confirm_click', {});
+
+    if(!CONFIG.SCRIPT_URL || CONFIG.SCRIPT_URL.indexOf('PASTE_YOUR') === 0){
+      showUnsubState('error');
+      return;
+    }
+
+    fetch(CONFIG.SCRIPT_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain;charset=utf-8'},
+      body: JSON.stringify({ action: 'unsubscribe', token: token })
+    })
+    .then(r => r.json())
+    .then(res => {
+      if(res && res.ok){
+        clearStoredToken();
+        if(res.alreadyRemoved){
+          document.querySelector('#unsubStateSuccess p').textContent = t(currentLang, 'unsub_already_removed_desc');
+        } else {
+          document.querySelector('#unsubStateSuccess p').textContent = t(currentLang, 'unsub_success_desc');
+        }
+        showUnsubState('success');
+        trackEvent('unsubscribe_success', {alreadyRemoved: !!res.alreadyRemoved});
+      } else {
+        showUnsubState('error');
+      }
+    })
+    .catch(() => showUnsubState('error'));
+  });
+}
+
+/* ---------- page init: unsubscribe mode vs normal mode ---------- */
+(function initPageMode(){
+  const params = new URLSearchParams(window.location.search);
+  const unsubToken = params.get('unsubscribe');
+  if(unsubToken){
+    initUnsubscribeView(unsubToken);
+  } else {
+    checkStoredSubscription();
+  }
+})();
 
 /* ---------- language init (runs last: needs every const/function above) ---------- */
 buildLangMenu();
