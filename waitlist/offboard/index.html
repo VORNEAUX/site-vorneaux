@@ -56,7 +56,7 @@
   .lang-btn:hover{ border-color:var(--amber); color:#fff; }
   .lang-btn svg{ width:11px; height:11px; transition:transform .2s ease; }
   .lang-btn[aria-expanded="true"] svg{ transform:rotate(180deg); }
-  .lang-menu{ position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%); background:var(--panel); border:1px solid var(--line-dark); border-radius:12px; padding:6px; min-width:160px; list-style:none; box-shadow:0 20px 40px -20px rgba(0,0,0,0.6); z-index:200; }
+  .lang-menu{ position:absolute; top:calc(100% + 8px); right:0; background:var(--panel); border:1px solid var(--line-dark); border-radius:12px; padding:6px; min-width:160px; max-width:calc(100vw - 40px); list-style:none; box-shadow:0 20px 40px -20px rgba(0,0,0,0.6); z-index:200; }
   .lang-menu[hidden]{ display:none; }
   .lang-option{ display:flex; align-items:center; justify-content:space-between; width:100%; background:none; border:none; color:var(--ink-soft); font-family:var(--body); font-size:13.5px; padding:9px 12px; border-radius:8px; cursor:pointer; text-align:left; }
   .lang-option:hover, .lang-option:focus-visible{ background:var(--panel-2); color:#fff; }
@@ -514,7 +514,7 @@
      Keep this identical to the constant of the same name in
      offboard-unsubscribe.html — both pages talk to the same backend.
      ===================================================================== */
-  var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyNHVnNqDbxIZGGtJg04PBBQ1BEUkNSF-BqgnBb_6hqbj8nsZ3VTJZVLr41JXteGry01Q/exec"; 
+  var APPS_SCRIPT_URL = ""; // e.g. "https://script.google.com/macros/s/XXXX/exec"
   var SUPPORTED_LANGS = ['en','it','es','fr'];
   var DEFAULT_LANG = 'en';
   var LANG_STORAGE_KEY = 'offboard_lang';
