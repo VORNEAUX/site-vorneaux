@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">Cadence — Privacy Policy</title>
+<meta id="pageDescription" name="description" content="How VORNEAUX collects, uses and protects your information on the Cadence waitlist page.">
+<meta name="robots" content="noindex, follow">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@400;500;600&family=DM+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --obsidian:#050509;
+    --panel:#0c0c13;
+    --panel-2:#111119;
+    --hairline:rgba(201,169,110,0.14);
+    --hairline-strong:rgba(201,169,110,0.28);
+    --gold:#C9A96E;
+    --gold-dim:#8a7550;
+    --gold-bright:#E4CB98;
+    --rust:#8B4A3D;
+    --rust-bright:#B5695A;
+    --ink:#F3F1EA;
+    --ink-dim:#B9B6AC;
+    --ink-faint:#7A7870;
+    --ease:cubic-bezier(.16,.8,.24,1);
+    --serif:'Cormorant Garamond', serif;
+    --eyebrow:'Jost', sans-serif;
+    --body:'DM Sans', sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--obsidian);
+    color:var(--ink);
+    font-family:var(--body);
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--gold);color:var(--obsidian);}
+  img,svg{display:block;max-width:100%;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 32px;}
+  .eyebrow{
+    font-family:var(--eyebrow);
+    font-size:12.5px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--gold);
+    font-weight:500;
+  }
+  h1,h2,h3{font-family:var(--serif);font-weight:500;line-height:1.08;letter-spacing:-0.01em;}
+  h1{font-size:clamp(36px,5.4vw,64px);}
+  h2{font-size:clamp(22px,2.6vw,28px);}
+  p{color:var(--ink-dim);}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:10px;
+    font-family:var(--eyebrow);font-size:14.5px;font-weight:500;letter-spacing:0.04em;
+    padding:16px 30px;border-radius:2px;cursor:pointer;border:1px solid transparent;
+    transition:transform .5s var(--ease), background .4s var(--ease), border-color .4s var(--ease), color .4s var(--ease);
+  }
+  .btn-primary{background:var(--gold);color:var(--obsidian);}
+  .btn-primary:hover{background:var(--gold-bright);transform:translateY(-2px);}
+  .btn-ghost{background:transparent;color:var(--ink);border-color:var(--hairline-strong);}
+  .btn-ghost:hover{border-color:var(--gold);color:var(--gold);}
+  section{position:relative;}
+  .divider{height:1px;background:linear-gradient(90deg, transparent, var(--hairline-strong) 20%, var(--hairline-strong) 80%, transparent);}
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity 1s var(--ease), transform 1s var(--ease);}
+  .reveal.is-visible{opacity:1;transform:translateY(0);}
+
+  /* ---------- NAV (identical to the main Cadence page) ---------- */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px 32px;
+    background:linear-gradient(180deg, rgba(5,5,9,0.92), rgba(5,5,9,0));
+    backdrop-filter:blur(6px);
+  }
+  .nav-left{display:flex;align-items:center;gap:22px;}
+  .nav-mark{font-family:var(--serif);font-size:20px;letter-spacing:0.03em;}
+  .nav-mark span{color:var(--gold);}
+  .nav-sub{font-family:var(--eyebrow);font-size:10px;letter-spacing:0.2em;color:var(--ink-faint);display:block;margin-top:-2px;}
+  .nav-right{display:flex;align-items:center;gap:14px;}
+  .nav-cta{font-family:var(--eyebrow);font-size:13px;letter-spacing:0.05em;padding:11px 20px;border:1px solid var(--hairline-strong);border-radius:2px;transition:border-color .3s,color .3s;}
+  .nav-cta:hover{border-color:var(--gold);color:var(--gold);}
+
+  /* language switcher (identical to the main Cadence page) */
+  .lang-switch{position:relative;}
+  .lang-btn{
+    display:flex;align-items:center;gap:7px;background:transparent;border:1px solid var(--hairline-strong);
+    color:var(--ink-dim);font-family:var(--eyebrow);font-size:12.5px;letter-spacing:0.05em;
+    padding:10px 13px;border-radius:2px;cursor:pointer;transition:border-color .3s,color .3s;
+  }
+  .lang-btn:hover, .lang-btn[aria-expanded="true"]{border-color:var(--gold);color:var(--gold);}
+  .lang-btn .car{font-size:9px;transition:transform .3s var(--ease);}
+  .lang-btn[aria-expanded="true"] .car{transform:rotate(180deg);}
+  .lang-menu{
+    position:absolute;top:calc(100% + 8px);right:0;min-width:172px;
+    background:var(--panel);border:1px solid var(--hairline-strong);border-radius:2px;
+    padding:6px;display:none;flex-direction:column;gap:2px;
+    box-shadow:0 20px 40px rgba(0,0,0,0.4);
+  }
+  .lang-menu.open{display:flex;}
+  .lang-option{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    background:transparent;border:none;color:var(--ink-dim);text-align:left;
+    font-family:var(--body);font-size:14px;padding:10px 12px;border-radius:2px;cursor:pointer;
+    transition:background .25s,color .25s;
+  }
+  .lang-option:hover{background:rgba(201,169,110,0.08);color:var(--ink);}
+  .lang-option[aria-selected="true"]{color:var(--gold);}
+  .lang-option .code{font-family:var(--eyebrow);font-size:10.5px;letter-spacing:0.06em;color:var(--ink-faint);}
+  .lang-option[aria-selected="true"] .code{color:var(--gold-dim);}
+
+  /* ---------- LEGAL PAGE HEADER ---------- */
+  .legal-hero{
+    padding:150px 0 60px;
+    background:radial-gradient(ellipse 900px 500px at 82% -10%, rgba(201,169,110,0.09), transparent 60%);
+  }
+  .legal-hero h1{margin:16px 0 18px;}
+  .legal-hero .updated{font-family:var(--mono);font-size:12.5px;color:var(--ink-faint);margin-bottom:22px;}
+  .legal-hero .lede{font-size:17px;max-width:640px;color:var(--ink-dim);}
+
+  /* ---------- TOC ---------- */
+  .legal-toc{padding:26px 0 10px;}
+  .legal-toc-list{display:flex;flex-wrap:wrap;gap:10px;list-style:none;}
+  .legal-toc-list a{
+    display:inline-block;font-family:var(--eyebrow);font-size:12.5px;letter-spacing:0.03em;
+    color:var(--ink-dim);border:1px solid var(--hairline);border-radius:100px;padding:8px 16px;
+    transition:border-color .3s,color .3s;
+  }
+  .legal-toc-list a:hover{border-color:var(--gold);color:var(--gold);}
+
+  /* ---------- LEGAL SECTIONS ---------- */
+  .legal-body{padding:20px 0 80px;}
+  .legal-section{padding:34px 0;border-top:1px solid var(--hairline);scroll-margin-top:100px;}
+  .legal-section h2{margin-bottom:14px;color:var(--ink);}
+  .legal-section p{font-size:15.5px;max-width:720px;margin-bottom:12px;}
+  .legal-section p:last-child{margin-bottom:0;}
+  .legal-section ul{margin:6px 0 14px 22px;max-width:700px;}
+  .legal-section li{font-size:15.5px;color:var(--ink-dim);margin-bottom:8px;}
+  .legal-section a{color:var(--gold);border-bottom:1px solid var(--hairline-strong);}
+  .legal-section a:hover{color:var(--gold-bright);border-color:var(--gold);}
+
+  .legal-back{padding:0 0 90px;text-align:center;}
+
+  footer{border-top:1px solid var(--hairline);padding:40px 0;}
+  .footer-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+  .footer-row .fmark{font-family:var(--serif);font-size:16px;color:var(--ink-dim);}
+  .footer-row .flinks{display:flex;gap:26px;font-family:var(--eyebrow);font-size:12px;letter-spacing:0.05em;color:var(--ink-faint);}
+  .footer-row .flinks a:hover{color:var(--gold);}
+
+  @media (max-width:720px){
+    nav{padding:18px 20px;}
+    .wrap{padding:0 20px;}
+    .legal-hero{padding:130px 0 40px;}
+    .legal-toc-list{gap:8px;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <a href="cadence.html" data-track="nav_logo">
+      <div class="nav-mark">CADENCE <span>™</span></div>
+      <span class="nav-sub">BY VORNEAUX</span>
+    </a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-switch">
+      <button class="lang-btn" id="langBtn" aria-haspopup="listbox" aria-expanded="false" aria-label="Change language">
+        <span id="langBtnLabel">EN</span>
+        <span class="car">▾</span>
+      </button>
+      <div class="lang-menu" id="langMenu" role="listbox" aria-label="Select language"></div>
+    </div>
+    <a href="cadence.html#waitlist" class="nav-cta" data-track="nav_cta" data-i18n="nav_cta">Request early access</a>
+  </div>
+</nav>
+
+<!-- ============ HEADER ============ -->
+<section class="legal-hero">
+  <div class="wrap reveal">
+    <span class="eyebrow" data-i18n="privacy_eyebrow">Legal</span>
+    <h1 data-i18n="privacy_title">Privacy Policy</h1>
+    <div class="updated" data-i18n="privacy_updated">Last updated: September 6, 2026</div>
+    <p class="lede" data-i18n="privacy_lede">Short version: we only ask for what helps us build Cadence well, we never sell your information, and you can leave the waitlist whenever you want. Here's the long version.</p>
+  </div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<!-- ============ TABLE OF CONTENTS ============ -->
+<section class="legal-toc">
+  <div class="wrap reveal">
+    <ul class="legal-toc-list">
+      <li><a href="#who-we-are" data-i18n="privacy_s1_title">Who we are</a></li>
+      <li><a href="#scope" data-i18n="privacy_s2_title">Scope of this policy</a></li>
+      <li><a href="#information-we-collect" data-i18n="privacy_s3_title">Information we collect</a></li>
+      <li><a href="#how-we-use-it" data-i18n="privacy_s4_title">How we use your information</a></li>
+      <li><a href="#legal-basis" data-i18n="privacy_s5_title">Legal basis for processing</a></li>
+      <li><a href="#who-we-share-with" data-i18n="privacy_s6_title">Who we share it with</a></li>
+      <li><a href="#international-transfers" data-i18n="privacy_s7_title">International transfers</a></li>
+      <li><a href="#retention" data-i18n="privacy_s8_title">How long we keep it</a></li>
+      <li><a href="#cookies" data-i18n="privacy_s9_title">Cookies and local storage</a></li>
+      <li><a href="#your-rights" data-i18n="privacy_s10_title">Your rights</a></li>
+      <li><a href="#children" data-i18n="privacy_s11_title">Children's privacy</a></li>
+      <li><a href="#security" data-i18n="privacy_s12_title">Security</a></li>
+      <li><a href="#changes" data-i18n="privacy_s13_title">Changes to this policy</a></li>
+      <li><a href="#contact" data-i18n="privacy_s14_title">Contact us</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ POLICY BODY ============ -->
+<section class="legal-body">
+  <div class="wrap">
+
+    <div class="legal-section reveal" id="who-we-are">
+      <h2 data-i18n="privacy_s1_title">Who we are</h2>
+      <p data-i18n="privacy_s1_body">Cadence is an early-stage product by VORNEAUX. This page explains what information we collect from visitors and waitlist members of Cadence, why we collect it, and what choices you have. VORNEAUX is the data controller responsible for this information.</p>
+    </div>
+
+    <div class="legal-section reveal" id="scope">
+      <h2 data-i18n="privacy_s2_title">Scope of this policy</h2>
+      <p data-i18n="privacy_s2_body">This policy covers only the Cadence waitlist page you're on right now. If you've interacted with other VORNEAUX products, such as OFFBOARD, their own data practices are described in that product's own privacy policy.</p>
+    </div>
+
+    <div class="legal-section reveal" id="information-we-collect">
+      <h2 data-i18n="privacy_s3_title">Information we collect</h2>
+      <div data-i18n-html="privacy_s3_body"><p>When you join the Cadence waitlist, we collect:</p>
+        <ul>
+          <li>Your email address, so we can contact you when early access opens.</li>
+          <li>Your language preference, so we can write to you in the right language.</li>
+          <li>If you choose to answer them: your main income source, whether you'd be willing to pay for Cadence, and how you currently decide what's safe to spend. These three questions are optional and help us build something people actually need.</li>
+          <li>A small amount of technical information attached to your signup, such as the campaign or link that brought you here, and the date and time you joined.</li>
+          <li>A unique subscriber identifier, used only to recognize your entry and to power the unsubscribe link in our emails.</li>
+        </ul>
+        <p>We do not ask for your bank details, your income amount, or any government identifier at this stage, and we don't use cookies to track you across other websites.</p>
+      </div>
+    </div>
+
+    <div class="legal-section reveal" id="how-we-use-it">
+      <h2 data-i18n="privacy_s4_title">How we use your information</h2>
+      <div data-i18n-html="privacy_s4_body"><p>We use what you share to:</p>
+        <ul>
+          <li>Let you know when early access to Cadence opens, and share meaningful updates about the product before then.</li>
+          <li>Understand whether the problem we're trying to solve is real, and for whom — this is the entire point of this page. Your optional answers directly shape whether and how we build Cadence.</li>
+          <li>Keep basic records of who signed up and when, for our own internal tracking.</li>
+        </ul>
+        <p>We do not sell your information, and we do not use it to show you ads.</p>
+      </div>
+    </div>
+
+    <div class="legal-section reveal" id="legal-basis">
+      <h2 data-i18n="privacy_s5_title">Legal basis for processing</h2>
+      <div data-i18n-html="privacy_s5_body"><p>Where the GDPR or UK GDPR applies to you, we rely on:</p>
+        <ul>
+          <li>Your consent, for the optional questions (income source, willingness to pay, current workaround) — you can decline to answer any of them and still join the waitlist.</li>
+          <li>Our legitimate interest, for your email address and the basic technical data attached to it, in order to run a functioning waitlist and validate a product idea before building it.</li>
+        </ul>
+        <p>You can withdraw consent or object at any time by unsubscribing or writing to us — see "Your rights" below.</p>
+      </div>
+    </div>
+
+    <div class="legal-section reveal" id="who-we-share-with">
+      <h2 data-i18n="privacy_s6_title">Who we share it with</h2>
+      <div data-i18n-html="privacy_s6_body"><p>We keep the number of parties who see your information to a minimum:</p>
+        <ul>
+          <li>Google Workspace, which we use to send emails and to store waitlist entries securely. Google processes this information on our behalf, under its own data processing terms.</li>
+        </ul>
+        <p>We do not share your information with advertisers, data brokers, or any other third party, and we do not sell it under any circumstance.</p>
+      </div>
+    </div>
+
+    <div class="legal-section reveal" id="international-transfers">
+      <h2 data-i18n="privacy_s7_title">International transfers</h2>
+      <p data-i18n="privacy_s7_body">Because we use Google Workspace, your information may be processed in countries outside your own, including the United States. Where that happens, it's covered by Google's standard contractual clauses and other safeguards recognized under applicable data protection law.</p>
+    </div>
+
+    <div class="legal-section reveal" id="retention">
+      <h2 data-i18n="privacy_s8_title">How long we keep it</h2>
+      <p data-i18n="privacy_s8_body">We keep your waitlist entry for as long as Cadence is in development and you remain subscribed. If you unsubscribe, we remove you from the active waitlist immediately, and keep a minimal record — your email, language, and signup/unsubscribe dates — for a limited period, only to keep our records accurate and to make sure we don't contact you again by mistake.</p>
+    </div>
+
+    <div class="legal-section reveal" id="cookies">
+      <h2 data-i18n="privacy_s9_title">Cookies and local storage</h2>
+      <div data-i18n-html="privacy_s9_body"><p>This page doesn't use tracking cookies. It stores two small pieces of information directly in your browser:</p>
+        <ul>
+          <li>Your language choice, so the page remembers it on your next visit.</li>
+          <li>Your subscriber identifier, so the page can recognize you if you come back to unsubscribe.</li>
+        </ul>
+        <p>If we ever activate analytics tools such as Google Analytics on this page, we'll update this section beforehand to explain what's collected and give you a way to opt out.</p>
+      </div>
+    </div>
+
+    <div class="legal-section reveal" id="your-rights">
+      <h2 data-i18n="privacy_s10_title">Your rights</h2>
+      <div data-i18n-html="privacy_s10_body"><p>Depending on where you live, you may have the right to:</p>
+        <ul>
+          <li>Access the information we hold about you.</li>
+          <li>Correct it, if it's inaccurate.</li>
+          <li>Ask us to delete it.</li>
+          <li>Object to, or ask us to restrict, how we use it.</li>
+          <li>Receive a copy of it in a portable format.</li>
+          <li>Lodge a complaint with your local data protection authority.</li>
+        </ul>
+        <p>To exercise any of these rights, write to us at the address below — we'll respond within a reasonable time, and in any case within the timeframe required by applicable law.</p>
+      </div>
+    </div>
+
+    <div class="legal-section reveal" id="children">
+      <h2 data-i18n="privacy_s11_title">Children's privacy</h2>
+      <p data-i18n="privacy_s11_body">Cadence is intended for working adults, and this page is not directed at children. We don't knowingly collect information from anyone under 16. If you believe a child has provided us with information, please contact us and we'll remove it.</p>
+    </div>
+
+    <div class="legal-section reveal" id="security">
+      <h2 data-i18n="privacy_s12_title">Security</h2>
+      <p data-i18n="privacy_s12_body">We take reasonable technical and organizational measures to protect your information, including relying on Google Workspace's security infrastructure for storage and email delivery. No method of transmission or storage is completely secure, but we work to keep your information protected.</p>
+    </div>
+
+    <div class="legal-section reveal" id="changes">
+      <h2 data-i18n="privacy_s13_title">Changes to this policy</h2>
+      <p data-i18n="privacy_s13_body">We may update this policy as Cadence evolves — for example, when we add a new question to the waitlist form, or move to a different backend. We'll update the date at the top of this page whenever we do, and for material changes, we'll let you know by email.</p>
+    </div>
+
+    <div class="legal-section reveal" id="contact">
+      <h2 data-i18n="privacy_s14_title">Contact us</h2>
+      <p data-i18n-html="privacy_s14_body">For anything related to this policy or your information, write to us at <a href="mailto:contact@vorneaux.com">contact@vorneaux.com</a>. We're a small team building this in the open, and we'll get back to you personally.</p>
+    </div>
+
+  </div>
+</section>
+
+<div class="legal-back reveal">
+  <a href="cadence.html" class="btn btn-ghost" data-track="privacy_back_to_cadence" data-i18n="back_to_cadence">Back to Cadence</a>
+</div>
+
+<footer>
+  <div class="wrap footer-row">
+    <div class="fmark">VORNEAUX</div>
+    <div class="flinks">
+      <a href="mailto:contact@vorneaux.com">contact@vorneaux.com</a>
+      <a href="privacy.html" id="privacyLink" data-i18n="footer_privacy">Privacy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ================================================================
+   TRANSLATIONS
+   Same structure and mechanism as cadence.html: one object per
+   supported language, looked up by t(lang, key). Keys shared with
+   the main page (nav_cta, footer_privacy, back_to_cadence,
+   lang_aria_label) use the exact same strings, so switching pages
+   never shows a different translation for the same label.
+================================================================= */
+const I18N = {
+en: {
+  nav_cta: "Request early access",
+  footer_privacy: "Privacy",
+  back_to_cadence: "Back to Cadence",
+  lang_aria_label: "Change language",
+  privacy_meta_title: "Cadence — Privacy Policy",
+  privacy_meta_description: "How VORNEAUX collects, uses and protects your information on the Cadence waitlist page.",
+  privacy_eyebrow: "Legal",
+  privacy_title: "Privacy Policy",
+  privacy_updated: "Last updated: September 6, 2026",
+  privacy_lede: "Short version: we only ask for what helps us build Cadence well, we never sell your information, and you can leave the waitlist whenever you want. Here's the long version.",
+  privacy_s1_title: "Who we are",
+  privacy_s1_body: "Cadence is an early-stage product by VORNEAUX. This page explains what information we collect from visitors and waitlist members of Cadence, why we collect it, and what choices you have. VORNEAUX is the data controller responsible for this information.",
+  privacy_s2_title: "Scope of this policy",
+  privacy_s2_body: "This policy covers only the Cadence waitlist page you're on right now. If you've interacted with other VORNEAUX products, such as OFFBOARD, their own data practices are described in that product's own privacy policy.",
+  privacy_s3_title: "Information we collect",
+  privacy_s3_body: "<p>When you join the Cadence waitlist, we collect:</p><ul><li>Your email address, so we can contact you when early access opens.</li><li>Your language preference, so we can write to you in the right language.</li><li>If you choose to answer them: your main income source, whether you'd be willing to pay for Cadence, and how you currently decide what's safe to spend. These three questions are optional and help us build something people actually need.</li><li>A small amount of technical information attached to your signup, such as the campaign or link that brought you here, and the date and time you joined.</li><li>A unique subscriber identifier, used only to recognize your entry and to power the unsubscribe link in our emails.</li></ul><p>We do not ask for your bank details, your income amount, or any government identifier at this stage, and we don't use cookies to track you across other websites.</p>",
+  privacy_s4_title: "How we use your information",
+  privacy_s4_body: "<p>We use what you share to:</p><ul><li>Let you know when early access to Cadence opens, and share meaningful updates about the product before then.</li><li>Understand whether the problem we're trying to solve is real, and for whom — this is the entire point of this page. Your optional answers directly shape whether and how we build Cadence.</li><li>Keep basic records of who signed up and when, for our own internal tracking.</li></ul><p>We do not sell your information, and we do not use it to show you ads.</p>",
+  privacy_s5_title: "Legal basis for processing",
+  privacy_s5_body: "<p>Where the GDPR or UK GDPR applies to you, we rely on:</p><ul><li>Your consent, for the optional questions (income source, willingness to pay, current workaround) — you can decline to answer any of them and still join the waitlist.</li><li>Our legitimate interest, for your email address and the basic technical data attached to it, in order to run a functioning waitlist and validate a product idea before building it.</li></ul><p>You can withdraw consent or object at any time by unsubscribing or writing to us — see \"Your rights\" below.</p>",
+  privacy_s6_title: "Who we share it with",
+  privacy_s6_body: "<p>We keep the number of parties who see your information to a minimum:</p><ul><li>Google Workspace, which we use to send emails and to store waitlist entries securely. Google processes this information on our behalf, under its own data processing terms.</li></ul><p>We do not share your information with advertisers, data brokers, or any other third party, and we do not sell it under any circumstance.</p>",
+  privacy_s7_title: "International transfers",
+  privacy_s7_body: "Because we use Google Workspace, your information may be processed in countries outside your own, including the United States. Where that happens, it's covered by Google's standard contractual clauses and other safeguards recognized under applicable data protection law.",
+  privacy_s8_title: "How long we keep it",
+  privacy_s8_body: "We keep your waitlist entry for as long as Cadence is in development and you remain subscribed. If you unsubscribe, we remove you from the active waitlist immediately, and keep a minimal record — your email, language, and signup/unsubscribe dates — for a limited period, only to keep our records accurate and to make sure we don't contact you again by mistake.",
+  privacy_s9_title: "Cookies and local storage",
+  privacy_s9_body: "<p>This page doesn't use tracking cookies. It stores two small pieces of information directly in your browser:</p><ul><li>Your language choice, so the page remembers it on your next visit.</li><li>Your subscriber identifier, so the page can recognize you if you come back to unsubscribe.</li></ul><p>If we ever activate analytics tools such as Google Analytics on this page, we'll update this section beforehand to explain what's collected and give you a way to opt out.</p>",
+  privacy_s10_title: "Your rights",
+  privacy_s10_body: "<p>Depending on where you live, you may have the right to:</p><ul><li>Access the information we hold about you.</li><li>Correct it, if it's inaccurate.</li><li>Ask us to delete it.</li><li>Object to, or ask us to restrict, how we use it.</li><li>Receive a copy of it in a portable format.</li><li>Lodge a complaint with your local data protection authority.</li></ul><p>To exercise any of these rights, write to us at the address below — we'll respond within a reasonable time, and in any case within the timeframe required by applicable law.</p>",
+  privacy_s11_title: "Children's privacy",
+  privacy_s11_body: "Cadence is intended for working adults, and this page is not directed at children. We don't knowingly collect information from anyone under 16. If you believe a child has provided us with information, please contact us and we'll remove it.",
+  privacy_s12_title: "Security",
+  privacy_s12_body: "We take reasonable technical and organizational measures to protect your information, including relying on Google Workspace's security infrastructure for storage and email delivery. No method of transmission or storage is completely secure, but we work to keep your information protected.",
+  privacy_s13_title: "Changes to this policy",
+  privacy_s13_body: "We may update this policy as Cadence evolves — for example, when we add a new question to the waitlist form, or move to a different backend. We'll update the date at the top of this page whenever we do, and for material changes, we'll let you know by email.",
+  privacy_s14_title: "Contact us",
+  privacy_s14_body: "For anything related to this policy or your information, write to us at <a href=\"mailto:contact@vorneaux.com\">contact@vorneaux.com</a>. We're a small team building this in the open, and we'll get back to you personally."
+},
+it: {
+  nav_cta: "Richiedi accesso anticipato",
+  footer_privacy: "Privacy",
+  back_to_cadence: "Torna a Cadence",
+  lang_aria_label: "Cambia lingua",
+  privacy_meta_title: "Cadence — Informativa sulla Privacy",
+  privacy_meta_description: "Come VORNEAUX raccoglie, utilizza e protegge le tue informazioni sulla pagina della waiting list di Cadence.",
+  privacy_eyebrow: "Legale",
+  privacy_title: "Informativa sulla Privacy",
+  privacy_updated: "Ultimo aggiornamento: 6 settembre 2026",
+  privacy_lede: "Versione breve: chiediamo solo ciò che ci aiuta a costruire Cadence nel modo giusto, non vendiamo mai le tue informazioni, e puoi lasciare la waiting list quando vuoi. Qui trovi la versione completa.",
+  privacy_s1_title: "Chi siamo",
+  privacy_s1_body: "Cadence è un prodotto in fase iniziale di VORNEAUX. Questa pagina spiega quali informazioni raccogliamo dai visitatori e dagli iscritti alla waiting list di Cadence, perché le raccogliamo e quali scelte hai a disposizione. VORNEAUX è il titolare del trattamento responsabile di queste informazioni.",
+  privacy_s2_title: "Ambito di applicazione",
+  privacy_s2_body: "Questa informativa riguarda esclusivamente la pagina della waiting list di Cadence su cui ti trovi in questo momento. Se hai interagito con altri prodotti VORNEAUX, come OFFBOARD, le relative pratiche sui dati sono descritte nell'informativa sulla privacy di quel prodotto.",
+  privacy_s3_title: "Informazioni che raccogliamo",
+  privacy_s3_body: "<p>Quando ti iscrivi alla waiting list di Cadence, raccogliamo:</p><ul><li>Il tuo indirizzo email, per poterti contattare quando si aprirà l'accesso anticipato.</li><li>La tua lingua preferita, per scriverti nella lingua giusta.</li><li>Se scegli di rispondere: la tua principale fonte di reddito, se saresti disposto a pagare per Cadence e come decidi oggi cosa puoi spendere in sicurezza. Queste tre domande sono facoltative e ci aiutano a costruire qualcosa che le persone abbiano davvero bisogno.</li><li>Una piccola quantità di informazioni tecniche legate alla tua iscrizione, come la campagna o il link da cui sei arrivato, e la data e l'ora dell'iscrizione.</li><li>Un identificativo univoco di iscrizione, usato solo per riconoscere la tua registrazione e per far funzionare il link di disiscrizione nelle nostre email.</li></ul><p>Non chiediamo i tuoi dati bancari, l'importo del tuo reddito o alcun documento d'identità in questa fase, e non usiamo cookie per tracciarti su altri siti web.</p>",
+  privacy_s4_title: "Come utilizziamo le tue informazioni",
+  privacy_s4_body: "<p>Utilizziamo ciò che ci condividi per:</p><ul><li>Avvisarti quando si apre l'accesso anticipato a Cadence, e condividere aggiornamenti rilevanti sul prodotto prima di allora.</li><li>Capire se il problema che vogliamo risolvere è reale, e per chi — è proprio questo lo scopo di questa pagina. Le tue risposte facoltative influenzano direttamente se e come costruiremo Cadence.</li><li>Mantenere un registro essenziale di chi si è iscritto e quando, per il nostro monitoraggio interno.</li></ul><p>Non vendiamo le tue informazioni e non le utilizziamo per mostrarti pubblicità.</p>",
+  privacy_s5_title: "Base giuridica del trattamento",
+  privacy_s5_body: "<p>Laddove il GDPR o lo UK GDPR ti sia applicabile, ci basiamo su:</p><ul><li>Il tuo consenso, per le domande facoltative (fonte di reddito, disponibilità a pagare, workaround attuale) — puoi rifiutarti di rispondere a una qualsiasi di esse e comunque iscriverti alla waiting list.</li><li>Il nostro legittimo interesse, per il tuo indirizzo email e i dati tecnici essenziali ad esso collegati, al fine di gestire una waiting list funzionante e validare un'idea di prodotto prima di svilupparla.</li></ul><p>Puoi revocare il consenso o opporti in qualsiasi momento disiscrivendoti o scrivendoci — vedi \"I tuoi diritti\" più sotto.</p>",
+  privacy_s6_title: "Con chi le condividiamo",
+  privacy_s6_body: "<p>Manteniamo al minimo il numero di soggetti che vedono le tue informazioni:</p><ul><li>Google Workspace, che utilizziamo per inviare email e per archiviare in modo sicuro le iscrizioni alla waiting list. Google tratta queste informazioni per nostro conto, secondo i propri termini di trattamento dei dati.</li></ul><p>Non condividiamo le tue informazioni con inserzionisti, data broker o altre terze parti, e non le vendiamo in nessuna circostanza.</p>",
+  privacy_s7_title: "Trasferimenti internazionali",
+  privacy_s7_body: "Poiché utilizziamo Google Workspace, le tue informazioni potrebbero essere trattate in paesi diversi dal tuo, inclusi gli Stati Uniti. In tal caso, il trattamento è disciplinato dalle clausole contrattuali standard di Google e da altre garanzie riconosciute dalla normativa applicabile in materia di protezione dei dati.",
+  privacy_s8_title: "Per quanto tempo le conserviamo",
+  privacy_s8_body: "Conserviamo la tua iscrizione alla waiting list per tutto il tempo in cui Cadence è in fase di sviluppo e resti iscritto. Se ti disiscrivi, ti rimuoviamo immediatamente dalla waiting list attiva e conserviamo un registro minimo — email, lingua e date di iscrizione/disiscrizione — per un periodo limitato, solo per mantenere accurati i nostri archivi ed evitare di contattarti nuovamente per errore.",
+  privacy_s9_title: "Cookie e archiviazione locale",
+  privacy_s9_body: "<p>Questa pagina non utilizza cookie di tracciamento. Salva due piccole informazioni direttamente nel tuo browser:</p><ul><li>La lingua scelta, così la pagina la ricorda alla tua prossima visita.</li><li>Il tuo identificativo di iscrizione, così la pagina può riconoscerti se torni per disiscriverti.</li></ul><p>Se in futuro attiveremo strumenti di analisi come Google Analytics su questa pagina, aggiorneremo prima questa sezione per spiegare cosa viene raccolto e darti un modo per rifiutare.</p>",
+  privacy_s10_title: "I tuoi diritti",
+  privacy_s10_body: "<p>A seconda di dove vivi, potresti avere il diritto di:</p><ul><li>Accedere alle informazioni che conserviamo su di te.</li><li>Correggerle, se inesatte.</li><li>Chiederci di cancellarle.</li><li>Opporti al loro utilizzo, o chiederne la limitazione.</li><li>Riceverne una copia in un formato portabile.</li><li>Presentare un reclamo alla tua autorità di controllo locale.</li></ul><p>Per esercitare uno qualsiasi di questi diritti, scrivici all'indirizzo indicato più sotto — ti risponderemo entro un tempo ragionevole, e comunque entro i termini previsti dalla normativa applicabile.</p>",
+  privacy_s11_title: "Privacy dei minori",
+  privacy_s11_body: "Cadence è pensato per persone adulte che lavorano, e questa pagina non è rivolta ai minori. Non raccogliamo consapevolmente informazioni da persone di età inferiore ai 16 anni. Se ritieni che un minore ci abbia fornito informazioni, contattaci e provvederemo a rimuoverle.",
+  privacy_s12_title: "Sicurezza",
+  privacy_s12_body: "Adottiamo misure tecniche e organizzative ragionevoli per proteggere le tue informazioni, incluso l'affidamento all'infrastruttura di sicurezza di Google Workspace per l'archiviazione e l'invio delle email. Nessun metodo di trasmissione o archiviazione è completamente sicuro, ma lavoriamo per mantenere protette le tue informazioni.",
+  privacy_s13_title: "Modifiche a questa informativa",
+  privacy_s13_body: "Potremmo aggiornare questa informativa man mano che Cadence si evolve — ad esempio, quando aggiungiamo una nuova domanda al modulo di iscrizione, o passiamo a un backend diverso. Aggiorneremo la data in cima a questa pagina ogni volta che lo facciamo, e per le modifiche sostanziali te lo comunicheremo via email.",
+  privacy_s14_title: "Contattaci",
+  privacy_s14_body: "Per qualsiasi cosa relativa a questa informativa o alle tue informazioni, scrivici a <a href=\"mailto:contact@vorneaux.com\">contact@vorneaux.com</a>. Siamo un piccolo team che costruisce tutto questo in modo trasparente, e ti risponderemo personalmente."
+},
+es: {
+  nav_cta: "Solicitar acceso anticipado",
+  footer_privacy: "Privacidad",
+  back_to_cadence: "Volver a Cadence",
+  lang_aria_label: "Cambiar idioma",
+  privacy_meta_title: "Cadence — Política de Privacidad",
+  privacy_meta_description: "Cómo VORNEAUX recopila, utiliza y protege tu información en la página de la lista de espera de Cadence.",
+  privacy_eyebrow: "Legal",
+  privacy_title: "Política de Privacidad",
+  privacy_updated: "Última actualización: 6 de septiembre de 2026",
+  privacy_lede: "Versión breve: solo pedimos lo que nos ayuda a construir bien Cadence, nunca vendemos tu información y puedes salir de la lista de espera cuando quieras. Aquí tienes la versión completa.",
+  privacy_s1_title: "Quiénes somos",
+  privacy_s1_body: "Cadence es un producto en fase inicial de VORNEAUX. Esta página explica qué información recopilamos de los visitantes y miembros de la lista de espera de Cadence, por qué la recopilamos y qué opciones tienes. VORNEAUX es el responsable del tratamiento de esta información.",
+  privacy_s2_title: "Alcance de esta política",
+  privacy_s2_body: "Esta política cubre únicamente la página de la lista de espera de Cadence en la que te encuentras ahora. Si has interactuado con otros productos de VORNEAUX, como OFFBOARD, sus propias prácticas de datos se describen en la política de privacidad de ese producto.",
+  privacy_s3_title: "Información que recopilamos",
+  privacy_s3_body: "<p>Cuando te unes a la lista de espera de Cadence, recopilamos:</p><ul><li>Tu dirección de correo electrónico, para poder contactarte cuando se abra el acceso anticipado.</li><li>Tu idioma preferido, para escribirte en el idioma correcto.</li><li>Si eliges responderlas: tu principal fuente de ingresos, si estarías dispuesto a pagar por Cadence, y cómo decides hoy qué es seguro gastar. Estas tres preguntas son opcionales y nos ayudan a construir algo que la gente realmente necesite.</li><li>Una pequeña cantidad de información técnica asociada a tu registro, como la campaña o el enlace que te trajo hasta aquí, y la fecha y hora en que te uniste.</li><li>Un identificador único de suscriptor, utilizado únicamente para reconocer tu registro y para que funcione el enlace de baja en nuestros correos.</li></ul><p>No pedimos tus datos bancarios, el importe de tus ingresos ni ningún documento de identidad en esta etapa, y no usamos cookies para rastrearte en otros sitios web.</p>",
+  privacy_s4_title: "Cómo usamos tu información",
+  privacy_s4_body: "<p>Usamos lo que compartes para:</p><ul><li>Avisarte cuando se abra el acceso anticipado a Cadence, y compartir novedades relevantes sobre el producto antes de eso.</li><li>Entender si el problema que intentamos resolver es real, y para quién — este es precisamente el propósito de esta página. Tus respuestas opcionales determinan directamente si construimos Cadence y cómo lo hacemos.</li><li>Mantener un registro básico de quién se registró y cuándo, para nuestro propio seguimiento interno.</li></ul><p>No vendemos tu información ni la usamos para mostrarte anuncios.</p>",
+  privacy_s5_title: "Base jurídica del tratamiento",
+  privacy_s5_body: "<p>Cuando te resulte aplicable el RGPD o el UK GDPR, nos basamos en:</p><ul><li>Tu consentimiento, para las preguntas opcionales (fuente de ingresos, disposición a pagar, método actual) — puedes negarte a responder cualquiera de ellas y aun así unirte a la lista de espera.</li><li>Nuestro interés legítimo, para tu dirección de correo electrónico y los datos técnicos básicos asociados, con el fin de gestionar una lista de espera funcional y validar una idea de producto antes de construirla.</li></ul><p>Puedes retirar tu consentimiento u oponerte en cualquier momento dándote de baja o escribiéndonos — consulta \"Tus derechos\" más abajo.</p>",
+  privacy_s6_title: "Con quién la compartimos",
+  privacy_s6_body: "<p>Mantenemos al mínimo el número de terceros que ven tu información:</p><ul><li>Google Workspace, que utilizamos para enviar correos y almacenar de forma segura los registros de la lista de espera. Google trata esta información en nuestro nombre, bajo sus propios términos de tratamiento de datos.</li></ul><p>No compartimos tu información con anunciantes, intermediarios de datos ni ningún otro tercero, y no la vendemos bajo ninguna circunstancia.</p>",
+  privacy_s7_title: "Transferencias internacionales",
+  privacy_s7_body: "Debido a que utilizamos Google Workspace, tu información puede procesarse en países distintos al tuyo, incluido Estados Unidos. Cuando esto ocurre, está cubierto por las cláusulas contractuales estándar de Google y otras garantías reconocidas por la normativa de protección de datos aplicable.",
+  privacy_s8_title: "Cuánto tiempo la conservamos",
+  privacy_s8_body: "Conservamos tu registro en la lista de espera mientras Cadence esté en desarrollo y sigas suscrito. Si te das de baja, te eliminamos de la lista de espera activa de inmediato, y conservamos un registro mínimo — tu correo, idioma y fechas de alta/baja — durante un periodo limitado, solo para mantener nuestros registros correctos y evitar contactarte de nuevo por error.",
+  privacy_s9_title: "Cookies y almacenamiento local",
+  privacy_s9_body: "<p>Esta página no utiliza cookies de rastreo. Guarda dos pequeños datos directamente en tu navegador:</p><ul><li>Tu idioma elegido, para que la página lo recuerde en tu próxima visita.</li><li>Tu identificador de suscriptor, para que la página pueda reconocerte si vuelves a darte de baja.</li></ul><p>Si en algún momento activamos herramientas de análisis como Google Analytics en esta página, actualizaremos antes esta sección para explicar qué se recopila y darte una forma de rechazarlo.</p>",
+  privacy_s10_title: "Tus derechos",
+  privacy_s10_body: "<p>Dependiendo de dónde vivas, es posible que tengas derecho a:</p><ul><li>Acceder a la información que tenemos sobre ti.</li><li>Corregirla, si es inexacta.</li><li>Pedirnos que la eliminemos.</li><li>Oponerte a su uso, o solicitar que lo restrinjamos.</li><li>Recibir una copia en un formato portable.</li><li>Presentar una reclamación ante tu autoridad de protección de datos local.</li></ul><p>Para ejercer cualquiera de estos derechos, escríbenos a la dirección indicada abajo — te responderemos en un plazo razonable, y en cualquier caso dentro del plazo exigido por la normativa aplicable.</p>",
+  privacy_s11_title: "Privacidad de menores",
+  privacy_s11_body: "Cadence está pensado para adultos trabajadores, y esta página no está dirigida a menores. No recopilamos conscientemente información de nadie menor de 16 años. Si crees que un menor nos ha proporcionado información, contáctanos y la eliminaremos.",
+  privacy_s12_title: "Seguridad",
+  privacy_s12_body: "Tomamos medidas técnicas y organizativas razonables para proteger tu información, incluyendo confiar en la infraestructura de seguridad de Google Workspace para el almacenamiento y el envío de correos. Ningún método de transmisión o almacenamiento es completamente seguro, pero trabajamos para mantener tu información protegida.",
+  privacy_s13_title: "Cambios en esta política",
+  privacy_s13_body: "Podemos actualizar esta política a medida que Cadence evoluciona — por ejemplo, cuando añadimos una nueva pregunta al formulario de la lista de espera, o cambiamos a un backend diferente. Actualizaremos la fecha en la parte superior de esta página cada vez que lo hagamos, y para cambios importantes te avisaremos por correo electrónico.",
+  privacy_s14_title: "Contáctanos",
+  privacy_s14_body: "Para cualquier tema relacionado con esta política o tu información, escríbenos a <a href=\"mailto:contact@vorneaux.com\">contact@vorneaux.com</a>. Somos un equipo pequeño construyendo esto de forma abierta, y te responderemos personalmente."
+},
+fr: {
+  nav_cta: "Demander un accès anticipé",
+  footer_privacy: "Confidentialité",
+  back_to_cadence: "Retour à Cadence",
+  lang_aria_label: "Changer de langue",
+  privacy_meta_title: "Cadence — Politique de confidentialité",
+  privacy_meta_description: "Comment VORNEAUX collecte, utilise et protège vos informations sur la page de liste d'attente de Cadence.",
+  privacy_eyebrow: "Mentions légales",
+  privacy_title: "Politique de confidentialité",
+  privacy_updated: "Dernière mise à jour : 6 septembre 2026",
+  privacy_lede: "Version courte : nous ne demandons que ce qui nous aide à bien construire Cadence, nous ne vendons jamais vos informations, et vous pouvez quitter la liste d'attente quand vous le souhaitez. Voici la version complète.",
+  privacy_s1_title: "Qui nous sommes",
+  privacy_s1_body: "Cadence est un produit en phase initiale développé par VORNEAUX. Cette page explique quelles informations nous collectons auprès des visiteurs et des inscrits à la liste d'attente de Cadence, pourquoi nous les collectons, et quels choix s'offrent à vous. VORNEAUX est le responsable du traitement de ces informations.",
+  privacy_s2_title: "Portée de cette politique",
+  privacy_s2_body: "Cette politique concerne uniquement la page de liste d'attente de Cadence sur laquelle vous vous trouvez actuellement. Si vous avez interagi avec d'autres produits VORNEAUX, comme OFFBOARD, leurs propres pratiques en matière de données sont décrites dans la politique de confidentialité de ce produit.",
+  privacy_s3_title: "Informations que nous collectons",
+  privacy_s3_body: "<p>Lorsque vous rejoignez la liste d'attente de Cadence, nous collectons :</p><ul><li>Votre adresse e-mail, pour pouvoir vous contacter à l'ouverture de l'accès anticipé.</li><li>Votre langue préférée, pour vous écrire dans la bonne langue.</li><li>Si vous choisissez d'y répondre : votre principale source de revenus, si vous seriez prêt à payer pour Cadence, et comment vous décidez aujourd'hui ce que vous pouvez dépenser sans risque. Ces trois questions sont facultatives et nous aident à construire quelque chose dont les gens ont réellement besoin.</li><li>Un peu d'information technique associée à votre inscription, comme la campagne ou le lien qui vous a amené ici, ainsi que la date et l'heure de votre inscription.</li><li>Un identifiant d'abonné unique, utilisé uniquement pour reconnaître votre inscription et faire fonctionner le lien de désabonnement dans nos e-mails.</li></ul><p>Nous ne demandons pas vos coordonnées bancaires, le montant de vos revenus, ni aucune pièce d'identité à ce stade, et nous n'utilisons pas de cookies pour vous suivre sur d'autres sites web.</p>",
+  privacy_s4_title: "Comment nous utilisons vos informations",
+  privacy_s4_body: "<p>Nous utilisons ce que vous partagez pour :</p><ul><li>Vous informer de l'ouverture de l'accès anticipé à Cadence, et partager des mises à jour pertinentes sur le produit avant cela.</li><li>Comprendre si le problème que nous essayons de résoudre est réel, et pour qui — c'est tout l'objet de cette page. Vos réponses facultatives déterminent directement si et comment nous construisons Cadence.</li><li>Conserver un registre de base de qui s'est inscrit et quand, pour notre propre suivi interne.</li></ul><p>Nous ne vendons pas vos informations et ne les utilisons pas pour vous montrer des publicités.</p>",
+  privacy_s5_title: "Base légale du traitement",
+  privacy_s5_body: "<p>Lorsque le RGPD ou le UK GDPR vous est applicable, nous nous appuyons sur :</p><ul><li>Votre consentement, pour les questions facultatives (source de revenus, disposition à payer, méthode actuelle) — vous pouvez refuser d'y répondre et rejoindre quand même la liste d'attente.</li><li>Notre intérêt légitime, pour votre adresse e-mail et les données techniques de base qui y sont associées, afin de faire fonctionner une liste d'attente et de valider une idée de produit avant de la construire.</li></ul><p>Vous pouvez retirer votre consentement ou vous y opposer à tout moment en vous désabonnant ou en nous écrivant — voir « Vos droits » ci-dessous.</p>",
+  privacy_s6_title: "Avec qui nous les partageons",
+  privacy_s6_body: "<p>Nous limitons au minimum le nombre de tiers qui voient vos informations :</p><ul><li>Google Workspace, que nous utilisons pour envoyer des e-mails et stocker en toute sécurité les inscriptions à la liste d'attente. Google traite ces informations pour notre compte, selon ses propres conditions de traitement des données.</li></ul><p>Nous ne partageons pas vos informations avec des annonceurs, des courtiers en données ou tout autre tiers, et nous ne les vendons en aucune circonstance.</p>",
+  privacy_s7_title: "Transferts internationaux",
+  privacy_s7_body: "Parce que nous utilisons Google Workspace, vos informations peuvent être traitées dans des pays autres que le vôtre, y compris les États-Unis. Le cas échéant, cela est encadré par les clauses contractuelles types de Google et d'autres garanties reconnues par la réglementation applicable en matière de protection des données.",
+  privacy_s8_title: "Durée de conservation",
+  privacy_s8_body: "Nous conservons votre inscription à la liste d'attente tant que Cadence est en développement et que vous restez abonné. Si vous vous désabonnez, nous vous retirons immédiatement de la liste d'attente active, et conservons un enregistrement minimal — votre e-mail, votre langue et vos dates d'inscription/désabonnement — pendant une durée limitée, uniquement pour garder nos registres exacts et éviter de vous recontacter par erreur.",
+  privacy_s9_title: "Cookies et stockage local",
+  privacy_s9_body: "<p>Cette page n'utilise pas de cookies de suivi. Elle enregistre deux petites informations directement dans votre navigateur :</p><ul><li>Votre choix de langue, pour que la page s'en souvienne lors de votre prochaine visite.</li><li>Votre identifiant d'abonné, pour que la page puisse vous reconnaître si vous revenez vous désabonner.</li></ul><p>Si nous activons un jour des outils d'analyse comme Google Analytics sur cette page, nous mettrons d'abord à jour cette section pour expliquer ce qui est collecté et vous donner un moyen de vous y opposer.</p>",
+  privacy_s10_title: "Vos droits",
+  privacy_s10_body: "<p>Selon l'endroit où vous vivez, vous pouvez avoir le droit de :</p><ul><li>Accéder aux informations que nous détenons sur vous.</li><li>Les corriger, si elles sont inexactes.</li><li>Nous demander de les supprimer.</li><li>Vous opposer à leur utilisation, ou en demander la limitation.</li><li>En recevoir une copie dans un format portable.</li><li>Déposer une plainte auprès de votre autorité de protection des données locale.</li></ul><p>Pour exercer l'un de ces droits, écrivez-nous à l'adresse ci-dessous — nous vous répondrons dans un délai raisonnable, et en tout cas dans les délais requis par la réglementation applicable.</p>",
+  privacy_s11_title: "Confidentialité des mineurs",
+  privacy_s11_body: "Cadence s'adresse à des adultes en activité, et cette page ne s'adresse pas aux mineurs. Nous ne collectons pas sciemment d'informations auprès de personnes de moins de 16 ans. Si vous pensez qu'un mineur nous a fourni des informations, contactez-nous et nous les supprimerons.",
+  privacy_s12_title: "Sécurité",
+  privacy_s12_body: "Nous prenons des mesures techniques et organisationnelles raisonnables pour protéger vos informations, notamment en nous appuyant sur l'infrastructure de sécurité de Google Workspace pour le stockage et l'envoi des e-mails. Aucune méthode de transmission ou de stockage n'est totalement sûre, mais nous travaillons à protéger vos informations.",
+  privacy_s13_title: "Modifications de cette politique",
+  privacy_s13_body: "Nous pouvons mettre à jour cette politique à mesure que Cadence évolue — par exemple, lorsque nous ajoutons une nouvelle question au formulaire d'inscription, ou changeons de backend. Nous mettrons à jour la date en haut de cette page à chaque modification, et pour tout changement important, nous vous informerons par e-mail.",
+  privacy_s14_title: "Nous contacter",
+  privacy_s14_body: "Pour toute question relative à cette politique ou à vos informations, écrivez-nous à <a href=\"mailto:contact@vorneaux.com\">contact@vorneaux.com</a>. Nous sommes une petite équipe qui construit tout cela en toute transparence, et nous vous répondrons personnellement."
+},
+de: {
+  nav_cta: "Frühen Zugang anfordern",
+  footer_privacy: "Datenschutz",
+  back_to_cadence: "Zurück zu Cadence",
+  lang_aria_label: "Sprache ändern",
+  privacy_meta_title: "Cadence — Datenschutzerklärung",
+  privacy_meta_description: "Wie VORNEAUX Ihre Informationen auf der Cadence-Warteliste-Seite erhebt, verwendet und schützt.",
+  privacy_eyebrow: "Rechtliches",
+  privacy_title: "Datenschutzerklärung",
+  privacy_updated: "Zuletzt aktualisiert: 6. September 2026",
+  privacy_lede: "Kurzfassung: Wir fragen nur das ab, was uns hilft, Cadence gut zu entwickeln, verkaufen Ihre Informationen niemals und Sie können die Warteliste jederzeit verlassen. Hier ist die ausführliche Fassung.",
+  privacy_s1_title: "Wer wir sind",
+  privacy_s1_body: "Cadence ist ein Produkt von VORNEAUX in einer frühen Phase. Diese Seite erklärt, welche Informationen wir von Besuchern und Mitgliedern der Cadence-Warteliste erheben, warum wir sie erheben und welche Wahlmöglichkeiten Sie haben. VORNEAUX ist der für diese Informationen verantwortliche Verantwortliche im Sinne der Datenschutzgesetze.",
+  privacy_s2_title: "Geltungsbereich dieser Erklärung",
+  privacy_s2_body: "Diese Erklärung betrifft ausschließlich die Cadence-Wartelisten-Seite, auf der Sie sich gerade befinden. Wenn Sie mit anderen VORNEAUX-Produkten wie OFFBOARD interagiert haben, sind deren eigene Datenpraktiken in der Datenschutzerklärung dieses Produkts beschrieben.",
+  privacy_s3_title: "Informationen, die wir erheben",
+  privacy_s3_body: "<p>Wenn Sie sich auf die Cadence-Warteliste eintragen, erheben wir:</p><ul><li>Ihre E-Mail-Adresse, damit wir Sie kontaktieren können, sobald der frühe Zugang öffnet.</li><li>Ihre Sprachpräferenz, damit wir Ihnen in der richtigen Sprache schreiben können.</li><li>Falls Sie sie beantworten möchten: Ihre wichtigste Einkommensquelle, ob Sie bereit wären, für Cadence zu bezahlen, und wie Sie heute entscheiden, was sicher ausgegeben werden kann. Diese drei Fragen sind freiwillig und helfen uns, etwas zu bauen, das Menschen wirklich brauchen.</li><li>Eine geringe Menge technischer Informationen im Zusammenhang mit Ihrer Anmeldung, etwa die Kampagne oder den Link, über den Sie hierher gekommen sind, sowie Datum und Uhrzeit Ihrer Anmeldung.</li><li>Eine eindeutige Abonnenten-ID, die nur dazu dient, Ihren Eintrag zu erkennen und den Abmeldelink in unseren E-Mails funktionsfähig zu machen.</li></ul><p>Wir fragen in dieser Phase nicht nach Ihren Bankdaten, der Höhe Ihres Einkommens oder amtlichen Ausweisdaten, und wir verwenden keine Cookies, um Sie auf anderen Websites zu verfolgen.</p>",
+  privacy_s4_title: "Wie wir Ihre Informationen verwenden",
+  privacy_s4_body: "<p>Wir verwenden das, was Sie mit uns teilen, um:</p><ul><li>Sie zu informieren, sobald der frühe Zugang zu Cadence öffnet, und Ihnen davor relevante Produkt-Updates mitzuteilen.</li><li>Zu verstehen, ob das Problem, das wir lösen wollen, real ist — und für wen. Genau das ist der Zweck dieser Seite. Ihre freiwilligen Antworten bestimmen direkt, ob und wie wir Cadence bauen.</li><li>Grundlegende Aufzeichnungen darüber zu führen, wer sich wann angemeldet hat, für unsere eigene interne Nachverfolgung.</li></ul><p>Wir verkaufen Ihre Informationen nicht und verwenden sie nicht, um Ihnen Werbung zu zeigen.</p>",
+  privacy_s5_title: "Rechtsgrundlage der Verarbeitung",
+  privacy_s5_body: "<p>Soweit die DSGVO oder die UK GDPR auf Sie anwendbar ist, stützen wir uns auf:</p><ul><li>Ihre Einwilligung, für die freiwilligen Fragen (Einkommensquelle, Zahlungsbereitschaft, aktuelle Vorgehensweise) — Sie können die Beantwortung jederzeit ablehnen und sich trotzdem auf die Warteliste setzen lassen.</li><li>Unser berechtigtes Interesse, für Ihre E-Mail-Adresse und die damit verbundenen grundlegenden technischen Daten, um eine funktionierende Warteliste zu betreiben und eine Produktidee zu validieren, bevor wir sie umsetzen.</li></ul><p>Sie können Ihre Einwilligung jederzeit widerrufen oder widersprechen, indem Sie sich abmelden oder uns schreiben — siehe „Ihre Rechte\" weiter unten.</p>",
+  privacy_s6_title: "Mit wem wir sie teilen",
+  privacy_s6_body: "<p>Wir halten die Anzahl der Parteien, die Ihre Informationen sehen, so gering wie möglich:</p><ul><li>Google Workspace, das wir zum Versand von E-Mails und zur sicheren Speicherung von Wartelisten-Einträgen nutzen. Google verarbeitet diese Informationen in unserem Auftrag, gemäß seinen eigenen Bedingungen zur Datenverarbeitung.</li></ul><p>Wir teilen Ihre Informationen nicht mit Werbetreibenden, Datenhändlern oder anderen Dritten, und wir verkaufen sie unter keinen Umständen.</p>",
+  privacy_s7_title: "Internationale Datenübermittlungen",
+  privacy_s7_body: "Da wir Google Workspace nutzen, können Ihre Informationen in Ländern außerhalb Ihres eigenen verarbeitet werden, einschließlich der Vereinigten Staaten. In diesem Fall gelten die Standardvertragsklauseln von Google sowie weitere nach geltendem Datenschutzrecht anerkannte Garantien.",
+  privacy_s8_title: "Wie lange wir sie aufbewahren",
+  privacy_s8_body: "Wir bewahren Ihren Wartelisten-Eintrag so lange auf, wie Cadence in Entwicklung ist und Sie angemeldet bleiben. Wenn Sie sich abmelden, entfernen wir Sie sofort von der aktiven Warteliste und bewahren einen minimalen Datensatz — Ihre E-Mail, Sprache sowie An- und Abmeldedatum — für einen begrenzten Zeitraum auf, nur um unsere Aufzeichnungen korrekt zu halten und sicherzustellen, dass wir Sie nicht versehentlich erneut kontaktieren.",
+  privacy_s9_title: "Cookies und lokaler Speicher",
+  privacy_s9_body: "<p>Diese Seite verwendet keine Tracking-Cookies. Sie speichert zwei kleine Informationen direkt in Ihrem Browser:</p><ul><li>Ihre Sprachwahl, damit die Seite sich diese bei Ihrem nächsten Besuch merkt.</li><li>Ihre Abonnenten-ID, damit die Seite Sie erkennen kann, wenn Sie zurückkehren, um sich abzumelden.</li></ul><p>Sollten wir jemals Analysetools wie Google Analytics auf dieser Seite aktivieren, werden wir diesen Abschnitt vorher aktualisieren, um zu erklären, was erhoben wird, und Ihnen eine Möglichkeit zum Widerspruch geben.</p>",
+  privacy_s10_title: "Ihre Rechte",
+  privacy_s10_body: "<p>Je nachdem, wo Sie leben, haben Sie möglicherweise das Recht:</p><ul><li>Auf die Informationen zuzugreifen, die wir über Sie gespeichert haben.</li><li>Sie zu berichtigen, falls sie unrichtig sind.</li><li>Uns um deren Löschung zu bitten.</li><li>Der Verwendung zu widersprechen oder deren Einschränkung zu verlangen.</li><li>Eine Kopie in einem übertragbaren Format zu erhalten.</li><li>Bei Ihrer örtlichen Datenschutzbehörde Beschwerde einzulegen.</li></ul><p>Um eines dieser Rechte auszuüben, schreiben Sie uns an die unten angegebene Adresse — wir antworten innerhalb einer angemessenen Frist, in jedem Fall innerhalb der gesetzlich vorgeschriebenen Frist.</p>",
+  privacy_s11_title: "Datenschutz für Kinder",
+  privacy_s11_body: "Cadence richtet sich an berufstätige Erwachsene, und diese Seite richtet sich nicht an Kinder. Wir erheben wissentlich keine Informationen von Personen unter 16 Jahren. Wenn Sie glauben, dass ein Kind uns Informationen zur Verfügung gestellt hat, kontaktieren Sie uns bitte — wir werden sie entfernen.",
+  privacy_s12_title: "Sicherheit",
+  privacy_s12_body: "Wir treffen angemessene technische und organisatorische Maßnahmen zum Schutz Ihrer Informationen, unter anderem indem wir uns auf die Sicherheitsinfrastruktur von Google Workspace für Speicherung und E-Mail-Versand verlassen. Keine Übertragungs- oder Speichermethode ist vollständig sicher, aber wir arbeiten daran, Ihre Informationen zu schützen.",
+  privacy_s13_title: "Änderungen dieser Erklärung",
+  privacy_s13_body: "Wir können diese Erklärung aktualisieren, wenn sich Cadence weiterentwickelt — zum Beispiel, wenn wir dem Wartelisten-Formular eine neue Frage hinzufügen oder zu einem anderen Backend wechseln. Wir aktualisieren dann das Datum oben auf dieser Seite, und bei wesentlichen Änderungen informieren wir Sie per E-Mail.",
+  privacy_s14_title: "Kontaktieren Sie uns",
+  privacy_s14_body: "Für alles rund um diese Erklärung oder Ihre Informationen schreiben Sie uns an <a href=\"mailto:contact@vorneaux.com\">contact@vorneaux.com</a>. Wir sind ein kleines Team, das dies offen aufbaut, und wir antworten Ihnen persönlich."
+}
+};
+
+const SUPPORTED_LANGS = ['en','it','es','fr','de'];
+const LANG_NAMES = { en:'English', it:'Italiano', es:'Español', fr:'Français', de:'Deutsch' };
+const LANG_STORAGE_KEY = 'cadence_lang_pref'; // same key as cadence.html — the manual choice is shared site-wide
+
+let currentLang = 'en';
+
+function detectLanguage(){
+  try{
+    const saved = JSON.parse(localStorage.getItem(LANG_STORAGE_KEY) || 'null');
+    if(saved && saved.manual && SUPPORTED_LANGS.indexOf(saved.lang) !== -1){
+      return saved.lang;
+    }
+  }catch(e){}
+  const raw = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || navigator.userLanguage || 'en'];
+  for(let i = 0; i < raw.length; i++){
+    const code = (raw[i] || '').toLowerCase().split('-')[0];
+    if(SUPPORTED_LANGS.indexOf(code) !== -1) return code;
+  }
+  return 'en';
+}
+
+function t(lang, key){
+  if(I18N[lang] && I18N[lang][key] !== undefined) return I18N[lang][key];
+  return I18N.en[key] !== undefined ? I18N.en[key] : '';
+}
+
+function applyTranslations(lang){
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    el.textContent = t(lang, key);
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.getAttribute('data-i18n-html');
+    el.innerHTML = t(lang, key);
+  });
+  document.getElementById('pageTitle').textContent = t(lang, 'privacy_meta_title');
+  document.getElementById('pageDescription').setAttribute('content', t(lang, 'privacy_meta_description'));
+  document.getElementById('langBtn').setAttribute('aria-label', t(lang, 'lang_aria_label'));
+}
+
+function buildLangMenu(){
+  const menu = document.getElementById('langMenu');
+  menu.innerHTML = '';
+  SUPPORTED_LANGS.forEach(code => {
+    const opt = document.createElement('button');
+    opt.type = 'button';
+    opt.className = 'lang-option';
+    opt.setAttribute('role', 'option');
+    opt.setAttribute('data-lang', code);
+    opt.innerHTML = '<span>' + LANG_NAMES[code] + '</span><span class="code">' + code.toUpperCase() + '</span>';
+    opt.addEventListener('click', () => {
+      setLanguage(code, true);
+      closeLangMenu();
+    });
+    menu.appendChild(opt);
+  });
+  updateLangMenuSelection();
+}
+
+function updateLangMenuSelection(){
+  document.querySelectorAll('.lang-option').forEach(opt => {
+    opt.setAttribute('aria-selected', opt.getAttribute('data-lang') === currentLang ? 'true' : 'false');
+  });
+  document.getElementById('langBtnLabel').textContent = currentLang.toUpperCase();
+}
+
+function openLangMenu(){
+  document.getElementById('langMenu').classList.add('open');
+  document.getElementById('langBtn').setAttribute('aria-expanded', 'true');
+}
+function closeLangMenu(){
+  document.getElementById('langMenu').classList.remove('open');
+  document.getElementById('langBtn').setAttribute('aria-expanded', 'false');
+}
+
+function setLanguage(lang, manual){
+  currentLang = SUPPORTED_LANGS.indexOf(lang) !== -1 ? lang : 'en';
+  document.documentElement.lang = currentLang;
+  applyTranslations(currentLang);
+  updateLangMenuSelection();
+  if(manual){
+    try{ localStorage.setItem(LANG_STORAGE_KEY, JSON.stringify({ lang: currentLang, manual: true })); }catch(e){}
+    trackEvent('language_changed', { language: currentLang });
+  }
+}
+
+document.getElementById('langBtn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  const isOpen = document.getElementById('langMenu').classList.contains('open');
+  if(isOpen){ closeLangMenu(); } else { openLangMenu(); }
+});
+document.addEventListener('click', (e) => {
+  if(!e.target.closest('.lang-switch')){ closeLangMenu(); }
+});
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape'){ closeLangMenu(); }
+});
+
+/* ---------- lightweight analytics (same as cadence.html) ---------- */
+function trackEvent(name, params){
+  params = params || {};
+  try{
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({event: name}, params));
+  }catch(e){}
+  try{ if(typeof fbq === 'function'){ fbq('trackCustom', name, params); } }catch(e){}
+  console.log('[track]', name, params);
+}
+document.addEventListener('click', function(e){
+  const el = e.target.closest('[data-track]');
+  if(el){ trackEvent(el.getAttribute('data-track'), {href: el.getAttribute('href') || ''}); }
+});
+
+/* ---------- reveal-on-scroll (same as cadence.html) ---------- */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => { if(entry.isIntersecting){ entry.target.classList.add('is-visible'); revealObserver.unobserve(entry.target); } });
+}, {threshold:0.15});
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+/* ---------- language init (runs last) ---------- */
+buildLangMenu();
+setLanguage(detectLanguage(), false);
+trackEvent('page_view', { page: 'privacy' });
+</script>
+
+</body>
+</html>
