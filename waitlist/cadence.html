@@ -676,9 +676,20 @@ fbq('track', 'PageView');
               </select>
             </div>
           </div>
+          <div class="field">
+            <label for="workaround" data-i18n="field_workaround_label">How do you currently figure out what's safe to spend?</label>
+            <select id="workaround" name="workaround">
+              <option value="" data-i18n="select_placeholder">Select one</option>
+              <option value="spreadsheet" data-i18n="workaround_opt_spreadsheet">A spreadsheet I built myself</option>
+              <option value="bank_balance" data-i18n="workaround_opt_balance">Checking my bank balance</option>
+              <option value="gut_feeling" data-i18n="workaround_opt_gut">Gut feeling</option>
+              <option value="no_method" data-i18n="workaround_opt_none">I don't, and that's the problem</option>
+              <option value="other" data-i18n="workaround_opt_other">Something else</option>
+            </select>
+          </div>
           <span class="wl-error" id="wlError" data-i18n="wl_error_default">Enter a valid email to continue.</span>
           <button type="submit" class="btn btn-primary wl-submit" id="wlSubmitBtn" data-track="waitlist_submit_attempt" data-i18n="wl_submit">Request early access</button>
-          <span class="wl-fineprint" data-i18n="wl_fineprint">Two questions, both optional — they help us build the right thing.</span>
+          <span class="wl-fineprint" data-i18n="wl_fineprint">Three questions, all optional — they help us build the right thing.</span>
         </form>
         <div class="wl-success" id="wlSuccess">
           <div class="mark" data-i18n="wl_success_mark">You're on the list.</div>
@@ -705,6 +716,10 @@ fbq('track', 'PageView');
     <div class="faq-item reveal">
       <div class="faq-q"><h3 data-i18n="faq_q1">Is this just another budgeting app?</h3><span class="plus">+</span></div>
       <div class="faq-a"><p data-i18n="faq_a1">No. Budgeting apps ask you to manage a system. Cadence is built to hand you one decision — what's safe to spend today — calculated for you, with no categories, no envelopes, no weekly review ritual required.</p></div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q"><h3 data-i18n="faq_q_calc">How is my safe-to-spend number actually calculated?</h3><span class="plus">+</span></div>
+      <div class="faq-a"><p data-i18n="faq_a_calc">Cadence looks at your recent income — including your leanest month, not just the average — sets aside a tax reserve automatically, and builds a buffer from your stronger months. What's left is what's safe to spend today. No categories, no manual math.</p></div>
     </div>
     <div class="faq-item reveal">
       <div class="faq-q"><h3 data-i18n="faq_q2">Is my financial data safe?</h3><span class="plus">+</span></div>
@@ -867,17 +882,25 @@ en: {
   wtp_opt_yesmore: "Yes — more, if it delivers",
   wtp_opt_maybe: "Maybe, need to see it first",
   wtp_opt_freeonly: "Only if free",
+  field_workaround_label: "How do you currently figure out what's safe to spend?",
+  workaround_opt_spreadsheet: "A spreadsheet I built myself",
+  workaround_opt_balance: "Checking my bank balance",
+  workaround_opt_gut: "Gut feeling",
+  workaround_opt_none: "I don't, and that's the problem",
+  workaround_opt_other: "Something else",
   wl_error_default: "Enter a valid email to continue.",
   wl_error_fail: "Something went wrong. Try again, or email contact@vorneaux.com directly.",
   wl_submit: "Request early access",
   wl_submitting: "Submitting…",
-  wl_fineprint: "Two questions, both optional — they help us build the right thing.",
+  wl_fineprint: "Three questions, all optional — they help us build the right thing.",
   wl_success_mark: "You're on the list.",
   wl_success_body: "We'll reach out from <strong style=\"color:var(--ink);\">hello@vorneaux.com</strong> as Cadence gets closer to launch — including a chance to test it early.",
   faq_eyebrow: "Before you go",
   faq_title: "Questions people ask first.",
   faq_q1: "Is this just another budgeting app?",
   faq_a1: "No. Budgeting apps ask you to manage a system. Cadence is built to hand you one decision — what's safe to spend today — calculated for you, with no categories, no envelopes, no weekly review ritual required.",
+  faq_q_calc: "How is my safe-to-spend number actually calculated?",
+  faq_a_calc: "Cadence looks at your recent income — including your leanest month, not just the average — sets aside a tax reserve automatically, and builds a buffer from your stronger months. What's left is what's safe to spend today. No categories, no manual math.",
   faq_q2: "Is my financial data safe?",
   faq_a2: "Bank connections, when available, go through the same read-only, encrypted providers used across the industry — Cadence never sees your credentials and can't move money. Full details will be published before launch.",
   faq_q3: "Do I have to connect my bank account?",
@@ -1000,17 +1023,25 @@ it: {
   wtp_opt_yesmore: "Sì — anche di più, se funziona davvero",
   wtp_opt_maybe: "Forse, devo prima vederlo",
   wtp_opt_freeonly: "Solo se gratuito",
+  field_workaround_label: "Oggi come fai a sapere cosa puoi spendere in sicurezza?",
+  workaround_opt_spreadsheet: "Un foglio di calcolo che mi sono costruito",
+  workaround_opt_balance: "Controllo il saldo del conto",
+  workaround_opt_gut: "A istinto",
+  workaround_opt_none: "Non lo so, ed è proprio questo il problema",
+  workaround_opt_other: "Qualcos'altro",
   wl_error_default: "Inserisci un'email valida per continuare.",
   wl_error_fail: "Qualcosa è andato storto. Riprova, oppure scrivi direttamente a contact@vorneaux.com.",
   wl_submit: "Richiedi accesso anticipato",
   wl_submitting: "Invio in corso…",
-  wl_fineprint: "Due domande, entrambe facoltative — ci aiutano a costruire la cosa giusta.",
+  wl_fineprint: "Tre domande, tutte facoltative — ci aiutano a costruire la cosa giusta.",
   wl_success_mark: "Sei in lista.",
   wl_success_body: "Ti scriveremo da <strong style=\"color:var(--ink);\">hello@vorneaux.com</strong> quando Cadence sarà più vicina al lancio — incluso l'invito a provarla in anteprima.",
   faq_eyebrow: "Prima di andare",
   faq_title: "Le domande più frequenti.",
   faq_q1: "È solo l'ennesima app di budget?",
   faq_a1: "No. Le app di budget ti chiedono di gestire un sistema. Cadence è pensata per darti una sola decisione — quanto puoi spendere oggi in sicurezza — già calcolata per te, senza categorie, senza buste, senza un rituale settimanale da rispettare.",
+  faq_q_calc: "Come viene calcolato davvero il mio numero \"sicuro da spendere\"?",
+  faq_a_calc: "Cadence guarda al tuo reddito recente — incluso il mese più magro, non solo la media — accantona automaticamente una riserva per le tasse e costruisce un cuscinetto con i mesi più forti. Quello che resta è ciò che puoi spendere oggi in sicurezza. Nessuna categoria, nessun calcolo manuale.",
   faq_q2: "I miei dati finanziari sono al sicuro?",
   faq_a2: "I collegamenti bancari, dove disponibili, passano dagli stessi provider crittografati e in sola lettura usati in tutto il settore — Cadence non vede mai le tue credenziali e non può spostare denaro. I dettagli completi saranno pubblicati prima del lancio.",
   faq_q3: "Devo per forza collegare il conto bancario?",
@@ -1133,17 +1164,25 @@ es: {
   wtp_opt_yesmore: "Sí — incluso más, si de verdad funciona",
   wtp_opt_maybe: "Tal vez, necesito verlo primero",
   wtp_opt_freeonly: "Solo si es gratis",
+  field_workaround_label: "¿Cómo decides hoy qué es seguro gastar?",
+  workaround_opt_spreadsheet: "Una hoja de cálculo que hice yo mismo/a",
+  workaround_opt_balance: "Miro el saldo de mi cuenta",
+  workaround_opt_gut: "Por instinto",
+  workaround_opt_none: "No lo sé, y ese es el problema",
+  workaround_opt_other: "Otra cosa",
   wl_error_default: "Introduce un correo válido para continuar.",
   wl_error_fail: "Algo salió mal. Inténtalo de nuevo, o escribe directamente a contact@vorneaux.com.",
   wl_submit: "Solicitar acceso anticipado",
   wl_submitting: "Enviando…",
-  wl_fineprint: "Dos preguntas, ambas opcionales — nos ayudan a construir lo correcto.",
+  wl_fineprint: "Tres preguntas, todas opcionales — nos ayudan a construir lo correcto.",
   wl_success_mark: "Ya estás en la lista.",
   wl_success_body: "Te escribiremos desde <strong style=\"color:var(--ink);\">hello@vorneaux.com</strong> a medida que Cadence se acerque al lanzamiento — incluida una invitación a probarla antes que nadie.",
   faq_eyebrow: "Antes de irte",
   faq_title: "Las preguntas más frecuentes.",
   faq_q1: "¿Es solo otra app de presupuesto?",
   faq_a1: "No. Las apps de presupuesto te piden gestionar un sistema. Cadence está pensada para darte una sola decisión — cuánto puedes gastar hoy con seguridad — ya calculada por ti, sin categorías, sin sobres, sin un ritual semanal que cumplir.",
+  faq_q_calc: "¿Cómo se calcula realmente mi número de \"gasto seguro\"?",
+  faq_a_calc: "Cadence analiza tus ingresos recientes — incluyendo tu mes más flojo, no solo el promedio — reserva automáticamente una provisión para impuestos y construye un colchón con tus meses más fuertes. Lo que queda es lo que puedes gastar hoy con seguridad. Sin categorías, sin cálculos manuales.",
   faq_q2: "¿Mis datos financieros están seguros?",
   faq_a2: "Las conexiones bancarias, cuando están disponibles, pasan por los mismos proveedores cifrados y de solo lectura usados en toda la industria — Cadence nunca ve tus credenciales y no puede mover dinero. Los detalles completos se publicarán antes del lanzamiento.",
   faq_q3: "¿Tengo que conectar mi cuenta bancaria?",
@@ -1266,17 +1305,25 @@ fr: {
   wtp_opt_yesmore: "Oui — plus encore, si c'est vraiment efficace",
   wtp_opt_maybe: "Peut-être, je dois d'abord voir",
   wtp_opt_freeonly: "Seulement si c'est gratuit",
+  field_workaround_label: "Aujourd'hui, comment savez-vous ce que vous pouvez dépenser sans risque ?",
+  workaround_opt_spreadsheet: "Un tableur que j'ai créé moi-même",
+  workaround_opt_balance: "Je vérifie le solde de mon compte",
+  workaround_opt_gut: "Au feeling",
+  workaround_opt_none: "Je ne sais pas, et c'est bien le problème",
+  workaround_opt_other: "Autre chose",
   wl_error_default: "Saisissez une adresse e-mail valide pour continuer.",
   wl_error_fail: "Une erreur s'est produite. Réessayez, ou écrivez directement à contact@vorneaux.com.",
   wl_submit: "Demander un accès anticipé",
   wl_submitting: "Envoi en cours…",
-  wl_fineprint: "Deux questions, toutes deux facultatives — elles nous aident à construire la bonne chose.",
+  wl_fineprint: "Trois questions, toutes facultatives — elles nous aident à construire la bonne chose.",
   wl_success_mark: "Vous êtes sur la liste.",
   wl_success_body: "Nous vous écrirons depuis <strong style=\"color:var(--ink);\">hello@vorneaux.com</strong> à mesure que Cadence se rapprochera du lancement — avec une invitation à la tester en avant-première.",
   faq_eyebrow: "Avant de partir",
   faq_title: "Les questions les plus fréquentes.",
   faq_q1: "Est-ce juste une appli de budget de plus ?",
   faq_a1: "Non. Les applis de budget vous demandent de gérer un système. Cadence est conçue pour vous donner une seule décision — ce que vous pouvez dépenser aujourd'hui en toute sérénité — déjà calculée pour vous, sans catégories, sans enveloppes, sans rituel hebdomadaire à respecter.",
+  faq_q_calc: "Comment mon montant \"sûr à dépenser\" est-il vraiment calculé ?",
+  faq_a_calc: "Cadence examine vos revenus récents — y compris votre mois le plus faible, pas seulement la moyenne — met automatiquement de côté une réserve fiscale, et construit un coussin à partir de vos mois les plus forts. Ce qui reste, c'est ce que vous pouvez dépenser aujourd'hui en toute sérénité. Pas de catégories, pas de calcul manuel.",
   faq_q2: "Mes données financières sont-elles en sécurité ?",
   faq_a2: "Les connexions bancaires, lorsqu'elles sont disponibles, passent par les mêmes fournisseurs chiffrés et en lecture seule utilisés dans tout le secteur — Cadence ne voit jamais vos identifiants et ne peut pas déplacer d'argent. Tous les détails seront publiés avant le lancement.",
   faq_q3: "Dois-je connecter mon compte bancaire ?",
@@ -1399,17 +1446,25 @@ de: {
   wtp_opt_yesmore: "Ja — auch mehr, wenn es wirklich hält",
   wtp_opt_maybe: "Vielleicht, ich muss es erst sehen",
   wtp_opt_freeonly: "Nur wenn kostenlos",
+  field_workaround_label: "Wie stellen Sie heute fest, was sicher ausgegeben werden kann?",
+  workaround_opt_spreadsheet: "Eine selbst erstellte Tabelle",
+  workaround_opt_balance: "Ich schaue auf meinen Kontostand",
+  workaround_opt_gut: "Aus dem Bauchgefühl",
+  workaround_opt_none: "Gar nicht, und genau das ist das Problem",
+  workaround_opt_other: "Etwas anderes",
   wl_error_default: "Geben Sie eine gültige E-Mail-Adresse ein, um fortzufahren.",
   wl_error_fail: "Etwas ist schiefgelaufen. Versuchen Sie es erneut oder schreiben Sie direkt an contact@vorneaux.com.",
   wl_submit: "Frühen Zugang anfordern",
   wl_submitting: "Wird gesendet…",
-  wl_fineprint: "Zwei Fragen, beide freiwillig — sie helfen uns, das Richtige zu bauen.",
+  wl_fineprint: "Drei Fragen, alle freiwillig — sie helfen uns, das Richtige zu bauen.",
   wl_success_mark: "Sie stehen auf der Liste.",
   wl_success_body: "Wir melden uns von <strong style=\"color:var(--ink);\">hello@vorneaux.com</strong>, sobald der Start von Cadence näher rückt — inklusive der Möglichkeit, es vorab zu testen.",
   faq_eyebrow: "Bevor Sie gehen",
   faq_title: "Häufig gestellte Fragen.",
   faq_q1: "Ist das nicht einfach noch eine Budget-App?",
   faq_a1: "Nein. Budget-Apps verlangen von Ihnen, ein System zu verwalten. Cadence gibt Ihnen eine einzige, für Sie bereits berechnete Entscheidung — was heute sicher ausgegeben werden kann —, ohne Kategorien, ohne Umschläge, ohne wöchentliches Ritual.",
+  faq_q_calc: "Wie wird meine \"sicher ausgebbare\" Zahl tatsächlich berechnet?",
+  faq_a_calc: "Cadence betrachtet Ihr aktuelles Einkommen — einschließlich Ihres schwächsten Monats, nicht nur des Durchschnitts —, legt automatisch eine Steuerrücklage zurück und baut aus Ihren stärkeren Monaten einen Puffer auf. Was übrig bleibt, ist das, was heute sicher ausgegeben werden kann. Keine Kategorien, keine manuelle Rechnung.",
   faq_q2: "Sind meine Finanzdaten sicher?",
   faq_a2: "Bankverbindungen laufen, wo verfügbar, über dieselben verschlüsselten Nur-Lese-Anbieter, die branchenweit üblich sind — Cadence sieht Ihre Zugangsdaten nie und kann kein Geld bewegen. Alle Details werden vor dem Start veröffentlicht.",
   faq_q3: "Muss ich mein Bankkonto verbinden?",
@@ -1736,6 +1791,7 @@ wlForm.addEventListener('submit', function(e){
     email: email,
     incomeSource: document.getElementById('incomeSource').value,
     willingnessToPay: document.getElementById('wtp').value,
+    workaround: document.getElementById('workaround').value,
     language: currentLang,
     utm_source: (getUTM().utm_source || ''),
     utm_campaign: (getUTM().utm_campaign || '')
@@ -1765,7 +1821,7 @@ wlForm.addEventListener('submit', function(e){
     resetButton();
     wlForm.style.display = 'none';
     wlSuccess.style.display = 'block';
-    trackEvent('waitlist_signup', {incomeSource: payload.incomeSource, willingnessToPay: payload.willingnessToPay, language: currentLang});
+    trackEvent('waitlist_signup', {incomeSource: payload.incomeSource, willingnessToPay: payload.willingnessToPay, workaround: payload.workaround, language: currentLang});
     return;
   }
 
@@ -1785,7 +1841,7 @@ wlForm.addEventListener('submit', function(e){
     } else {
       wlForm.style.display = 'none';
       wlSuccess.style.display = 'block';
-      trackEvent('waitlist_signup', {incomeSource: payload.incomeSource, willingnessToPay: payload.willingnessToPay, language: currentLang});
+      trackEvent('waitlist_signup', {incomeSource: payload.incomeSource, willingnessToPay: payload.willingnessToPay, workaround: payload.workaround, language: currentLang});
     }
   })
   .catch(() => { resetButton(); showWlError('wl_error_fail'); });
