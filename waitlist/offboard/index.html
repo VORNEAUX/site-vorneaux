@@ -91,6 +91,7 @@
   .board-head{ display:flex; justify-content:space-between; align-items:center; font-family:var(--mono); font-size:11px; letter-spacing:0.08em; color:var(--slate); text-transform:uppercase; padding:0 4px 14px; border-bottom:1px solid var(--line-dark); margin-bottom:4px; }
   .board-head .live{ display:flex; align-items:center; gap:6px; color:var(--mint); }
   .board-head .live i{ width:6px; height:6px; border-radius:50%; background:var(--mint); display:inline-block; animation:pulse 1.8s infinite; }
+  .board-example{ display:block; font-family:var(--mono); font-size:10px; letter-spacing:0.05em; color:var(--slate); text-transform:none; padding:8px 4px 0; opacity:0.75; }
   @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.35;} }
   .board-cols{ display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:10px; font-family:var(--mono); font-size:10.5px; letter-spacing:0.08em; color:var(--slate); text-transform:uppercase; padding:10px 12px 6px; }
   .board-row{ display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:10px; align-items:center; padding:11px 12px; border-radius:8px; font-family:var(--mono); font-size:13px; color:#fff; background:var(--panel-2); margin-bottom:7px; transform-origin:top center; animation:flap .6s cubic-bezier(.2,.9,.3,1) both; }
@@ -143,6 +144,7 @@
   .receipt-line{ display:flex; justify-content:space-between; padding:12px 0; font-size:13.5px; color:var(--ink-soft); border-bottom:1px solid var(--line-dark); }
   .receipt-line span:last-child{ color:#fff; }
   .receipt-line.cancelled span:last-child{ color:var(--mint); }
+  .receipt-note{ font-family:var(--body); font-size:12px; line-height:1.5; color:var(--slate); padding-top:14px; }
 
   /* GATES */
   .gates{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; }
@@ -188,6 +190,12 @@
   .field-row input[type="email"]::placeholder{ color:var(--slate); }
   .field-row input[type="email"]:focus{ border-color:var(--amber); }
   .field-row .btn{ flex-shrink:0; }
+  .signal-fields{ display:flex; gap:10px; text-align:left; }
+  .signal-field{ flex:1; min-width:0; display:flex; flex-direction:column; gap:6px; }
+  .signal-field label{ font-family:var(--mono); font-size:11px; color:var(--slate); letter-spacing:0.03em; }
+  .signal-field select{ background:var(--panel); border:1px solid var(--line-dark); color:#fff; font-family:var(--body); font-size:14px; padding:12px 14px; border-radius:12px; outline:none; transition:border-color .18s ease; appearance:none; -webkit-appearance:none; }
+  .signal-field select:focus{ border-color:var(--amber); }
+  .signal-field select:invalid{ color:var(--slate); }
   .form-note{ font-family:var(--mono); font-size:11.5px; color:var(--slate); margin-top:6px; }
   .form-error{ font-family:var(--mono); font-size:12.5px; color:var(--coral); min-height:16px; text-align:left; padding-left:6px; }
   .waitlist-perks{ display:flex; justify-content:center; gap:34px; flex-wrap:wrap; margin-top:46px; font-family:var(--mono); font-size:12px; color:var(--slate); text-transform:uppercase; letter-spacing:0.06em; }
@@ -234,6 +242,7 @@
     .avatars{ display:none; }
     .field-row{ flex-direction:column; }
     .field-row .btn{ width:100%; }
+    .signal-fields{ flex-direction:column; }
     .waitlist-perks{ gap:18px 26px; }
     .nav-cta{ display:none; }
     .sticky-cta{ display:flex; }
@@ -291,6 +300,7 @@
         <span data-i18n="board.title">Your Subscriptions</span>
         <span class="live"><i></i><span data-i18n="board.live">Live</span></span>
       </div>
+      <span class="board-example" data-i18n="board.example">Illustrative example, not your actual data</span>
       <div class="board-cols">
         <span data-i18n="board.col.service">Service</span><span data-i18n="board.col.billing">Billing</span><span data-i18n="board.col.status">Status</span>
       </div>
@@ -381,6 +391,7 @@
         <div class="receipt-line cancelled"><span data-i18n="solution.receipt.action.label">→ Suggested action</span><span data-i18n="solution.receipt.a2v">Renegotiate</span></div>
         <div class="receipt-line"><span>PulseFit Trial</span><span data-i18n="solution.receipt.r3b">Ends in 2 days</span></div>
         <div class="receipt-line cancelled"><span data-i18n="solution.receipt.action.label">→ Suggested action</span><span data-i18n="solution.receipt.a3v">Decide now</span></div>
+        <div class="receipt-note" data-i18n="solution.receipt.recurring">OFFBOARD keeps checking, so you don't have to think about it again next month.</div>
       </div>
     </div>
   </div>
@@ -412,7 +423,7 @@
       <div class="compare-col old">
         <h4 data-i18n="diff.old.title">The usual options</h4>
         <div class="compare-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 6 12 12M18 6 6 18"/></svg><span data-i18n="diff.old.r1">Ask for your bank login to "see everything"</span></div>
-        <div class="compare-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 6 12 12M18 6 6 18"/></svg><span data-i18n="diff.old.r2">Take 30–60% of whatever they claim to save you</span></div>
+        <div class="compare-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 6 12 12M18 6 6 18"/></svg><span data-i18n="diff.old.r2">Take a cut of whatever they claim to save you</span></div>
         <div class="compare-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 6 12 12M18 6 6 18"/></svg><span data-i18n="diff.old.r3">Send you a reminder — and stop there</span></div>
         <div class="compare-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 6 12 12M18 6 6 18"/></svg><span data-i18n="diff.old.r4">Built for one country, one currency</span></div>
       </div>
@@ -445,6 +456,7 @@
         <div class="rv-line"><span data-i18n="result.rv2">Recommended to cancel</span><b>3</b></div>
         <div class="rv-line"><span data-i18n="result.rv3">Renewals flagged early</span><b>2</b></div>
         <div class="rv-total"><span data-i18n="result.rvtotal">Reclaimed / year</span><span>$1,211</span></div>
+        <span class="board-example" data-i18n="result.example">Illustrative example, not a guaranteed outcome</span>
       </div>
     </div>
   </div>
@@ -464,6 +476,28 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </button>
       </div>
+      <div class="signal-fields">
+        <div class="signal-field">
+          <label for="subsToCancelInput" data-i18n="waitlist.q1.label">How many subscriptions are you currently paying for that you meant to cancel?</label>
+          <select id="subsToCancelInput" name="subsToCancel">
+            <option value="" data-i18n="waitlist.select.placeholder">Prefer not to say</option>
+            <option value="0-1" data-i18n="waitlist.q1.opt1">0–1</option>
+            <option value="2-4" data-i18n="waitlist.q1.opt2">2–4</option>
+            <option value="5+" data-i18n="waitlist.q1.opt3">5+</option>
+          </select>
+        </div>
+        <div class="signal-field">
+          <label for="wtpInput" data-i18n="waitlist.q2.label">What would you pay to never have to do this yourself?</label>
+          <select id="wtpInput" name="willingnessToPay">
+            <option value="" data-i18n="waitlist.select.placeholder">Prefer not to say</option>
+            <option value="diy" data-i18n="waitlist.q2.opt1">Nothing, I'll do it myself</option>
+            <option value="3-5" data-i18n="waitlist.q2.opt2">$3–5/mo</option>
+            <option value="8-12" data-i18n="waitlist.q2.opt3">$8–12/mo</option>
+            <option value="depends" data-i18n="waitlist.q2.opt4">Depends what I'd save</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-note" data-i18n="waitlist.signal.note">Both optional — they help us know we're solving a problem you actually have.</div>
       <div class="form-error" id="formError"></div>
       <div class="form-note" data-i18n="waitlist.note">No spam. One email when boarding opens. Unsubscribe anytime.</div>
     </form>
@@ -537,6 +571,7 @@
       'hero.trust':"No bank connection required. No percentage of your savings.",
       'hero.avatars':"Joining founders on the early access list",
       'board.title':"Your Subscriptions",'board.live':"Live",'board.col.service':"Service",'board.col.billing':"Billing",'board.col.status':"Status",
+      'board.example':"Illustrative example, not your actual data",
       'board.status.cancelled':"Cancelled",'board.status.renews':"Renews in 2d",'board.total.label':"Reclaimed this month",
       'problem.eyebrow':"The problem",
       'problem.h2':"You didn't choose to keep paying.<br>You just never got around to leaving.",
@@ -560,6 +595,7 @@
       'solution.p3.h4':"Actually leave — in one tap",
       'solution.p3.p':"OFFBOARD drafts the exact cancellation request each service requires, citing your legal right to a simple cancellation where it applies. You approve, it sends.",
       'solution.receipt.title':"Monthly review",'solution.receipt.r1b':"Used 2× this month",
+      'solution.receipt.recurring':"OFFBOARD keeps checking, so you don't have to think about it again next month.",
       'solution.receipt.action.label':"→ Suggested action",'solution.receipt.a1v':"Cancel",
       'solution.receipt.r2b':"Price up 22%",'solution.receipt.a2v':"Renegotiate",
       'solution.receipt.r3b':"Ends in 2 days",'solution.receipt.a3v':"Decide now",
@@ -575,7 +611,7 @@
       'diff.p':"We looked closely at what people say about the tools they already tried.",
       'diff.old.title':"The usual options",
       'diff.old.r1':'Ask for your bank login to "see everything"',
-      'diff.old.r2':"Take 30–60% of whatever they claim to save you",
+      'diff.old.r2':"Take a cut of whatever they claim to save you",
       'diff.old.r3':"Send you a reminder — and stop there",
       'diff.old.r4':"Built for one country, one currency",
       'diff.new.title':"OFFBOARD",
@@ -588,9 +624,16 @@
       'result.p':"You stop wondering what's quietly leaving your account every month — and you stop being the only one who has to fight to get out of it.",
       'result.stat1.span':"To your first review",'result.stat2.span':"Bank logins required",'result.stat3.span':"To send a cancellation",
       'result.rv1':"Subscriptions found",'result.rv2':"Recommended to cancel",'result.rv3':"Renewals flagged early",'result.rvtotal':"Reclaimed / year",
+      'result.example':"Illustrative example, not a guaranteed outcome",
       'waitlist.eyebrow':"Early access",'waitlist.h2':"Be checked out before everyone else.",
       'waitlist.sub':"OFFBOARD is in private validation. Join now and you'll be first through the gate when it opens — plus a founding-member rate, locked in for as long as you stay.",
       'waitlist.note':"No spam. One email when boarding opens. Unsubscribe anytime.",
+      'waitlist.select.placeholder':"Prefer not to say",
+      'waitlist.signal.note':"Both optional — they help us know we're solving a problem you actually have.",
+      'waitlist.q1.label':"How many subscriptions are you currently paying for that you meant to cancel?",
+      'waitlist.q1.opt1':"0–1",'waitlist.q1.opt2':"2–4",'waitlist.q1.opt3':"5+",
+      'waitlist.q2.label':"What would you pay to never have to do this yourself?",
+      'waitlist.q2.opt1':"Nothing, I'll do it myself",'waitlist.q2.opt2':"$3–5/mo",'waitlist.q2.opt3':"$8–12/mo",'waitlist.q2.opt4':"Depends what I'd save",
       'waitlist.error.invalid':"Enter a valid email address to join the waitlist.",
       'waitlist.error.generic':"Something went wrong. Please try again in a moment.",
       'waitlist.submitting':"Joining…",
@@ -616,6 +659,7 @@
       'hero.trust':"Nessun collegamento bancario richiesto. Nessuna percentuale sui tuoi risparmi.",
       'hero.avatars':"Si stanno iscrivendo altri founder alla lista d'accesso anticipato",
       'board.title':"I tuoi abbonamenti",'board.live':"In diretta",'board.col.service':"Servizio",'board.col.billing':"Addebito",'board.col.status':"Stato",
+      'board.example':"Esempio illustrativo, non i tuoi dati reali",
       'board.status.cancelled':"Disdetto",'board.status.renews':"Rinnova tra 2gg",'board.total.label':"Recuperato questo mese",
       'problem.eyebrow':"Il problema",
       'problem.h2':"Non hai scelto di continuare a pagare.<br>Semplicemente, non hai mai trovato il momento per disdire.",
@@ -639,6 +683,7 @@
       'solution.p3.h4':"Esci davvero — con un tocco",
       'solution.p3.p':"OFFBOARD prepara esattamente la richiesta di disdetta richiesta da ciascun servizio, citando il tuo diritto a una disdetta semplice dove previsto. Tu approvi, lui la invia.",
       'solution.receipt.title':"Revisione mensile",'solution.receipt.r1b':"Usato 2 volte questo mese",
+      'solution.receipt.recurring':"OFFBOARD continua a controllare, così il mese prossimo non devi più pensarci.",
       'solution.receipt.action.label':"→ Azione consigliata",'solution.receipt.a1v':"Disdici",
       'solution.receipt.r2b':"Prezzo +22%",'solution.receipt.a2v':"Rinegozia",
       'solution.receipt.r3b':"Termina tra 2 giorni",'solution.receipt.a3v':"Decidi ora",
@@ -654,7 +699,7 @@
       'diff.p':"Abbiamo analizzato attentamente cosa dicono le persone sugli strumenti che hanno già provato.",
       'diff.old.title':"Le soluzioni abituali",
       'diff.old.r1':'Chiedono le tue credenziali bancarie per "vedere tutto"',
-      'diff.old.r2':"Trattengono il 30–60% di quanto dichiarano di farti risparmiare",
+      'diff.old.r2':"Trattengono una percentuale di quanto dichiarano di farti risparmiare",
       'diff.old.r3':"Ti mandano un promemoria — e si fermano lì",
       'diff.old.r4':"Pensati per un solo paese, una sola valuta",
       'diff.new.title':"OFFBOARD",
@@ -667,9 +712,16 @@
       'result.p':"Smetti di chiederti cosa sta silenziosamente uscendo dal tuo conto ogni mese — e smetti di essere l'unico che deve lottare per uscirne.",
       'result.stat1.span':"Alla tua prima revisione",'result.stat2.span':"Accessi bancari richiesti",'result.stat3.span':"Per inviare una disdetta",
       'result.rv1':"Abbonamenti trovati",'result.rv2':"Consigliati per la disdetta",'result.rv3':"Rinnovi segnalati in anticipo",'result.rvtotal':"Recuperato / anno",
+      'result.example':"Esempio illustrativo, non un risultato garantito",
       'waitlist.eyebrow':"Accesso anticipato",'waitlist.h2':"Sii tra i primi a poter uscire davvero.",
       'waitlist.sub':"OFFBOARD è in fase di validazione privata. Iscriviti ora e sarai tra i primi ad accedere quando apriremo — con una tariffa da founding member, bloccata per tutto il tempo che resterai con noi.",
       'waitlist.note':"Niente spam. Una sola email quando si aprirà l'accesso. Puoi disiscriverti quando vuoi.",
+      'waitlist.select.placeholder':"Preferisco non rispondere",
+      'waitlist.signal.note':"Entrambe facoltative — ci aiutano a capire se stiamo risolvendo un problema che hai davvero.",
+      'waitlist.q1.label':"Quanti abbonamenti stai pagando in questo momento che volevi cancellare?",
+      'waitlist.q1.opt1':"0–1",'waitlist.q1.opt2':"2–4",'waitlist.q1.opt3':"5+",
+      'waitlist.q2.label':"Quanto pagheresti per non doverlo fare tu?",
+      'waitlist.q2.opt1':"Niente, lo faccio da solo",'waitlist.q2.opt2':"3–5$/mese",'waitlist.q2.opt3':"8–12$/mese",'waitlist.q2.opt4':"Dipende da quanto risparmierei",
       'waitlist.error.invalid':"Inserisci un indirizzo email valido per iscriverti alla waiting list.",
       'waitlist.error.generic':"Qualcosa è andato storto. Riprova tra qualche istante.",
       'waitlist.submitting':"Iscrizione in corso…",
@@ -695,6 +747,7 @@
       'hero.trust':"No requiere conexión bancaria. Sin comisión sobre tus ahorros.",
       'hero.avatars':"Otros founders ya se están uniendo a la lista de acceso anticipado",
       'board.title':"Tus suscripciones",'board.live':"En vivo",'board.col.service':"Servicio",'board.col.billing':"Facturación",'board.col.status':"Estado",
+      'board.example':"Ejemplo ilustrativo, no tus datos reales",
       'board.status.cancelled':"Cancelado",'board.status.renews':"Se renueva en 2d",'board.total.label':"Recuperado este mes",
       'problem.eyebrow':"El problema",
       'problem.h2':"No elegiste seguir pagando.<br>Simplemente nunca encontraste el momento de cancelar.",
@@ -718,6 +771,7 @@
       'solution.p3.h4':"Sal de verdad — con un toque",
       'solution.p3.p':"OFFBOARD redacta exactamente la solicitud de cancelación que exige cada servicio, citando tu derecho a una cancelación sencilla cuando corresponda. Tú apruebas, él la envía.",
       'solution.receipt.title':"Revisión mensual",'solution.receipt.r1b':"Usado 2 veces este mes",
+      'solution.receipt.recurring':"OFFBOARD sigue vigilando, para que el mes que viene no tengas que volver a pensarlo.",
       'solution.receipt.action.label':"→ Acción sugerida",'solution.receipt.a1v':"Cancelar",
       'solution.receipt.r2b':"Precio +22%",'solution.receipt.a2v':"Renegociar",
       'solution.receipt.r3b':"Termina en 2 días",'solution.receipt.a3v':"Decide ahora",
@@ -733,7 +787,7 @@
       'diff.p':"Analizamos con detalle lo que dice la gente sobre las herramientas que ya probó.",
       'diff.old.title':"Las opciones habituales",
       'diff.old.r1':'Piden las claves de tu banco para "verlo todo"',
-      'diff.old.r2':"Se quedan con el 30–60% de lo que dicen ahorrarte",
+      'diff.old.r2':"Se quedan con un porcentaje de lo que dicen ahorrarte",
       'diff.old.r3':"Te envían un recordatorio — y ahí se detienen",
       'diff.old.r4':"Pensados para un solo país, una sola moneda",
       'diff.new.title':"OFFBOARD",
@@ -746,9 +800,16 @@
       'result.p':"Dejas de preguntarte qué está saliendo silenciosamente de tu cuenta cada mes — y dejas de ser el único que tiene que luchar para salir de ello.",
       'result.stat1.span':"Hasta tu primera revisión",'result.stat2.span':"Accesos bancarios requeridos",'result.stat3.span':"Para enviar una cancelación",
       'result.rv1':"Suscripciones encontradas",'result.rv2':"Recomendadas para cancelar",'result.rv3':"Renovaciones señaladas a tiempo",'result.rvtotal':"Recuperado / año",
+      'result.example':"Ejemplo ilustrativo, no un resultado garantizado",
       'waitlist.eyebrow':"Acceso anticipado",'waitlist.h2':"Sé de los primeros en poder salir de verdad.",
       'waitlist.sub':"OFFBOARD está en fase de validación privada. Únete ahora y serás de los primeros en acceder cuando abramos — con una tarifa de miembro fundador, fija mientras te quedes.",
       'waitlist.note':"Sin spam. Un solo correo cuando se abra el acceso. Puedes darte de baja cuando quieras.",
+      'waitlist.select.placeholder':"Prefiero no decirlo",
+      'waitlist.signal.note':"Ambas opcionales — nos ayudan a saber si estamos resolviendo un problema que realmente tienes.",
+      'waitlist.q1.label':"¿Cuántas suscripciones estás pagando ahora mismo que querías cancelar?",
+      'waitlist.q1.opt1':"0–1",'waitlist.q1.opt2':"2–4",'waitlist.q1.opt3':"5+",
+      'waitlist.q2.label':"¿Cuánto pagarías para no tener que hacerlo tú mismo/a?",
+      'waitlist.q2.opt1':"Nada, lo hago yo mismo/a",'waitlist.q2.opt2':"3–5$/mes",'waitlist.q2.opt3':"8–12$/mes",'waitlist.q2.opt4':"Depende de cuánto ahorraría",
       'waitlist.error.invalid':"Introduce una dirección de correo válida para unirte a la lista de espera.",
       'waitlist.error.generic':"Algo salió mal. Inténtalo de nuevo en un momento.",
       'waitlist.submitting':"Uniéndote…",
@@ -774,6 +835,7 @@
       'hero.trust':"Aucune connexion bancaire requise. Aucun pourcentage sur vos économies.",
       'hero.avatars':"D'autres fondateurs rejoignent déjà la liste d'accès anticipé",
       'board.title':"Vos abonnements",'board.live':"En direct",'board.col.service':"Service",'board.col.billing':"Facturation",'board.col.status':"Statut",
+      'board.example':"Exemple illustratif, pas vos données réelles",
       'board.status.cancelled':"Résilié",'board.status.renews':"Renouvelle dans 2j",'board.total.label':"Récupéré ce mois-ci",
       'problem.eyebrow':"Le problème",
       'problem.h2':"Vous n'avez pas choisi de continuer à payer.<br>Vous n'avez juste jamais pris le temps de résilier.",
@@ -797,6 +859,7 @@
       'solution.p3.h4':"Partez pour de bon — en un geste",
       'solution.p3.p':"OFFBOARD rédige exactement la demande de résiliation exigée par chaque service, en citant votre droit à une résiliation simple lorsqu'il s'applique. Vous approuvez, il l'envoie.",
       'solution.receipt.title':"Bilan mensuel",'solution.receipt.r1b':"Utilisé 2 fois ce mois-ci",
+      'solution.receipt.recurring':"OFFBOARD continue de vérifier, pour que vous n'ayez plus à y penser le mois prochain.",
       'solution.receipt.action.label':"→ Action suggérée",'solution.receipt.a1v':"Résilier",
       'solution.receipt.r2b':"Prix +22 %",'solution.receipt.a2v':"Renégocier",
       'solution.receipt.r3b':"Se termine dans 2 jours",'solution.receipt.a3v':"Décidez maintenant",
@@ -812,7 +875,7 @@
       'diff.p':"Nous avons étudié de près ce que disent les gens des outils qu'ils ont déjà essayés.",
       'diff.old.title':"Les solutions habituelles",
       'diff.old.r1':'Demandent vos identifiants bancaires pour « tout voir »',
-      'diff.old.r2':"Prélèvent 30 à 60 % de ce qu'ils prétendent vous faire économiser",
+      'diff.old.r2':"Prélèvent une partie de ce qu'ils prétendent vous faire économiser",
       'diff.old.r3':"Vous envoient un rappel — et s'arrêtent là",
       'diff.old.r4':"Conçus pour un seul pays, une seule devise",
       'diff.new.title':"OFFBOARD",
@@ -825,9 +888,16 @@
       'result.p':"Vous arrêtez de vous demander ce qui quitte discrètement votre compte chaque mois — et vous n'êtes plus le seul à devoir vous battre pour vous en sortir.",
       'result.stat1.span':"Jusqu'à votre premier bilan",'result.stat2.span':"Identifiants bancaires requis",'result.stat3.span':"Pour envoyer une résiliation",
       'result.rv1':"Abonnements détectés",'result.rv2':"Recommandés à résilier",'result.rv3':"Renouvellements signalés à l'avance",'result.rvtotal':"Récupéré / an",
+      'result.example':"Exemple illustratif, pas un résultat garanti",
       'waitlist.eyebrow':"Accès anticipé",'waitlist.h2':"Soyez parmi les premiers à pouvoir vraiment vous en libérer.",
       'waitlist.sub':"OFFBOARD est en phase de validation privée. Inscrivez-vous maintenant et vous serez parmi les premiers à passer la porte à l'ouverture — avec un tarif fondateur, verrouillé aussi longtemps que vous restez.",
       'waitlist.note':"Pas de spam. Un seul e-mail à l'ouverture de l'accès. Désabonnement possible à tout moment.",
+      'waitlist.select.placeholder':"Je préfère ne pas répondre",
+      'waitlist.signal.note':"Facultatives toutes les deux — elles nous aident à savoir si on résout un vrai problème pour vous.",
+      'waitlist.q1.label':"Combien d'abonnements payez-vous actuellement que vous vouliez résilier ?",
+      'waitlist.q1.opt1':"0–1",'waitlist.q1.opt2':"2–4",'waitlist.q1.opt3':"5+",
+      'waitlist.q2.label':"Combien paieriez-vous pour ne plus avoir à le faire vous-même ?",
+      'waitlist.q2.opt1':"Rien, je le fais moi-même",'waitlist.q2.opt2':"3–5 $/mois",'waitlist.q2.opt3':"8–12 $/mois",'waitlist.q2.opt4':"Ça dépend de ce que j'économiserais",
       'waitlist.error.invalid':"Saisissez une adresse e-mail valide pour rejoindre la liste d'attente.",
       'waitlist.error.generic':"Une erreur s'est produite. Veuillez réessayer dans un instant.",
       'waitlist.submitting':"Inscription en cours…",
@@ -987,6 +1057,8 @@
 
   var form = document.getElementById('waitlistForm');
   var emailInput = document.getElementById('emailInput');
+  var subsToCancelInput = document.getElementById('subsToCancelInput');
+  var wtpInput = document.getElementById('wtpInput');
   var errorEl = document.getElementById('formError');
   var submitBtn = document.getElementById('submitBtn');
   var submitBtnLabel = document.getElementById('submitBtnLabel');
@@ -1046,7 +1118,9 @@
       action: 'subscribe', email: email, product: 'OFFBOARD', lang: currentLang,
       timestamp: new Date().toISOString(),
       utm_source: traffic.utm_source, utm_medium: traffic.utm_medium,
-      utm_campaign: traffic.utm_campaign, referrer: traffic.referrer
+      utm_campaign: traffic.utm_campaign, referrer: traffic.referrer,
+      subs_to_cancel: subsToCancelInput ? subsToCancelInput.value : '',
+      willingness_to_pay: wtpInput ? wtpInput.value : ''
     };
     addToQueue(payload); // never lost, even if the call below fails
 
