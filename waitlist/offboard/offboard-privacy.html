@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en" id="htmlRoot">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title id="pageTitle">OFFBOARD — Privacy Policy</title>
+<meta id="metaDescription" name="description" content="How VORNEAUX collects, uses and protects your information on the OFFBOARD waitlist page.">
+<meta name="robots" content="noindex, follow">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ink:#12151a; --ink-2:#191d24; --panel:#1b2027; --panel-2:#20262f; --line-dark:rgba(255,255,255,0.08);
+    --amber:#f2a93b; --amber-dim:#c98a2d; --amber-soft:rgba(242,169,59,0.14);
+    --ink-soft:#c9cfd8; --slate:#8b93a1;
+    --mint:#5fbfa0; --coral:#e2685a;
+    --display:'Space Grotesk', system-ui, sans-serif;
+    --body:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+    --maxw:1180px;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{ font-family:var(--body); background:var(--ink); color:var(--ink-soft); -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  img,svg{ display:block; max-width:100%; }
+  a{ color:inherit; text-decoration:none; }
+  ::selection{ background:var(--amber); color:var(--ink); }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 28px; }
+  section{ position:relative; }
+  h1,h2,h3{ font-family:var(--display); letter-spacing:-0.01em; }
+  .eyebrow{ font-family:var(--mono); font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--amber); display:inline-flex; align-items:center; gap:10px; }
+  .eyebrow::before{ content:""; width:7px; height:7px; background:var(--amber); border-radius:1px; display:inline-block; }
+
+  /* NAV — identical to index.html */
+  .nav{ position:fixed; top:0; left:0; right:0; z-index:100; background:rgba(18,21,26,0.7); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-bottom:1px solid var(--line-dark); }
+  .nav-inner{ max-width:var(--maxw); margin:0 auto; padding:16px 28px; display:flex; align-items:center; justify-content:space-between; }
+  .logo{ font-family:var(--display); font-weight:700; font-size:19px; color:#fff; letter-spacing:-0.01em; display:flex; align-items:center; gap:9px; }
+  .logo .dot{ width:8px; height:8px; background:var(--amber); border-radius:1px; }
+  .logo small{ font-family:var(--mono); font-weight:400; font-size:10px; color:var(--slate); letter-spacing:0.1em; margin-left:2px; }
+  .nav-right{ display:flex; align-items:center; gap:14px; }
+  .nav-cta{ font-family:var(--body); font-weight:600; font-size:13.5px; background:var(--amber); color:var(--ink); padding:10px 20px; border-radius:100px; white-space:nowrap; }
+  .nav-cta:hover{ background:#fff; }
+
+  /* LANGUAGE SWITCHER — identical to index.html */
+  .lang-switch{ position:relative; }
+  .lang-btn{ display:flex; align-items:center; gap:6px; background:transparent; border:1px solid var(--line-dark); color:var(--ink-soft); font-family:var(--mono); font-size:12px; letter-spacing:0.06em; padding:8px 12px; border-radius:100px; cursor:pointer; text-transform:uppercase; transition:border-color .18s ease, color .18s ease; }
+  .lang-btn:hover{ border-color:var(--amber); color:#fff; }
+  .lang-btn svg{ width:11px; height:11px; transition:transform .2s ease; }
+  .lang-btn[aria-expanded="true"] svg{ transform:rotate(180deg); }
+  .lang-menu{ position:absolute; top:calc(100% + 8px); right:0; background:var(--panel); border:1px solid var(--line-dark); border-radius:12px; padding:6px; min-width:160px; max-width:calc(100vw - 40px); list-style:none; box-shadow:0 20px 40px -20px rgba(0,0,0,0.6); z-index:200; }
+  .lang-menu[hidden]{ display:none; }
+  .lang-option{ display:flex; align-items:center; justify-content:space-between; width:100%; background:none; border:none; color:var(--ink-soft); font-family:var(--body); font-size:13.5px; padding:9px 12px; border-radius:8px; cursor:pointer; text-align:left; }
+  .lang-option:hover, .lang-option:focus-visible{ background:var(--panel-2); color:#fff; }
+  .lang-option.active{ color:var(--amber); }
+  .lang-option .code{ font-family:var(--mono); font-size:11px; color:var(--slate); }
+
+  .btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:var(--body); font-weight:600; font-size:15px; padding:14px 26px; border-radius:100px; border:1px solid var(--line-dark); cursor:pointer; transition:border-color .18s ease, color .18s ease; background:transparent; color:var(--ink-soft); }
+  .btn:hover{ border-color:var(--amber); color:#fff; }
+
+  /* ---------- LEGAL PAGE HEADER ---------- */
+  .legal-hero{ background: radial-gradient(ellipse 900px 500px at 15% -10%, rgba(242,169,59,0.10), transparent 60%), var(--ink); padding:150px 0 56px; }
+  .legal-hero h1{ font-size:clamp(32px,4.6vw,52px); color:#fff; margin:18px 0 16px; }
+  .legal-hero .updated{ font-family:var(--mono); font-size:12.5px; color:var(--slate); margin-bottom:20px; }
+  .legal-hero .lede{ font-size:17px; line-height:1.6; max-width:640px; color:var(--ink-soft); }
+
+  .divider{ height:1px; background:var(--line-dark); }
+
+  /* ---------- TOC ---------- */
+  .legal-toc{ padding:26px 0 6px; }
+  .legal-toc-list{ display:flex; flex-wrap:wrap; gap:10px; list-style:none; }
+  .legal-toc-list a{ display:inline-block; font-family:var(--mono); font-size:12.5px; letter-spacing:0.02em; color:var(--ink-soft); border:1px solid var(--line-dark); border-radius:100px; padding:8px 16px; transition:border-color .18s ease, color .18s ease; }
+  .legal-toc-list a:hover{ border-color:var(--amber); color:var(--amber); }
+
+  /* ---------- LEGAL SECTIONS ---------- */
+  .legal-body{ padding:16px 0 80px; }
+  .legal-section{ padding:32px 0; border-top:1px solid var(--line-dark); scroll-margin-top:100px; }
+  .legal-section h2{ font-size:23px; color:#fff; margin-bottom:14px; }
+  .legal-section p{ font-size:15.5px; line-height:1.65; max-width:720px; margin-bottom:12px; color:var(--ink-soft); }
+  .legal-section p:last-child{ margin-bottom:0; }
+  .legal-section ul{ margin:6px 0 14px 22px; max-width:700px; }
+  .legal-section li{ font-size:15.5px; line-height:1.6; color:var(--ink-soft); margin-bottom:8px; }
+  .legal-section a{ color:var(--amber); border-bottom:1px solid rgba(242,169,59,0.35); }
+  .legal-section a:hover{ color:#fff; border-color:#fff; }
+
+  .legal-back{ padding:0 0 90px; text-align:center; }
+
+  footer{ background:var(--ink); border-top:1px solid var(--line-dark); padding:38px 0; }
+  .footer-inner{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
+  .footer-inner .brand{ font-family:var(--mono); font-size:12px; color:var(--slate); }
+  .footer-inner .brand b{ color:var(--ink-soft); font-weight:500; }
+  .footer-links{ display:flex; gap:22px; font-family:var(--mono); font-size:12px; color:var(--slate); }
+  .footer-links a:hover{ color:var(--amber); }
+
+  @media (max-width:760px){
+    .legal-hero{ padding:126px 0 40px; }
+    .legal-toc-list{ gap:8px; }
+  }
+  :focus-visible{ outline:2px solid var(--amber); outline-offset:2px; }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="index.html" style="display:flex;align-items:center;">
+      <div class="logo">OFFBOARD <span class="dot"></span><small>by VORNEAUX</small></div>
+    </a>
+    <div class="nav-right">
+      <div class="lang-switch" id="langSwitch">
+        <button type="button" class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false">
+          <span id="langBtnLabel">EN</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <ul class="lang-menu" id="langMenu" role="menu" hidden>
+          <li role="none"><button role="menuitem" class="lang-option" data-lang="en">English <span class="code">EN</span></button></li>
+          <li role="none"><button role="menuitem" class="lang-option" data-lang="it">Italiano <span class="code">IT</span></button></li>
+          <li role="none"><button role="menuitem" class="lang-option" data-lang="es">Español <span class="code">ES</span></button></li>
+          <li role="none"><button role="menuitem" class="lang-option" data-lang="fr">Français <span class="code">FR</span></button></li>
+        </ul>
+      </div>
+      <a href="index.html#waitlist" class="nav-cta" data-i18n="nav.cta">Get Early Access</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ HEADER ============ -->
+<header class="legal-hero">
+  <div class="wrap">
+    <span class="eyebrow" data-i18n="privacy.eyebrow">Legal</span>
+    <h1 data-i18n="privacy.title">Privacy Policy</h1>
+    <div class="updated" data-i18n="privacy.updated">Last updated: September 6, 2026</div>
+    <p class="lede" data-i18n="privacy.lede">Short version: we never ask for your bank login, we only collect what helps us build OFFBOARD well, and you can leave the waitlist whenever you want. Here's the long version.</p>
+  </div>
+</header>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<!-- ============ TABLE OF CONTENTS ============ -->
+<section class="legal-toc">
+  <div class="wrap">
+    <ul class="legal-toc-list">
+      <li><a href="#who-we-are" data-i18n="privacy.s1.title">Who we are</a></li>
+      <li><a href="#scope" data-i18n="privacy.s2.title">Scope of this policy</a></li>
+      <li><a href="#information-we-collect" data-i18n="privacy.s3.title">Information we collect</a></li>
+      <li><a href="#how-we-use-it" data-i18n="privacy.s4.title">How we use your information</a></li>
+      <li><a href="#legal-basis" data-i18n="privacy.s5.title">Legal basis for processing</a></li>
+      <li><a href="#who-we-share-with" data-i18n="privacy.s6.title">Who we share it with</a></li>
+      <li><a href="#international-transfers" data-i18n="privacy.s7.title">International transfers</a></li>
+      <li><a href="#retention" data-i18n="privacy.s8.title">How long we keep it</a></li>
+      <li><a href="#cookies" data-i18n="privacy.s9.title">Cookies and local storage</a></li>
+      <li><a href="#your-rights" data-i18n="privacy.s10.title">Your rights</a></li>
+      <li><a href="#children" data-i18n="privacy.s11.title">Children's privacy</a></li>
+      <li><a href="#security" data-i18n="privacy.s12.title">Security</a></li>
+      <li><a href="#changes" data-i18n="privacy.s13.title">Changes to this policy</a></li>
+      <li><a href="#contact" data-i18n="privacy.s14.title">Contact us</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ POLICY BODY ============ -->
+<section class="legal-body">
+  <div class="wrap">
+
+    <div class="legal-section" id="who-we-are">
+      <h2 data-i18n="privacy.s1.title">Who we are</h2>
+      <p data-i18n="privacy.s1.body">OFFBOARD is an early-stage product by VORNEAUX. This page explains what information we collect from visitors and waitlist members of OFFBOARD, why we collect it, and what choices you have. VORNEAUX is the data controller responsible for this information.</p>
+    </div>
+
+    <div class="legal-section" id="scope">
+      <h2 data-i18n="privacy.s2.title">Scope of this policy</h2>
+      <p data-i18n="privacy.s2.body">This policy covers only the OFFBOARD waitlist page you're on right now. If you've interacted with other VORNEAUX products, such as CADENCE, their own data practices are described in that product's own privacy policy.</p>
+    </div>
+
+    <div class="legal-section" id="information-we-collect">
+      <h2 data-i18n="privacy.s3.title">Information we collect</h2>
+      <div data-i18n="privacy.s3.body"><p>When you join the OFFBOARD waitlist, we collect:</p>
+        <ul>
+          <li>Your email address, so we can contact you when early access opens.</li>
+          <li>Your language preference, so we can write to you in the right language.</li>
+          <li>If you choose to answer them: how many subscriptions you'd want to cancel, and what you'd be willing to pay to never have to do it yourself. These two questions are optional and help us build something people actually need.</li>
+          <li>A small amount of technical information attached to your signup, such as the campaign or link that brought you here, and the date and time you joined.</li>
+          <li>A unique subscriber identifier, used only to recognize your entry and to power the unsubscribe link in our emails.</li>
+        </ul>
+        <p>We never ask for your bank login or any other financial account access at this stage — that's a deliberate design choice, not just a policy — and we don't use cookies to track you across other websites.</p>
+      </div>
+    </div>
+
+    <div class="legal-section" id="how-we-use-it">
+      <h2 data-i18n="privacy.s4.title">How we use your information</h2>
+      <div data-i18n="privacy.s4.body"><p>We use what you share to:</p>
+        <ul>
+          <li>Let you know when early access to OFFBOARD opens, and share meaningful updates about the product before then.</li>
+          <li>Understand whether the problem we're trying to solve is real, and for whom — this is the entire point of this page. Your optional answers directly shape whether and how we build OFFBOARD.</li>
+          <li>Keep basic records of who signed up and when, for our own internal tracking.</li>
+        </ul>
+        <p>We do not sell your information, and we do not use it to show you ads.</p>
+      </div>
+    </div>
+
+    <div class="legal-section" id="legal-basis">
+      <h2 data-i18n="privacy.s5.title">Legal basis for processing</h2>
+      <div data-i18n="privacy.s5.body"><p>Where the GDPR or UK GDPR applies to you, we rely on:</p>
+        <ul>
+          <li>Your consent, for the optional questions (subscriptions to cancel, willingness to pay) — you can decline to answer either of them and still join the waitlist.</li>
+          <li>Our legitimate interest, for your email address and the basic technical data attached to it, in order to run a functioning waitlist and validate a product idea before building it.</li>
+        </ul>
+        <p>You can withdraw consent or object at any time by unsubscribing or writing to us — see "Your rights" below.</p>
+      </div>
+    </div>
+
+    <div class="legal-section" id="who-we-share-with">
+      <h2 data-i18n="privacy.s6.title">Who we share it with</h2>
+      <div data-i18n="privacy.s6.body"><p>We keep the number of parties who see your information to a minimum:</p>
+        <ul>
+          <li>Google Workspace, which we use to send emails and to store waitlist entries securely. Google processes this information on our behalf, under its own data processing terms.</li>
+        </ul>
+        <p>We do not share your information with advertisers, data brokers, or any other third party, and we do not sell it under any circumstance.</p>
+      </div>
+    </div>
+
+    <div class="legal-section" id="international-transfers">
+      <h2 data-i18n="privacy.s7.title">International transfers</h2>
+      <p data-i18n="privacy.s7.body">Because we use Google Workspace, your information may be processed in countries outside your own, including the United States. Where that happens, it's covered by Google's standard contractual clauses and other safeguards recognized under applicable data protection law.</p>
+    </div>
+
+    <div class="legal-section" id="retention">
+      <h2 data-i18n="privacy.s8.title">How long we keep it</h2>
+      <p data-i18n="privacy.s8.body">We keep your waitlist entry for as long as OFFBOARD is in development and you remain subscribed. If you unsubscribe, we remove you from the active waitlist immediately, and keep a minimal record — your email, language, and signup/unsubscribe dates — for a limited period, only to keep our records accurate and to make sure we don't contact you again by mistake.</p>
+    </div>
+
+    <div class="legal-section" id="cookies">
+      <h2 data-i18n="privacy.s9.title">Cookies and local storage</h2>
+      <div data-i18n="privacy.s9.body"><p>This page doesn't use tracking cookies. It stores two small pieces of information directly in your browser:</p>
+        <ul>
+          <li>Your language choice, so the page remembers it on your next visit.</li>
+          <li>Your subscriber identifier, so the page can recognize you if you come back to unsubscribe.</li>
+        </ul>
+        <p>If we ever activate analytics tools such as Google Analytics on this page, we'll update this section beforehand to explain what's collected and give you a way to opt out.</p>
+      </div>
+    </div>
+
+    <div class="legal-section" id="your-rights">
+      <h2 data-i18n="privacy.s10.title">Your rights</h2>
+      <div data-i18n="privacy.s10.body"><p>Depending on where you live, you may have the right to:</p>
+        <ul>
+          <li>Access the information we hold about you.</li>
+          <li>Correct it, if it's inaccurate.</li>
+          <li>Ask us to delete it.</li>
+          <li>Object to, or ask us to restrict, how we use it.</li>
+          <li>Receive a copy of it in a portable format.</li>
+          <li>Lodge a complaint with your local data protection authority.</li>
+        </ul>
+        <p>To exercise any of these rights, write to us at the address below — we'll respond within a reasonable time, and in any case within the timeframe required by applicable law.</p>
+      </div>
+    </div>
+
+    <div class="legal-section" id="children">
+      <h2 data-i18n="privacy.s11.title">Children's privacy</h2>
+      <p data-i18n="privacy.s11.body">OFFBOARD is intended for adults managing their own subscriptions, and this page is not directed at children. We don't knowingly collect information from anyone under 16. If you believe a child has provided us with information, please contact us and we'll remove it.</p>
+    </div>
+
+    <div class="legal-section" id="security">
+      <h2 data-i18n="privacy.s12.title">Security</h2>
+      <p data-i18n="privacy.s12.body">We take reasonable technical and organizational measures to protect your information, including relying on Google Workspace's security infrastructure for storage and email delivery. No method of transmission or storage is completely secure, but we work to keep your information protected.</p>
+    </div>
+
+    <div class="legal-section" id="changes">
+      <h2 data-i18n="privacy.s13.title">Changes to this policy</h2>
+      <p data-i18n="privacy.s13.body">We may update this policy as OFFBOARD evolves — for example, when we add a new question to the waitlist form, or move to a different backend. We'll update the date at the top of this page whenever we do, and for material changes, we'll let you know by email.</p>
+    </div>
+
+    <div class="legal-section" id="contact">
+      <h2 data-i18n="privacy.s14.title">Contact us</h2>
+      <p data-i18n="privacy.s14.body">For anything related to this policy or your information, write to us at <a href="mailto:contact@vorneaux.com">contact@vorneaux.com</a>. We're a small team building this in the open, and we'll get back to you personally.</p>
+    </div>
+
+  </div>
+</section>
+
+<div class="legal-back">
+  <a href="index.html" class="btn" data-i18n="privacy.back">Back to OFFBOARD</a>
+</div>
+
+<footer>
+  <div class="wrap footer-inner">
+    <div class="brand" id="footerBrand" data-i18n="footer.brand"><b>OFFBOARD</b> — an independent product by VORNEAUX</div>
+    <div class="footer-links">
+      <a href="index.html#problem" data-i18n="footer.link1">The problem</a>
+      <a href="index.html#how" data-i18n="footer.link2">How it works</a>
+      <a href="index.html#waitlist" data-i18n="footer.link3">Waitlist</a>
+      <a href="privacy.html" data-i18n="footer.link4">Privacy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* =====================================================================
+     TRANSLATIONS
+     Same structure and mechanism as index.html: one object per supported
+     language, looked up by t(lang, key), applied via innerHTML — so this
+     dictionary can hold the same list-based HTML bodies index.html
+     already uses elsewhere. Shared keys (nav.cta, footer.*,
+     lang.switch.aria) use the exact same strings as index.html, so the
+     two pages never disagree on a label.
+     ===================================================================== */
+  var SUPPORTED_LANGS = ['en','it','es','fr'];
+  var DEFAULT_LANG = 'en';
+  var LANG_STORAGE_KEY = 'offboard_lang'; // same key as index.html — manual choice is shared site-wide
+  var LANG_NAMES = { en:'EN', it:'IT', es:'ES', fr:'FR' };
+  var currentLang = DEFAULT_LANG;
+
+  var translations = {
+    en: {
+      'lang.switch.aria':"Select language",
+      'nav.cta':"Get Early Access",
+      'footer.brand':"<b>OFFBOARD</b> — an independent product by VORNEAUX",
+      'footer.link1':"The problem",'footer.link2':"How it works",'footer.link3':"Waitlist",'footer.link4':"Privacy",
+      'meta.title':"OFFBOARD — Privacy Policy",
+      'meta.description':"How VORNEAUX collects, uses and protects your information on the OFFBOARD waitlist page.",
+      'privacy.eyebrow':"Legal",
+      'privacy.title':"Privacy Policy",
+      'privacy.updated':"Last updated: September 6, 2026",
+      'privacy.lede':"Short version: we never ask for your bank login, we only collect what helps us build OFFBOARD well, and you can leave the waitlist whenever you want. Here's the long version.",
+      'privacy.back':"Back to OFFBOARD",
+      'privacy.s1.title':"Who we are",
+      'privacy.s1.body':"OFFBOARD is an early-stage product by VORNEAUX. This page explains what information we collect from visitors and waitlist members of OFFBOARD, why we collect it, and what choices you have. VORNEAUX is the data controller responsible for this information.",
+      'privacy.s2.title':"Scope of this policy",
+      'privacy.s2.body':"This policy covers only the OFFBOARD waitlist page you're on right now. If you've interacted with other VORNEAUX products, such as CADENCE, their own data practices are described in that product's own privacy policy.",
+      'privacy.s3.title':"Information we collect",
+      'privacy.s3.body':"<p>When you join the OFFBOARD waitlist, we collect:</p><ul><li>Your email address, so we can contact you when early access opens.</li><li>Your language preference, so we can write to you in the right language.</li><li>If you choose to answer them: how many subscriptions you'd want to cancel, and what you'd be willing to pay to never have to do it yourself. These two questions are optional and help us build something people actually need.</li><li>A small amount of technical information attached to your signup, such as the campaign or link that brought you here, and the date and time you joined.</li><li>A unique subscriber identifier, used only to recognize your entry and to power the unsubscribe link in our emails.</li></ul><p>We never ask for your bank login or any other financial account access at this stage — that's a deliberate design choice, not just a policy — and we don't use cookies to track you across other websites.</p>",
+      'privacy.s4.title':"How we use your information",
+      'privacy.s4.body':"<p>We use what you share to:</p><ul><li>Let you know when early access to OFFBOARD opens, and share meaningful updates about the product before then.</li><li>Understand whether the problem we're trying to solve is real, and for whom — this is the entire point of this page. Your optional answers directly shape whether and how we build OFFBOARD.</li><li>Keep basic records of who signed up and when, for our own internal tracking.</li></ul><p>We do not sell your information, and we do not use it to show you ads.</p>",
+      'privacy.s5.title':"Legal basis for processing",
+      'privacy.s5.body':"<p>Where the GDPR or UK GDPR applies to you, we rely on:</p><ul><li>Your consent, for the optional questions (subscriptions to cancel, willingness to pay) — you can decline to answer either of them and still join the waitlist.</li><li>Our legitimate interest, for your email address and the basic technical data attached to it, in order to run a functioning waitlist and validate a product idea before building it.</li></ul><p>You can withdraw consent or object at any time by unsubscribing or writing to us — see \"Your rights\" below.</p>",
+      'privacy.s6.title':"Who we share it with",
+      'privacy.s6.body':"<p>We keep the number of parties who see your information to a minimum:</p><ul><li>Google Workspace, which we use to send emails and to store waitlist entries securely. Google processes this information on our behalf, under its own data processing terms.</li></ul><p>We do not share your information with advertisers, data brokers, or any other third party, and we do not sell it under any circumstance.</p>",
+      'privacy.s7.title':"International transfers",
+      'privacy.s7.body':"Because we use Google Workspace, your information may be processed in countries outside your own, including the United States. Where that happens, it's covered by Google's standard contractual clauses and other safeguards recognized under applicable data protection law.",
+      'privacy.s8.title':"How long we keep it",
+      'privacy.s8.body':"We keep your waitlist entry for as long as OFFBOARD is in development and you remain subscribed. If you unsubscribe, we remove you from the active waitlist immediately, and keep a minimal record — your email, language, and signup/unsubscribe dates — for a limited period, only to keep our records accurate and to make sure we don't contact you again by mistake.",
+      'privacy.s9.title':"Cookies and local storage",
+      'privacy.s9.body':"<p>This page doesn't use tracking cookies. It stores two small pieces of information directly in your browser:</p><ul><li>Your language choice, so the page remembers it on your next visit.</li><li>Your subscriber identifier, so the page can recognize you if you come back to unsubscribe.</li></ul><p>If we ever activate analytics tools such as Google Analytics on this page, we'll update this section beforehand to explain what's collected and give you a way to opt out.</p>",
+      'privacy.s10.title':"Your rights",
+      'privacy.s10.body':"<p>Depending on where you live, you may have the right to:</p><ul><li>Access the information we hold about you.</li><li>Correct it, if it's inaccurate.</li><li>Ask us to delete it.</li><li>Object to, or ask us to restrict, how we use it.</li><li>Receive a copy of it in a portable format.</li><li>Lodge a complaint with your local data protection authority.</li></ul><p>To exercise any of these rights, write to us at the address below — we'll respond within a reasonable time, and in any case within the timeframe required by applicable law.</p>",
+      'privacy.s11.title':"Children's privacy",
+      'privacy.s11.body':"OFFBOARD is intended for adults managing their own subscriptions, and this page is not directed at children. We don't knowingly collect information from anyone under 16. If you believe a child has provided us with information, please contact us and we'll remove it.",
+      'privacy.s12.title':"Security",
+      'privacy.s12.body':"We take reasonable technical and organizational measures to protect your information, including relying on Google Workspace's security infrastructure for storage and email delivery. No method of transmission or storage is completely secure, but we work to keep your information protected.",
+      'privacy.s13.title':"Changes to this policy",
+      'privacy.s13.body':"We may update this policy as OFFBOARD evolves — for example, when we add a new question to the waitlist form, or move to a different backend. We'll update the date at the top of this page whenever we do, and for material changes, we'll let you know by email.",
+      'privacy.s14.title':"Contact us",
+      'privacy.s14.body':"For anything related to this policy or your information, write to us at <a href=\"mailto:contact@vorneaux.com\">contact@vorneaux.com</a>. We're a small team building this in the open, and we'll get back to you personally."
+    },
+    it: {
+      'lang.switch.aria':"Seleziona la lingua",
+      'nav.cta':"Richiedi l'accesso anticipato",
+      'footer.brand':"<b>OFFBOARD</b> — un prodotto indipendente firmato VORNEAUX",
+      'footer.link1':"Il problema",'footer.link2':"Come funziona",'footer.link3':"Waiting list",'footer.link4':"Privacy",
+      'meta.title':"OFFBOARD — Informativa sulla Privacy",
+      'meta.description':"Come VORNEAUX raccoglie, utilizza e protegge le tue informazioni sulla pagina della waiting list di OFFBOARD.",
+      'privacy.eyebrow':"Legale",
+      'privacy.title':"Informativa sulla Privacy",
+      'privacy.updated':"Ultimo aggiornamento: 6 settembre 2026",
+      'privacy.lede':"Versione breve: non ti chiediamo mai le credenziali della tua banca, raccogliamo solo ciò che ci aiuta a costruire OFFBOARD nel modo giusto, e puoi lasciare la waiting list quando vuoi. Qui trovi la versione completa.",
+      'privacy.back':"Torna a OFFBOARD",
+      'privacy.s1.title':"Chi siamo",
+      'privacy.s1.body':"OFFBOARD è un prodotto in fase iniziale di VORNEAUX. Questa pagina spiega quali informazioni raccogliamo dai visitatori e dagli iscritti alla waiting list di OFFBOARD, perché le raccogliamo e quali scelte hai a disposizione. VORNEAUX è il titolare del trattamento responsabile di queste informazioni.",
+      'privacy.s2.title':"Ambito di applicazione",
+      'privacy.s2.body':"Questa informativa riguarda esclusivamente la pagina della waiting list di OFFBOARD su cui ti trovi in questo momento. Se hai interagito con altri prodotti VORNEAUX, come CADENCE, le relative pratiche sui dati sono descritte nell'informativa sulla privacy di quel prodotto.",
+      'privacy.s3.title':"Informazioni che raccogliamo",
+      'privacy.s3.body':"<p>Quando ti iscrivi alla waiting list di OFFBOARD, raccogliamo:</p><ul><li>Il tuo indirizzo email, per poterti contattare quando si aprirà l'accesso anticipato.</li><li>La tua lingua preferita, per scriverti nella lingua giusta.</li><li>Se scegli di rispondere: quanti abbonamenti vorresti cancellare e quanto saresti disposto a pagare per non doverlo fare tu stesso. Queste due domande sono facoltative e ci aiutano a costruire qualcosa che le persone abbiano davvero bisogno.</li><li>Una piccola quantità di informazioni tecniche legate alla tua iscrizione, come la campagna o il link da cui sei arrivato, e la data e l'ora dell'iscrizione.</li><li>Un identificativo univoco di iscrizione, usato solo per riconoscere la tua registrazione e per far funzionare il link di disiscrizione nelle nostre email.</li></ul><p>Non chiediamo mai le credenziali di accesso alla tua banca né l'accesso ad altri conti finanziari in questa fase — è una scelta di progettazione deliberata, non solo una policy — e non usiamo cookie per tracciarti su altri siti web.</p>",
+      'privacy.s4.title':"Come utilizziamo le tue informazioni",
+      'privacy.s4.body':"<p>Utilizziamo ciò che ci condividi per:</p><ul><li>Avvisarti quando si apre l'accesso anticipato a OFFBOARD, e condividere aggiornamenti rilevanti sul prodotto prima di allora.</li><li>Capire se il problema che vogliamo risolvere è reale, e per chi — è proprio questo lo scopo di questa pagina. Le tue risposte facoltative influenzano direttamente se e come costruiremo OFFBOARD.</li><li>Mantenere un registro essenziale di chi si è iscritto e quando, per il nostro monitoraggio interno.</li></ul><p>Non vendiamo le tue informazioni e non le utilizziamo per mostrarti pubblicità.</p>",
+      'privacy.s5.title':"Base giuridica del trattamento",
+      'privacy.s5.body':"<p>Laddove il GDPR o lo UK GDPR ti sia applicabile, ci basiamo su:</p><ul><li>Il tuo consenso, per le domande facoltative (abbonamenti da cancellare, disponibilità a pagare) — puoi rifiutarti di rispondere a una qualsiasi di esse e comunque iscriverti alla waiting list.</li><li>Il nostro legittimo interesse, per il tuo indirizzo email e i dati tecnici essenziali ad esso collegati, al fine di gestire una waiting list funzionante e validare un'idea di prodotto prima di svilupparla.</li></ul><p>Puoi revocare il consenso o opporti in qualsiasi momento disiscrivendoti o scrivendoci — vedi \"I tuoi diritti\" più sotto.</p>",
+      'privacy.s6.title':"Con chi le condividiamo",
+      'privacy.s6.body':"<p>Manteniamo al minimo il numero di soggetti che vedono le tue informazioni:</p><ul><li>Google Workspace, che utilizziamo per inviare email e per archiviare in modo sicuro le iscrizioni alla waiting list. Google tratta queste informazioni per nostro conto, secondo i propri termini di trattamento dei dati.</li></ul><p>Non condividiamo le tue informazioni con inserzionisti, data broker o altre terze parti, e non le vendiamo in nessuna circostanza.</p>",
+      'privacy.s7.title':"Trasferimenti internazionali",
+      'privacy.s7.body':"Poiché utilizziamo Google Workspace, le tue informazioni potrebbero essere trattate in paesi diversi dal tuo, inclusi gli Stati Uniti. In tal caso, il trattamento è disciplinato dalle clausole contrattuali standard di Google e da altre garanzie riconosciute dalla normativa applicabile in materia di protezione dei dati.",
+      'privacy.s8.title':"Per quanto tempo le conserviamo",
+      'privacy.s8.body':"Conserviamo la tua iscrizione alla waiting list per tutto il tempo in cui OFFBOARD è in fase di sviluppo e resti iscritto. Se ti disiscrivi, ti rimuoviamo immediatamente dalla waiting list attiva e conserviamo un registro minimo — email, lingua e date di iscrizione/disiscrizione — per un periodo limitato, solo per mantenere accurati i nostri archivi ed evitare di contattarti nuovamente per errore.",
+      'privacy.s9.title':"Cookie e archiviazione locale",
+      'privacy.s9.body':"<p>Questa pagina non utilizza cookie di tracciamento. Salva due piccole informazioni direttamente nel tuo browser:</p><ul><li>La lingua scelta, così la pagina la ricorda alla tua prossima visita.</li><li>Il tuo identificativo di iscrizione, così la pagina può riconoscerti se torni per disiscriverti.</li></ul><p>Se in futuro attiveremo strumenti di analisi come Google Analytics su questa pagina, aggiorneremo prima questa sezione per spiegare cosa viene raccolto e darti un modo per rifiutare.</p>",
+      'privacy.s10.title':"I tuoi diritti",
+      'privacy.s10.body':"<p>A seconda di dove vivi, potresti avere il diritto di:</p><ul><li>Accedere alle informazioni che conserviamo su di te.</li><li>Correggerle, se inesatte.</li><li>Chiederci di cancellarle.</li><li>Opporti al loro utilizzo, o chiederne la limitazione.</li><li>Riceverne una copia in un formato portabile.</li><li>Presentare un reclamo alla tua autorità di controllo locale.</li></ul><p>Per esercitare uno qualsiasi di questi diritti, scrivici all'indirizzo indicato più sotto — ti risponderemo entro un tempo ragionevole, e comunque entro i termini previsti dalla normativa applicabile.</p>",
+      'privacy.s11.title':"Privacy dei minori",
+      'privacy.s11.body':"OFFBOARD è pensato per persone adulte che gestiscono i propri abbonamenti, e questa pagina non è rivolta ai minori. Non raccogliamo consapevolmente informazioni da persone di età inferiore ai 16 anni. Se ritieni che un minore ci abbia fornito informazioni, contattaci e provvederemo a rimuoverle.",
+      'privacy.s12.title':"Sicurezza",
+      'privacy.s12.body':"Adottiamo misure tecniche e organizzative ragionevoli per proteggere le tue informazioni, incluso l'affidamento all'infrastruttura di sicurezza di Google Workspace per l'archiviazione e l'invio delle email. Nessun metodo di trasmissione o archiviazione è completamente sicuro, ma lavoriamo per mantenere protette le tue informazioni.",
+      'privacy.s13.title':"Modifiche a questa informativa",
+      'privacy.s13.body':"Potremmo aggiornare questa informativa man mano che OFFBOARD si evolve — ad esempio, quando aggiungiamo una nuova domanda al modulo di iscrizione, o passiamo a un backend diverso. Aggiorneremo la data in cima a questa pagina ogni volta che lo facciamo, e per le modifiche sostanziali te lo comunicheremo via email.",
+      'privacy.s14.title':"Contattaci",
+      'privacy.s14.body':"Per qualsiasi cosa relativa a questa informativa o alle tue informazioni, scrivici a <a href=\"mailto:contact@vorneaux.com\">contact@vorneaux.com</a>. Siamo un piccolo team che costruisce tutto questo in modo trasparente, e ti risponderemo personalmente."
+    },
+    es: {
+      'lang.switch.aria':"Selecciona el idioma",
+      'nav.cta':"Solicita tu acceso anticipado",
+      'footer.brand':"<b>OFFBOARD</b> — un producto independiente de VORNEAUX",
+      'footer.link1':"El problema",'footer.link2':"Cómo funciona",'footer.link3':"Lista de espera",'footer.link4':"Privacidad",
+      'meta.title':"OFFBOARD — Política de Privacidad",
+      'meta.description':"Cómo VORNEAUX recopila, utiliza y protege tu información en la página de la lista de espera de OFFBOARD.",
+      'privacy.eyebrow':"Legal",
+      'privacy.title':"Política de Privacidad",
+      'privacy.updated':"Última actualización: 6 de septiembre de 2026",
+      'privacy.lede':"Versión breve: nunca te pedimos las credenciales de tu banco, solo recopilamos lo que nos ayuda a construir bien OFFBOARD, y puedes salir de la lista de espera cuando quieras. Aquí tienes la versión completa.",
+      'privacy.back':"Volver a OFFBOARD",
+      'privacy.s1.title':"Quiénes somos",
+      'privacy.s1.body':"OFFBOARD es un producto en fase inicial de VORNEAUX. Esta página explica qué información recopilamos de los visitantes y miembros de la lista de espera de OFFBOARD, por qué la recopilamos y qué opciones tienes. VORNEAUX es el responsable del tratamiento de esta información.",
+      'privacy.s2.title':"Alcance de esta política",
+      'privacy.s2.body':"Esta política cubre únicamente la página de la lista de espera de OFFBOARD en la que te encuentras ahora. Si has interactuado con otros productos de VORNEAUX, como CADENCE, sus propias prácticas de datos se describen en la política de privacidad de ese producto.",
+      'privacy.s3.title':"Información que recopilamos",
+      'privacy.s3.body':"<p>Cuando te unes a la lista de espera de OFFBOARD, recopilamos:</p><ul><li>Tu dirección de correo electrónico, para poder contactarte cuando se abra el acceso anticipado.</li><li>Tu idioma preferido, para escribirte en el idioma correcto.</li><li>Si eliges responderlas: cuántas suscripciones te gustaría cancelar, y cuánto estarías dispuesto a pagar para no tener que hacerlo tú mismo/a. Estas dos preguntas son opcionales y nos ayudan a construir algo que la gente realmente necesite.</li><li>Una pequeña cantidad de información técnica asociada a tu registro, como la campaña o el enlace que te trajo hasta aquí, y la fecha y hora en que te uniste.</li><li>Un identificador único de suscriptor, utilizado únicamente para reconocer tu registro y para que funcione el enlace de baja en nuestros correos.</li></ul><p>Nunca pedimos las credenciales de acceso a tu banco ni el acceso a otras cuentas financieras en esta etapa — es una decisión de diseño deliberada, no solo una política — y no usamos cookies para rastrearte en otros sitios web.</p>",
+      'privacy.s4.title':"Cómo usamos tu información",
+      'privacy.s4.body':"<p>Usamos lo que compartes para:</p><ul><li>Avisarte cuando se abra el acceso anticipado a OFFBOARD, y compartir novedades relevantes sobre el producto antes de eso.</li><li>Entender si el problema que intentamos resolver es real, y para quién — este es precisamente el propósito de esta página. Tus respuestas opcionales determinan directamente si construimos OFFBOARD y cómo lo hacemos.</li><li>Mantener un registro básico de quién se registró y cuándo, para nuestro propio seguimiento interno.</li></ul><p>No vendemos tu información ni la usamos para mostrarte anuncios.</p>",
+      'privacy.s5.title':"Base jurídica del tratamiento",
+      'privacy.s5.body':"<p>Cuando te resulte aplicable el RGPD o el UK GDPR, nos basamos en:</p><ul><li>Tu consentimiento, para las preguntas opcionales (suscripciones a cancelar, disposición a pagar) — puedes negarte a responder cualquiera de ellas y aun así unirte a la lista de espera.</li><li>Nuestro interés legítimo, para tu dirección de correo electrónico y los datos técnicos básicos asociados, con el fin de gestionar una lista de espera funcional y validar una idea de producto antes de construirla.</li></ul><p>Puedes retirar tu consentimiento u oponerte en cualquier momento dándote de baja o escribiéndonos — consulta \"Tus derechos\" más abajo.</p>",
+      'privacy.s6.title':"Con quién la compartimos",
+      'privacy.s6.body':"<p>Mantenemos al mínimo el número de terceros que ven tu información:</p><ul><li>Google Workspace, que utilizamos para enviar correos y almacenar de forma segura los registros de la lista de espera. Google trata esta información en nuestro nombre, bajo sus propios términos de tratamiento de datos.</li></ul><p>No compartimos tu información con anunciantes, intermediarios de datos ni ningún otro tercero, y no la vendemos bajo ninguna circunstancia.</p>",
+      'privacy.s7.title':"Transferencias internacionales",
+      'privacy.s7.body':"Debido a que utilizamos Google Workspace, tu información puede procesarse en países distintos al tuyo, incluido Estados Unidos. Cuando esto ocurre, está cubierto por las cláusulas contractuales estándar de Google y otras garantías reconocidas por la normativa de protección de datos aplicable.",
+      'privacy.s8.title':"Cuánto tiempo la conservamos",
+      'privacy.s8.body':"Conservamos tu registro en la lista de espera mientras OFFBOARD esté en desarrollo y sigas suscrito. Si te das de baja, te eliminamos de la lista de espera activa de inmediato, y conservamos un registro mínimo — tu correo, idioma y fechas de alta/baja — durante un periodo limitado, solo para mantener nuestros registros correctos y evitar contactarte de nuevo por error.",
+      'privacy.s9.title':"Cookies y almacenamiento local",
+      'privacy.s9.body':"<p>Esta página no utiliza cookies de rastreo. Guarda dos pequeños datos directamente en tu navegador:</p><ul><li>Tu idioma elegido, para que la página lo recuerde en tu próxima visita.</li><li>Tu identificador de suscriptor, para que la página pueda reconocerte si vuelves a darte de baja.</li></ul><p>Si en algún momento activamos herramientas de análisis como Google Analytics en esta página, actualizaremos antes esta sección para explicar qué se recopila y darte una forma de rechazarlo.</p>",
+      'privacy.s10.title':"Tus derechos",
+      'privacy.s10.body':"<p>Dependiendo de dónde vivas, es posible que tengas derecho a:</p><ul><li>Acceder a la información que tenemos sobre ti.</li><li>Corregirla, si es inexacta.</li><li>Pedirnos que la eliminemos.</li><li>Oponerte a su uso, o solicitar que lo restrinjamos.</li><li>Recibir una copia en un formato portable.</li><li>Presentar una reclamación ante tu autoridad de protección de datos local.</li></ul><p>Para ejercer cualquiera de estos derechos, escríbenos a la dirección indicada abajo — te responderemos en un plazo razonable, y en cualquier caso dentro del plazo exigido por la normativa aplicable.</p>",
+      'privacy.s11.title':"Privacidad de menores",
+      'privacy.s11.body':"OFFBOARD está pensado para adultos que gestionan sus propias suscripciones, y esta página no está dirigida a menores. No recopilamos conscientemente información de nadie menor de 16 años. Si crees que un menor nos ha proporcionado información, contáctanos y la eliminaremos.",
+      'privacy.s12.title':"Seguridad",
+      'privacy.s12.body':"Tomamos medidas técnicas y organizativas razonables para proteger tu información, incluyendo confiar en la infraestructura de seguridad de Google Workspace para el almacenamiento y el envío de correos. Ningún método de transmisión o almacenamiento es completamente seguro, pero trabajamos para mantener tu información protegida.",
+      'privacy.s13.title':"Cambios en esta política",
+      'privacy.s13.body':"Podemos actualizar esta política a medida que OFFBOARD evoluciona — por ejemplo, cuando añadimos una nueva pregunta al formulario de la lista de espera, o cambiamos a un backend diferente. Actualizaremos la fecha en la parte superior de esta página cada vez que lo hagamos, y para cambios importantes te avisaremos por correo electrónico.",
+      'privacy.s14.title':"Contáctanos",
+      'privacy.s14.body':"Para cualquier tema relacionado con esta política o tu información, escríbenos a <a href=\"mailto:contact@vorneaux.com\">contact@vorneaux.com</a>. Somos un equipo pequeño construyendo esto de forma abierta, y te responderemos personalmente."
+    },
+    fr: {
+      'lang.switch.aria':"Choisir la langue",
+      'nav.cta':"Demander l'accès anticipé",
+      'footer.brand':"<b>OFFBOARD</b> — un produit indépendant de VORNEAUX",
+      'footer.link1':"Le problème",'footer.link2':"Comment ça marche",'footer.link3':"Liste d'attente",'footer.link4':"Confidentialité",
+      'meta.title':"OFFBOARD — Politique de confidentialité",
+      'meta.description':"Comment VORNEAUX collecte, utilise et protège vos informations sur la page de liste d'attente d'OFFBOARD.",
+      'privacy.eyebrow':"Mentions légales",
+      'privacy.title':"Politique de confidentialité",
+      'privacy.updated':"Dernière mise à jour : 6 septembre 2026",
+      'privacy.lede':"Version courte : nous ne demandons jamais vos identifiants bancaires, nous ne collectons que ce qui nous aide à bien construire OFFBOARD, et vous pouvez quitter la liste d'attente quand vous le souhaitez. Voici la version complète.",
+      'privacy.back':"Retour à OFFBOARD",
+      'privacy.s1.title':"Qui nous sommes",
+      'privacy.s1.body':"OFFBOARD est un produit en phase initiale développé par VORNEAUX. Cette page explique quelles informations nous collectons auprès des visiteurs et des inscrits à la liste d'attente d'OFFBOARD, pourquoi nous les collectons, et quels choix s'offrent à vous. VORNEAUX est le responsable du traitement de ces informations.",
+      'privacy.s2.title':"Portée de cette politique",
+      'privacy.s2.body':"Cette politique concerne uniquement la page de liste d'attente d'OFFBOARD sur laquelle vous vous trouvez actuellement. Si vous avez interagi avec d'autres produits VORNEAUX, comme CADENCE, leurs propres pratiques en matière de données sont décrites dans la politique de confidentialité de ce produit.",
+      'privacy.s3.title':"Informations que nous collectons",
+      'privacy.s3.body':"<p>Lorsque vous rejoignez la liste d'attente d'OFFBOARD, nous collectons :</p><ul><li>Votre adresse e-mail, pour pouvoir vous contacter à l'ouverture de l'accès anticipé.</li><li>Votre langue préférée, pour vous écrire dans la bonne langue.</li><li>Si vous choisissez d'y répondre : combien d'abonnements vous souhaiteriez résilier, et combien vous seriez prêt à payer pour ne plus avoir à le faire vous-même. Ces deux questions sont facultatives et nous aident à construire quelque chose dont les gens ont réellement besoin.</li><li>Un peu d'information technique associée à votre inscription, comme la campagne ou le lien qui vous a amené ici, ainsi que la date et l'heure de votre inscription.</li><li>Un identifiant d'abonné unique, utilisé uniquement pour reconnaître votre inscription et faire fonctionner le lien de désabonnement dans nos e-mails.</li></ul><p>Nous ne demandons jamais vos identifiants bancaires ni l'accès à d'autres comptes financiers à ce stade — c'est un choix de conception délibéré, pas seulement une politique — et nous n'utilisons pas de cookies pour vous suivre sur d'autres sites web.</p>",
+      'privacy.s4.title':"Comment nous utilisons vos informations",
+      'privacy.s4.body':"<p>Nous utilisons ce que vous partagez pour :</p><ul><li>Vous informer de l'ouverture de l'accès anticipé à OFFBOARD, et partager des mises à jour pertinentes sur le produit avant cela.</li><li>Comprendre si le problème que nous essayons de résoudre est réel, et pour qui — c'est tout l'objet de cette page. Vos réponses facultatives déterminent directement si et comment nous construisons OFFBOARD.</li><li>Conserver un registre de base de qui s'est inscrit et quand, pour notre propre suivi interne.</li></ul><p>Nous ne vendons pas vos informations et ne les utilisons pas pour vous montrer des publicités.</p>",
+      'privacy.s5.title':"Base légale du traitement",
+      'privacy.s5.body':"<p>Lorsque le RGPD ou le UK GDPR vous est applicable, nous nous appuyons sur :</p><ul><li>Votre consentement, pour les questions facultatives (abonnements à résilier, disposition à payer) — vous pouvez refuser d'y répondre et rejoindre quand même la liste d'attente.</li><li>Notre intérêt légitime, pour votre adresse e-mail et les données techniques de base qui y sont associées, afin de faire fonctionner une liste d'attente et de valider une idée de produit avant de la construire.</li></ul><p>Vous pouvez retirer votre consentement ou vous y opposer à tout moment en vous désabonnant ou en nous écrivant — voir « Vos droits » ci-dessous.</p>",
+      'privacy.s6.title':"Avec qui nous les partageons",
+      'privacy.s6.body':"<p>Nous limitons au minimum le nombre de tiers qui voient vos informations :</p><ul><li>Google Workspace, que nous utilisons pour envoyer des e-mails et stocker en toute sécurité les inscriptions à la liste d'attente. Google traite ces informations pour notre compte, selon ses propres conditions de traitement des données.</li></ul><p>Nous ne partageons pas vos informations avec des annonceurs, des courtiers en données ou tout autre tiers, et nous ne les vendons en aucune circonstance.</p>",
+      'privacy.s7.title':"Transferts internationaux",
+      'privacy.s7.body':"Parce que nous utilisons Google Workspace, vos informations peuvent être traitées dans des pays autres que le vôtre, y compris les États-Unis. Le cas échéant, cela est encadré par les clauses contractuelles types de Google et d'autres garanties reconnues par la réglementation applicable en matière de protection des données.",
+      'privacy.s8.title':"Durée de conservation",
+      'privacy.s8.body':"Nous conservons votre inscription à la liste d'attente tant qu'OFFBOARD est en développement et que vous restez abonné. Si vous vous désabonnez, nous vous retirons immédiatement de la liste d'attente active, et conservons un enregistrement minimal — votre e-mail, votre langue et vos dates d'inscription/désabonnement — pendant une durée limitée, uniquement pour garder nos registres exacts et éviter de vous recontacter par erreur.",
+      'privacy.s9.title':"Cookies et stockage local",
+      'privacy.s9.body':"<p>Cette page n'utilise pas de cookies de suivi. Elle enregistre deux petites informations directement dans votre navigateur :</p><ul><li>Votre choix de langue, pour que la page s'en souvienne lors de votre prochaine visite.</li><li>Votre identifiant d'abonné, pour que la page puisse vous reconnaître si vous revenez vous désabonner.</li></ul><p>Si nous activons un jour des outils d'analyse comme Google Analytics sur cette page, nous mettrons d'abord à jour cette section pour expliquer ce qui est collecté et vous donner un moyen de vous y opposer.</p>",
+      'privacy.s10.title':"Vos droits",
+      'privacy.s10.body':"<p>Selon l'endroit où vous vivez, vous pouvez avoir le droit de :</p><ul><li>Accéder aux informations que nous détenons sur vous.</li><li>Les corriger, si elles sont inexactes.</li><li>Nous demander de les supprimer.</li><li>Vous opposer à leur utilisation, ou en demander la limitation.</li><li>En recevoir une copie dans un format portable.</li><li>Déposer une plainte auprès de votre autorité de protection des données locale.</li></ul><p>Pour exercer l'un de ces droits, écrivez-nous à l'adresse ci-dessous — nous vous répondrons dans un délai raisonnable, et en tout cas dans les délais requis par la réglementation applicable.</p>",
+      'privacy.s11.title':"Confidentialité des mineurs",
+      'privacy.s11.body':"OFFBOARD s'adresse à des adultes qui gèrent leurs propres abonnements, et cette page ne s'adresse pas aux mineurs. Nous ne collectons pas sciemment d'informations auprès de personnes de moins de 16 ans. Si vous pensez qu'un mineur nous a fourni des informations, contactez-nous et nous les supprimerons.",
+      'privacy.s12.title':"Sécurité",
+      'privacy.s12.body':"Nous prenons des mesures techniques et organisationnelles raisonnables pour protéger vos informations, notamment en nous appuyant sur l'infrastructure de sécurité de Google Workspace pour le stockage et l'envoi des e-mails. Aucune méthode de transmission ou de stockage n'est totalement sûre, mais nous travaillons à protéger vos informations.",
+      'privacy.s13.title':"Modifications de cette politique",
+      'privacy.s13.body':"Nous pouvons mettre à jour cette politique à mesure qu'OFFBOARD évolue — par exemple, lorsque nous ajoutons une nouvelle question au formulaire d'inscription, ou changeons de backend. Nous mettrons à jour la date en haut de cette page à chaque modification, et pour tout changement important, nous vous informerons par e-mail.",
+      'privacy.s14.title':"Nous contacter",
+      'privacy.s14.body':"Pour toute question relative à cette politique ou à vos informations, écrivez-nous à <a href=\"mailto:contact@vorneaux.com\">contact@vorneaux.com</a>. Nous sommes une petite équipe qui construit tout cela en toute transparence, et nous vous répondrons personnellement."
+    }
+  };
+
+  /* =====================================================================
+     LANGUAGE DETECTION & APPLICATION — identical logic to index.html
+     ===================================================================== */
+  function getUrlLang(){
+    var m = /[?&]lang=([a-zA-Z-]+)/.exec(window.location.search);
+    if (!m) return null;
+    var code = m[1].toLowerCase().slice(0,2);
+    return SUPPORTED_LANGS.indexOf(code) > -1 ? code : null;
+  }
+  function getStoredLang(){
+    try { var v = localStorage.getItem(LANG_STORAGE_KEY); return SUPPORTED_LANGS.indexOf(v) > -1 ? v : null; }
+    catch(e){ return null; }
+  }
+  function getBrowserLang(){
+    var langs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || navigator.userLanguage || ''];
+    for (var i = 0; i < langs.length; i++){
+      var code = String(langs[i]).toLowerCase().slice(0,2);
+      if (SUPPORTED_LANGS.indexOf(code) > -1) return code;
+    }
+    return null;
+  }
+  function detectInitialLang(){
+    var urlLang = getUrlLang();
+    if (urlLang) { try { localStorage.setItem(LANG_STORAGE_KEY, urlLang); } catch(e){} return urlLang; }
+    return getStoredLang() || getBrowserLang() || DEFAULT_LANG;
+  }
+  function t(lang, key){
+    var dict = translations[lang] || translations[DEFAULT_LANG];
+    if (dict[key] !== undefined) return dict[key];
+    return translations[DEFAULT_LANG][key] !== undefined ? translations[DEFAULT_LANG][key] : '';
+  }
+  function applyLanguage(lang){
+    if (SUPPORTED_LANGS.indexOf(lang) === -1) lang = DEFAULT_LANG;
+    currentLang = lang;
+    document.documentElement.setAttribute('lang', lang);
+    var nodes = document.querySelectorAll('[data-i18n]');
+    for (var i = 0; i < nodes.length; i++){
+      var key = nodes[i].getAttribute('data-i18n');
+      var val = t(lang, key);
+      if (val) nodes[i].innerHTML = val;
+    }
+    var titleVal = t(lang, 'meta.title'); if (titleVal) document.title = titleVal;
+    var descVal = t(lang, 'meta.description');
+    var descEl = document.getElementById('metaDescription');
+    if (descEl && descVal) descEl.setAttribute('content', descVal);
+    var btnLabel = document.getElementById('langBtnLabel');
+    if (btnLabel) btnLabel.textContent = LANG_NAMES[lang] || 'EN';
+    var langBtn = document.getElementById('langBtn');
+    if (langBtn) langBtn.setAttribute('aria-label', t(lang, 'lang.switch.aria'));
+    var options = document.querySelectorAll('.lang-option');
+    for (var j = 0; j < options.length; j++){
+      options[j].classList.toggle('active', options[j].getAttribute('data-lang') === lang);
+    }
+  }
+  function setLanguage(lang, persist){
+    if (persist !== false) { try { localStorage.setItem(LANG_STORAGE_KEY, lang); } catch(e){} }
+    applyLanguage(lang);
+  }
+
+  applyLanguage(detectInitialLang());
+
+  var langBtnEl = document.getElementById('langBtn');
+  var langMenuEl = document.getElementById('langMenu');
+  function closeLangMenu(){ langMenuEl.hidden = true; langBtnEl.setAttribute('aria-expanded', 'false'); }
+  function openLangMenu(){ langMenuEl.hidden = false; langBtnEl.setAttribute('aria-expanded', 'true'); }
+  langBtnEl.addEventListener('click', function(e){ e.stopPropagation(); if (langMenuEl.hidden) openLangMenu(); else closeLangMenu(); });
+  var langOptionEls = document.querySelectorAll('.lang-option');
+  for (var k = 0; k < langOptionEls.length; k++){
+    langOptionEls[k].addEventListener('click', function(e){
+      setLanguage(e.currentTarget.getAttribute('data-lang'), true);
+      closeLangMenu();
+    });
+  }
+  document.addEventListener('click', function(e){ if (!document.getElementById('langSwitch').contains(e.target)) closeLangMenu(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeLangMenu(); });
+</script>
+
+</body>
+</html>
