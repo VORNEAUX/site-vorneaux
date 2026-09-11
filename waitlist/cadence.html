@@ -22,13 +22,23 @@ gtag('js', new Date());
 gtag('config', 'G-XXXXXXX');
 </script>
 -->
-<!--
+<!-- Meta Pixel Code -->
 <script>
-!function(f,b,e,v,n,t,s){...}(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', 'YOUR_PIXEL_ID');
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '4494831707451851');
 fbq('track', 'PageView');
 </script>
--->
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=4494831707451851&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1619,6 +1629,16 @@ function trackEvent(name, params){
     window.dataLayer.push(Object.assign({event: name}, params));
   }catch(e){}
   try{ if(typeof fbq === 'function'){ fbq('trackCustom', name, params); } }catch(e){}
+  /* Meta Ads optimization event: fired only for a confirmed, non-duplicate
+     waitlist signup (see the two trackEvent('waitlist_signup', ...) call
+     sites in the submit handler — the duplicate branch calls
+     'waitlist_duplicate' instead, so this never double-fires for a
+     returning subscriber). content_name lets Cadence and Offboard share
+     one standard "Lead" optimization event while staying separable in
+     Ads Manager. */
+  if(name === 'waitlist_signup'){
+    try{ if(typeof fbq === 'function'){ fbq('track', 'Lead', Object.assign({content_name: 'cadence'}, params)); } }catch(e){}
+  }
   console.log('[track]', name, params);
 }
 
