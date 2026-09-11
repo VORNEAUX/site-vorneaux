@@ -249,6 +249,25 @@
   }
   :focus-visible{ outline:2px solid var(--amber); outline-offset:2px; }
 </style>
+
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '4494831707451851');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=4494831707451851&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+
 </head>
 <body>
 
@@ -1031,6 +1050,38 @@
 
   function isValidEmail(value){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value); }
 
+  /* =====================================================================
+     META PIXEL — WAITLIST CONVERSION EVENT
+     Fires the standard "Lead" event (shared with Cadence, distinguished by
+     content_name) only when the backend has actually confirmed a NEW,
+     non-duplicate signup — never on submit, never while a signup is only
+     queued/pending, and never for an email that was already registered.
+     This is called from exactly two places, both gated on
+     `data.status === 'ok' && !data.duplicate`:
+       1) the immediate response inside the form's submit handler
+       2) the background retryQueue() resolving a previously queued/pending
+          signup on a later page load
+     which is what keeps it a single, real, non-duplicated conversion per
+     subscriber regardless of which path confirms it.
+     ===================================================================== */
+  function trackWaitlistLead(payload){
+    try{
+      if (typeof fbq === 'function') {
+        fbq('trackCustom', 'waitlist_signup', {
+          language: payload.lang,
+          subs_to_cancel: payload.subs_to_cancel,
+          willingness_to_pay: payload.willingness_to_pay
+        });
+        fbq('track', 'Lead', {
+          content_name: 'offboard',
+          language: payload.lang,
+          subs_to_cancel: payload.subs_to_cancel,
+          willingness_to_pay: payload.willingness_to_pay
+        });
+      }
+    }catch(e){}
+  }
+
   function readQueue(){ try { return JSON.parse(localStorage.getItem(PENDING_STORAGE_KEY) || '[]'); } catch(e){ return []; } }
   function writeQueue(q){ try { localStorage.setItem(PENDING_STORAGE_KEY, JSON.stringify(q)); } catch(e){} }
   function addToQueue(payload){ var q = readQueue(); q.push(payload); writeQueue(q); }
@@ -1051,6 +1102,7 @@
         if (data && data.status === 'ok') {
           removeFromQueueByEmail(payload.email);
           if (data.token) saveSubscription(payload.email, data.token);
+          if (!data.duplicate) trackWaitlistLead(payload);
         }
       }).catch(function(){ /* stays queued, retried on next load */ });
     });
@@ -1133,7 +1185,7 @@
       if (data && data.status === 'ok') {
         removeFromQueueByEmail(email);
         if (data.token) saveSubscription(email, data.token);
-        if (data.duplicate) showAlready(); else showSuccess(false);
+        if (data.duplicate) { showAlready(); } else { showSuccess(false); trackWaitlistLead(payload); }
       } else {
         showSuccess(true); // stays queued, retried automatically
       }
